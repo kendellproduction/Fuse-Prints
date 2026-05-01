@@ -5,7 +5,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/fireba
 import {
   getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
   sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword,
-  GoogleAuthProvider, signInWithPopup
+  GoogleAuthProvider, signInWithRedirect, getRedirectResult
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc,
@@ -118,17 +118,24 @@ $("login-form").addEventListener("submit", async e => {
 $("google-signin-btn").addEventListener("click", async () => {
   const btn = $("google-signin-btn");
   const err = $("login-error");
-  btn.disabled = true; btn.textContent = "Signing in…"; err.classList.add("hidden");
+  btn.disabled = true;
+  btn.querySelector("span").textContent = "Redirecting…";
+  err.classList.add("hidden");
   try {
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    await signInWithRedirect(auth, provider);
   } catch (e) {
-    err.textContent = e.code === "auth/popup-closed-by-user"
-      ? "Sign-in cancelled."
-      : (e.message || "Google sign-in failed.");
+    err.textContent = e.message || "Google sign-in failed.";
     err.classList.remove("hidden");
-  } finally {
-    btn.disabled = false; btn.textContent = "Sign in with Google";
+    btn.disabled = false;
+    btn.querySelector("span").textContent = "Sign in with Google";
+  }
+});
+
+// Handle return from Google redirect
+getRedirectResult(auth).catch(e => {
+  if (e && e.code !== "auth/no-redirect-operation") {
+    console.error("Redirect sign-in error:", e);
   }
 });
 
