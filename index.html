@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fuse Prints — Large Format Printing Specialists</title>
   <meta name="description" content="Premium backdrops, banners, signage, and trade show graphics. Family-owned in Bradford, PA — serving brands nationwide." />
-  <link rel="icon" href="https://fuseprints.com/wp-content/uploads/2019/01/cropped-Etsy-Icon-32x32.png" />
+  <link rel="icon" type="image/png" href="assets/logo-white.png" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -98,6 +98,20 @@
     /* Bento card */
     .bento-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:24px;overflow:hidden;transition:border-color .3s,transform .3s}
     .bento-card:hover{border-color:rgba(33,150,243,.2);transform:translateY(-4px)}
+
+    /* Product card (Etsy-linked) */
+    .product-card{display:block;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:20px;overflow:hidden;transition:border-color .35s,transform .35s;text-decoration:none;color:inherit}
+    .product-card:hover{border-color:rgba(241,101,33,.35);transform:translateY(-4px)}
+    .product-card-img-wrap{position:relative;aspect-ratio:1/1;overflow:hidden;background:#0a0a0a}
+    .product-card-img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,0,.2,1)}
+    .product-card:hover .product-card-img{transform:scale(1.06)}
+    .product-card-hover{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 50%);display:flex;align-items:flex-end;justify-content:center;padding:20px;opacity:0;transition:opacity .35s}
+    .product-card:hover .product-card-hover{opacity:1}
+    .product-card-cta{display:inline-flex;align-items:center;gap:8px;background:#F16521;color:#fff;font-family:'Clash Display',system-ui,sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:10px 18px;border-radius:999px}
+    .product-card-body{padding:18px 20px 22px}
+    .product-card-title{font-family:'Clash Display',system-ui,sans-serif;font-weight:600;font-size:16px;color:#fafafa;margin:0 0 4px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .product-card-price{font-family:'Clash Display',system-ui,sans-serif;font-weight:600;font-size:15px;color:#F16521;margin:0 0 6px}
+    .product-card-desc{font-size:13px;color:rgba(255,255,255,.4);line-height:1.5;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
     /* Testimonial */
     .testimonial-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);transition:border-color .3s}
@@ -195,9 +209,8 @@
   <!-- ============ NAV ============ -->
   <nav id="navbar" class="fixed top-0 left-0 right-0 z-[100] transition-all duration-500" style="background:transparent">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3">
-        <img src="https://fuseprints.com/wp-content/uploads/2019/01/cropped-Etsy-Icon-192x192.png" alt="Fuse Prints" class="w-8 h-8" />
-        <span class="font-display font-bold text-xl tracking-tight text-white">FUSE PRINTS</span>
+      <a href="#" class="flex items-center">
+        <img src="assets/logo-white.png" alt="Fuse Prints" class="h-7 sm:h-8 w-auto" />
       </a>
       <div class="hidden lg:flex items-center gap-10">
         <a href="#work" class="text-[13px] font-medium text-white/70 hover:text-white transition-colors uppercase tracking-[.15em]">Work</a>
@@ -206,7 +219,15 @@
         <a href="#process" class="text-[13px] font-medium text-white/70 hover:text-white transition-colors uppercase tracking-[.15em]">Process</a>
         <a href="#contact" class="text-[13px] font-medium text-white/70 hover:text-white transition-colors uppercase tracking-[.15em]">Contact</a>
       </div>
-      <a href="#contact" class="hidden lg:inline-flex text-[13px] font-display font-semibold text-white bg-brand px-6 py-2.5 rounded-full hover:bg-brand-light transition-all">Get a Quote</a>
+      <div class="hidden lg:flex items-center gap-5">
+        <div class="flex items-center gap-3 pr-1 border-r border-white/10 mr-1">
+          <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-white/50 hover:text-brand transition-colors"><svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://www.tiktok.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="text-white/50 hover:text-brand transition-colors"><svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.56a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.03Z"/></svg></a>
+          <a href="https://www.youtube.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="text-white/50 hover:text-brand transition-colors"><svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+          <a href="https://www.facebook.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-white/50 hover:text-brand transition-colors"><svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        </div>
+        <a href="#contact" class="inline-flex text-[13px] font-display font-semibold text-white bg-brand px-6 py-2.5 rounded-full hover:bg-brand-light transition-all">Get a Quote</a>
+      </div>
       <button id="menu-toggle" class="lg:hidden text-white p-2"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
     </div>
   </nav>
@@ -220,48 +241,54 @@
     <a href="#process" class="mobile-nav-link text-4xl font-display font-semibold text-white/80 hover:text-brand transition-colors mb-6">Process</a>
     <a href="#contact" class="mobile-nav-link text-4xl font-display font-semibold text-white/80 hover:text-brand transition-colors mb-6">Contact</a>
     <a href="#contact" class="mt-4 text-lg font-display font-semibold text-white bg-brand px-8 py-3 rounded-full mobile-nav-link">Get a Quote</a>
+    <div class="flex items-center gap-6 mt-10">
+      <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-white/60 hover:text-brand transition-colors"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.tiktok.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="text-white/60 hover:text-brand transition-colors"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.56a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.03Z"/></svg></a>
+      <a href="https://www.youtube.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="text-white/60 hover:text-brand transition-colors"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+      <a href="https://www.facebook.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-white/60 hover:text-brand transition-colors"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+    </div>
   </div>
 
 
   <!-- ============ HERO — PHOTO MOSAIC ============ -->
-  <section class="relative min-h-screen flex flex-col justify-center sm:justify-end sm:pb-28 overflow-hidden pt-24 sm:pt-0">
+  <section class="relative min-h-screen flex flex-col justify-center sm:justify-end pt-24 pb-12 sm:pt-0 sm:pb-28 overflow-hidden">
     <!-- Image mosaic background -->
-    <div class="absolute inset-0 grid grid-cols-3 sm:grid-cols-5 grid-rows-4 sm:grid-rows-3 gap-1 opacity-0" id="hero-mosaic">
+    <div class="absolute inset-0 grid grid-cols-2 sm:grid-cols-5 grid-rows-3 gap-1 opacity-0" id="hero-mosaic">
       <div class="hero-img-reveal overflow-hidden"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/BannerStand2-768x1024.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
-      <div class="hero-img-reveal overflow-hidden col-span-2"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/IMG_2266-1024x768.jpg?ssl=1&resize=1512%2C1512" class="w-full h-full object-cover" alt="" /></div>
-      <div class="hero-img-reveal overflow-hidden"><img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/CustomeCanvas-1024x768.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
-      <div class="hero-img-reveal overflow-hidden"><img src="https://i0.wp.com/fuseprints.com/wp-content/uploads/2020/01/Acrylic-Signs.jpg?ssl=1&resize=720%2C720" class="w-full h-full object-cover" alt="" /></div>
-      <div class="hero-img-reveal overflow-hidden col-span-2"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/FabricBackdrops.jpg?ssl=1&resize=642%2C642" class="w-full h-full object-cover" alt="" /></div>
+      <div class="hero-img-reveal overflow-hidden"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/IMG_2266-1024x768.jpg?ssl=1&resize=1512%2C1512" class="w-full h-full object-cover" alt="" /></div>
+      <div class="hero-img-reveal overflow-hidden hidden sm:block col-span-2"><img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/CustomeCanvas-1024x768.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
+      <div class="hero-img-reveal overflow-hidden hidden sm:block"><img src="https://i0.wp.com/fuseprints.com/wp-content/uploads/2020/01/Acrylic-Signs.jpg?ssl=1&resize=720%2C720" class="w-full h-full object-cover" alt="" /></div>
+      <div class="hero-img-reveal overflow-hidden"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/FabricBackdrops.jpg?ssl=1&resize=642%2C642" class="w-full h-full object-cover" alt="" /></div>
       <div class="hero-img-reveal overflow-hidden"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/LobbyGraphics_Convergint.jpg?ssl=1&resize=720%2C720" class="w-full h-full object-cover" alt="" /></div>
-      <div class="hero-img-reveal overflow-hidden col-span-2"><img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/SkateBoardDecks-1024x768.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
-      <div class="hero-img-reveal overflow-hidden"><img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/Decals-1024x1024.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
+      <div class="hero-img-reveal overflow-hidden hidden sm:block col-span-2"><img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/SkateBoardDecks-1024x768.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
+      <div class="hero-img-reveal overflow-hidden hidden sm:block"><img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/Decals-1024x1024.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
       <div class="hero-img-reveal overflow-hidden"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/WoodenLaserCutSign-1024x768.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
-      <!-- Content cell with dark background -->
-      <div class="col-span-3 flex flex-col justify-center px-6 sm:px-10 py-6 sm:py-8 relative z-10 bg-surface-400" id="hero-content-cell">
-        <p id="hero-sub" class="mb-5" style="opacity:0">
-          <span class="block font-display font-medium text-base sm:text-lg text-white/90 tracking-wide leading-relaxed">Backdrops <span class="text-brand">/</span> Banners <span class="text-brand">/</span> Signage <span class="text-brand">/</span> Canvas</span>
-          <span class="block text-white/60 text-sm sm:text-base mt-2 leading-relaxed">Family-owned in Bradford, PA — printing bold for brands nationwide.</span>
-        </p>
-        <a href="#contact" id="hero-cta" class="group inline-flex items-center gap-3 bg-brand text-white font-display font-semibold text-sm uppercase tracking-[.12em] px-7 py-3.5 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.3)] w-fit" style="opacity:0">
-          Start a Project
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1 -rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-      </div>
+      <div class="hero-img-reveal overflow-hidden"><img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/SkateBoardDecks-1024x768.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
+      <div class="hero-img-reveal overflow-hidden hidden sm:block"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/WoodenLaserCutSign-1024x768.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
+      <div class="hero-img-reveal overflow-hidden hidden sm:block col-span-2"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/BannerStand2-768x1024.jpg?ssl=1&resize=2000%2C2000" class="w-full h-full object-cover" alt="" /></div>
     </div>
-    <div class="absolute inset-0 bg-surface-400/65" id="hero-overlay"></div>
+    <div class="absolute inset-0 bg-surface-400/75 sm:bg-surface-400/65" id="hero-overlay"></div>
 
     <div class="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-10 w-full">
-      <div class="flex items-center gap-4 mb-8" id="hero-eyebrow" style="opacity:0">
+      <div class="flex items-center gap-4 mb-6 sm:mb-8" id="hero-eyebrow" style="opacity:0">
         <div class="h-px w-12 bg-brand/50"></div>
-        <p class="text-brand text-[12px] sm:text-[13px] font-semibold tracking-[.3em] uppercase">Large Format Printing</p>
+        <p class="text-brand text-[11px] sm:text-[13px] font-semibold tracking-[.3em] uppercase">Large Format Printing</p>
       </div>
 
-      <h1 class="font-display font-bold text-[11vw] sm:text-[9vw] lg:text-[7vw] leading-[.9] tracking-[-.03em]">
+      <h1 class="font-display font-bold text-[13vw] sm:text-[9vw] lg:text-[7vw] leading-[.9] tracking-[-.03em]">
         <span class="hero-word"><span class="text-white">We Print</span></span><br/>
         <span class="hero-word"><span class="text-white">What Others</span></span><br/>
         <span class="hero-word"><span class="gradient-text">Can't.</span></span>
       </h1>
 
+      <p id="hero-sub" class="mt-6 sm:mt-8 max-w-md" style="opacity:0">
+        <span class="block font-display font-medium text-base sm:text-lg text-white/90 tracking-wide leading-relaxed">Backdrops <span class="text-brand">/</span> Banners <span class="text-brand">/</span> Signage <span class="text-brand">/</span> Canvas</span>
+        <span class="block text-white/50 text-sm sm:text-base mt-2 leading-relaxed">Family-owned in Bradford, PA — printing bold for brands nationwide.</span>
+      </p>
+      <a href="#contact" id="hero-cta" class="group inline-flex items-center gap-3 bg-brand text-white font-display font-semibold text-sm sm:text-base uppercase tracking-[.12em] px-8 py-4 sm:px-7 sm:py-3.5 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.3)] w-fit mt-8" style="opacity:0">
+        Start a Project
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1 -rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
     </div>
 
   </section>
@@ -295,7 +322,7 @@
 
     <!-- Row 1 left -->
     <div class="overflow-hidden mb-4">
-      <div class="marquee-track" style="animation-duration:45s">
+      <div id="gallery-row-1" class="marquee-track" style="animation-duration:45s">
         <div class="flex gap-4 px-2">
           <div class="gallery-card w-[350px] h-[260px] rounded-2xl cursor-pointer" data-title="Trade Show Booth" data-category="Trade Shows"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/IMG_2266-1024x768.jpg?ssl=1&resize=1512%2C1512" alt="Trade Show Booth" class="w-full h-full object-cover rounded-2xl" loading="lazy"/><div class="card-overlay rounded-2xl"></div><div class="card-content"><span class="text-brand text-[11px] font-semibold tracking-[.2em] uppercase">Trade Shows</span><p class="text-white font-display font-semibold text-lg mt-1">Trade Show Booth</p></div></div>
           <div class="gallery-card w-[280px] h-[260px] rounded-2xl cursor-pointer" data-title="Lobby Graphics" data-category="Signage"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/LobbyGraphics_Convergint.jpg?ssl=1&resize=720%2C720" alt="Lobby Graphics" class="w-full h-full object-cover rounded-2xl" loading="lazy"/><div class="card-overlay rounded-2xl"></div><div class="card-content"><span class="text-brand text-[11px] font-semibold tracking-[.2em] uppercase">Signage</span><p class="text-white font-display font-semibold text-lg mt-1">Lobby Graphics</p></div></div>
@@ -316,7 +343,7 @@
     </div>
     <!-- Row 2 right -->
     <div class="overflow-hidden">
-      <div class="marquee-track-rev" style="animation-duration:50s">
+      <div id="gallery-row-2" class="marquee-track-rev" style="animation-duration:50s">
         <div class="flex gap-4 px-2">
           <div class="gallery-card w-[280px] h-[260px] rounded-2xl cursor-pointer" data-title="Banner Stand" data-category="Banners"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/BannerStand2-768x1024.jpg?ssl=1&resize=2000%2C2000" alt="" class="w-full h-full object-cover rounded-2xl" loading="lazy"/><div class="card-overlay rounded-2xl"></div><div class="card-content"><span class="text-brand text-[11px] font-semibold tracking-[.2em] uppercase">Banners</span><p class="text-white font-display font-semibold text-lg mt-1">Retractable Banner Stand</p></div></div>
           <div class="gallery-card w-[350px] h-[260px] rounded-2xl cursor-pointer" data-title="Exhibition Graphics" data-category="Trade Shows"><img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/IMG_1994-1024x768.jpg?ssl=1&resize=1512%2C1512" alt="" class="w-full h-full object-cover rounded-2xl" loading="lazy"/><div class="card-overlay rounded-2xl"></div><div class="card-content"><span class="text-brand text-[11px] font-semibold tracking-[.2em] uppercase">Trade Shows</span><p class="text-white font-display font-semibold text-lg mt-1">Exhibition Graphics</p></div></div>
@@ -341,15 +368,15 @@
   <!-- ============ ABOUT — BENTO GRID ============ -->
   <section id="about" class="relative py-24 sm:py-32">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-10">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[200px] lg:auto-rows-[220px]">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:auto-rows-[200px] lg:auto-rows-[220px]">
 
         <!-- Big intro card -->
-        <div class="bento-card md:col-span-2 lg:row-span-2 p-10 flex flex-col justify-between" style="background:linear-gradient(135deg,rgba(33,150,243,.12),rgba(21,101,192,.06))">
+        <div class="bento-card md:col-span-2 lg:row-span-2 p-8 sm:p-10 flex flex-col justify-between gap-8" style="background:linear-gradient(135deg,rgba(33,150,243,.12),rgba(21,101,192,.06))">
           <div>
             <p class="text-brand text-[11px] font-semibold tracking-[.3em] uppercase mb-4">Who We Are</p>
-            <h2 class="font-display font-bold text-4xl sm:text-5xl tracking-[-.02em] leading-[.95]">Family-Owned.<br/><span class="gradient-text">Nationally Trusted.</span></h2>
+            <h2 class="font-display font-bold text-3xl sm:text-5xl tracking-[-.02em] leading-[.95]">Family-Owned.<br/><span class="gradient-text">Nationally Trusted.</span></h2>
           </div>
-          <p class="text-white/40 text-base leading-relaxed mt-6">Based in Bradford, PA, we've grown from a small family operation into a trusted partner for businesses and organizations nationwide.</p>
+          <p class="text-white/40 text-base leading-relaxed">Based in Bradford, PA, we've grown from a small family operation into a trusted partner for businesses and organizations nationwide.</p>
         </div>
 
         <!-- Stat: Years -->
@@ -422,8 +449,8 @@
           <div class="rounded-3xl overflow-hidden mb-4">
             <img id="service-feature-img" src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/FabricBackdrops.jpg?ssl=1&resize=642%2C642" alt="Featured work" class="w-full aspect-[4/5] object-cover transition-all duration-500" />
           </div>
-          <a href="https://theexhibitorshandbook.com" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-3 font-display font-semibold text-sm uppercase tracking-[.15em] text-brand hover:text-brand-light transition-colors">
-            Browse Trade Show Catalog <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1 -rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          <a href="#contact" class="group inline-flex items-center gap-3 font-display font-semibold text-sm uppercase tracking-[.15em] text-brand hover:text-brand-light transition-colors">
+            Request a Custom Quote <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1 -rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
         </div>
       </div>
@@ -479,27 +506,55 @@
   </section>
 
 
-  <!-- ============ TRADE SHOW — FULL-BLEED IMAGE CTA ============ -->
-  <section class="relative min-h-[70vh] flex items-center overflow-hidden">
-    <div class="absolute inset-0">
-      <img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/IMG_2266-1024x768.jpg?ssl=1&resize=1512%2C1512" alt="Trade show display" class="w-full h-full object-cover" loading="lazy" />
-      <div class="absolute inset-0 bg-gradient-to-r from-surface-400 via-surface-400/90 to-surface-400/40"></div>
-    </div>
-    <div class="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-10 py-24 sm:py-32">
-      <div class="max-w-xl">
-        <p class="text-brand-light text-[11px] font-semibold tracking-[.3em] uppercase mb-4 line-reveal"><span>Trade Show Displays</span></p>
-        <h2 class="font-display font-bold text-5xl sm:text-6xl lg:text-7xl tracking-[-.03em] leading-[.9] mb-6 line-reveal">
-          <span>Make Your Booth</span><br/><span class="gradient-text">Unforgettable.</span>
-        </h2>
-        <p class="text-white/50 text-lg leading-relaxed mb-10 line-reveal"><span>Complete booth solutions — from pop-up displays to full custom builds. Browse our trade show catalog or request a custom quote.</span></p>
-        <div class="flex flex-col sm:flex-row gap-4">
-          <a href="https://theexhibitorshandbook.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 bg-brand text-white font-display font-semibold text-sm uppercase tracking-[.1em] px-8 py-4 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.25)]">
-            Browse Catalog <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </a>
-          <a href="#contact" class="inline-flex items-center justify-center gap-3 border border-white/20 text-white font-display font-semibold text-sm uppercase tracking-[.1em] px-8 py-4 rounded-full hover:border-brand hover:text-brand transition-all">
-            Request Quote
-          </a>
+  <!-- ============ ETSY STORE — FEATURED SHOP + PRODUCTS ============ -->
+  <section id="etsy" class="relative py-24 sm:py-32 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-surface-400 via-[#0f0604] to-surface-400"></div>
+    <div class="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#F16521]/[.08] rounded-full blur-[180px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#F16521]/[.06] rounded-full blur-[160px] pointer-events-none"></div>
+
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-10 relative z-10">
+      <!-- Intro -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-16">
+        <div class="max-w-2xl">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="h-px w-10 bg-[#F16521]/60"></div>
+            <p class="text-[#F16521] text-[11px] font-semibold tracking-[.3em] uppercase">Shop Our Store</p>
+          </div>
+          <h2 class="font-display font-bold text-5xl sm:text-6xl lg:text-7xl tracking-[-.03em] leading-[.95] mb-6">
+            Shop Our<br/><span style="background:linear-gradient(135deg,#F99970 0%,#F16521 50%,#C1451A 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Etsy Collection.</span>
+          </h2>
+          <p class="text-white/50 text-lg leading-relaxed max-w-lg">Ready-to-ship prints, home decor, and personalized gifts — handmade in our Bradford, PA studio and shipped straight to your door.</p>
         </div>
+        <a href="https://www.etsy.com/shop/FusePrints" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 text-white font-display font-semibold text-sm uppercase tracking-[.1em] px-7 py-4 rounded-full transition-all hover:shadow-[0_0_40px_rgba(241,101,33,.35)] whitespace-nowrap w-fit" style="background:#F16521">
+          Visit Full Etsy Shop
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+
+      <!-- Dynamic product grid (populated from Firestore) -->
+      <div id="product-grid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" data-hide-when-empty="false"></div>
+
+      <!-- Fallback: shown when no products in Firestore -->
+      <div id="product-grid-fallback" class="relative">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          <div class="rounded-2xl overflow-hidden aspect-[4/5] relative group">
+            <img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/LaserEngraving_EtsyStore.jpg?ssl=1&resize=540%2C540" alt="Etsy laser engraving" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </div>
+          <div class="rounded-2xl overflow-hidden aspect-[4/5] relative group sm:translate-y-8">
+            <img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2020/01/Name-Sign.jpg?ssl=1&resize=814%2C814" alt="Custom name sign" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </div>
+          <div class="rounded-2xl overflow-hidden aspect-[4/5] relative group">
+            <img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/WoodenLaserCutSign-1024x768.jpg?ssl=1&resize=2000%2C2000" alt="Wooden laser cut" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </div>
+          <div class="rounded-2xl overflow-hidden aspect-[4/5] relative group sm:translate-y-8">
+            <img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/CustomeCanvas-1024x768.jpg?ssl=1&resize=2000%2C2000" alt="Custom canvas" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          </div>
+        </div>
+        <p class="text-center text-white/40 text-sm mt-10 max-w-md mx-auto">Featured products coming soon — <a href="https://www.etsy.com/shop/FusePrints" target="_blank" rel="noopener noreferrer" class="text-[#F16521] hover:underline">browse our full shop on Etsy</a>.</p>
       </div>
     </div>
   </section>
@@ -547,6 +602,47 @@
   </section>
 
 
+  <!-- ============ CONTACT — SPLIT WITH BLUE ACCENT ============ -->
+  <section id="contact" class="relative py-24 sm:py-40 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-tr from-surface-400 via-surface-400 to-brand-dark/10"></div>
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand/[.05] rounded-full blur-[150px]"></div>
+
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-10 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-24">
+        <div class="order-2 lg:order-1">
+          <p class="text-brand text-[11px] font-semibold tracking-[.3em] uppercase mb-3 line-reveal"><span>Start a Project</span></p>
+          <h2 class="font-display font-bold text-4xl sm:text-6xl lg:text-7xl tracking-[-.03em] leading-[.95] mb-8 line-reveal"><span>Let's Build</span><br/><span>Something</span><br/><span class="gradient-text">Bold.</span></h2>
+          <div class="space-y-6 mt-8 lg:mt-12">
+            <a href="tel:8775753873" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="phone" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">(877) 575-3873</span></a>
+            <a href="mailto:orders@fuseprints.com" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">orders@fuseprints.com</span></a>
+            <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span><span class="font-display font-medium text-lg">@fuseprints</span></a>
+            <div class="flex items-center gap-4 text-white/20"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center"><i data-lucide="map-pin" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">Bradford, PA</span></div>
+          </div>
+        </div>
+
+        <div class="holo-card rounded-3xl p-8 sm:p-10 order-1 lg:order-2" id="holo-form-card">
+          <div class="holo-glow"></div>
+          <form id="quote-form" class="space-y-7 relative" style="z-index:5">
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Name *</label><input type="text" name="name" required class="form-input" placeholder="Your name"/></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Email *</label><input type="email" name="email" required class="form-input" placeholder="you@company.com"/></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Phone</label><input type="tel" name="phone" class="form-input" placeholder="(555) 555-5555"/></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Project Type</label><select name="project-type" class="form-input" style="background:transparent"><option value="">Select a type...</option><option value="backdrop">Backdrop / Step-and-Repeat</option><option value="banner">Banner / Banner Stand</option><option value="tradeshow">Trade Show Display</option><option value="canvas">Canvas Print</option><option value="decal">Decal / Wall Graphic</option><option value="signage">Custom Signage</option><option value="laser">Laser Engraving</option><option value="other">Other</option></select></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Project Details *</label><textarea name="message" rows="4" required class="form-input resize-none" placeholder="What you need, dimensions, timeline..."></textarea></div>
+            <div style="display:none!important" aria-hidden="true"><input type="text" name="_gotcha" tabindex="-1" autocomplete="off"/></div>
+            <button type="submit" id="submit-btn" class="group w-full flex items-center justify-between bg-brand text-white font-display font-semibold text-base py-5 px-8 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.25)] active:scale-[.98]"><span>Send Quote Request</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1 -rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+            <p class="text-white/15 text-xs text-center">Have files? Email them to <a href="mailto:orders@fuseprints.com" class="text-brand/50 hover:text-brand transition-colors">orders@fuseprints.com</a></p>
+          </form>
+          <div id="form-success" class="hidden py-20 text-center relative" style="z-index:5">
+            <div class="w-20 h-20 rounded-full border-2 border-brand flex items-center justify-center mx-auto mb-6"><i data-lucide="check" class="w-8 h-8 text-brand"></i></div>
+            <h3 class="font-display font-bold text-3xl mb-3">Request Sent</h3>
+            <p class="text-white/30 text-base">We'll be in touch within 24 hours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
   <!-- ============ FAQ — ON DARK WITH BLUE ACCENT ============ -->
   <section class="relative py-24 sm:py-32 overflow-hidden">
     <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand/20 to-transparent"></div>
@@ -580,7 +676,7 @@
     </div>
     <div class="absolute inset-0 bg-surface-400/80"></div>
     <div class="relative z-10 max-w-4xl mx-auto px-6 sm:px-10 text-center">
-      <img src="https://fuseprints.com/wp-content/uploads/2019/01/cropped-Etsy-Icon-192x192.png" alt="Fuse Prints" class="w-16 h-16 mx-auto mb-8 opacity-60" />
+      <img src="assets/logo-white.png" alt="Fuse Prints" class="h-12 sm:h-14 w-auto mx-auto mb-8 opacity-70" />
       <h2 class="font-display font-bold text-5xl sm:text-6xl lg:text-8xl tracking-[-.03em] leading-[.9] mb-6">
         Ready to Print<br/><span class="gradient-text">Something Bold?</span>
       </h2>
@@ -592,55 +688,16 @@
   </section>
 
 
-  <!-- ============ CONTACT — SPLIT WITH BLUE ACCENT ============ -->
-  <section id="contact" class="relative py-24 sm:py-40 overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-tr from-surface-400 via-surface-400 to-brand-dark/10"></div>
-    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand/[.05] rounded-full blur-[150px]"></div>
-
-    <div class="max-w-[1400px] mx-auto px-6 sm:px-10 relative z-10">
-      <div class="grid lg:grid-cols-2 gap-16 lg:gap-24">
-        <div>
-          <p class="text-brand text-[11px] font-semibold tracking-[.3em] uppercase mb-3 line-reveal"><span>Start a Project</span></p>
-          <h2 class="font-display font-bold text-5xl sm:text-6xl lg:text-7xl tracking-[-.03em] leading-[.95] mb-8 line-reveal"><span>Let's Build</span><br/><span>Something</span><br/><span class="gradient-text">Bold.</span></h2>
-          <div class="space-y-6 mt-12">
-            <a href="tel:8775753873" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="phone" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">(877) 575-3873</span></a>
-            <a href="mailto:orders@fuseprints.com" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">orders@fuseprints.com</span></a>
-            <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span><span class="font-display font-medium text-lg">@fuseprints</span></a>
-            <div class="flex items-center gap-4 text-white/20"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center"><i data-lucide="map-pin" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">Bradford, PA</span></div>
-          </div>
-        </div>
-
-        <div class="holo-card rounded-3xl p-8 sm:p-10" id="holo-form-card">
-          <div class="holo-glow"></div>
-          <form id="quote-form" class="space-y-7 relative" style="z-index:5">
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Name *</label><input type="text" name="name" required class="form-input" placeholder="Your name"/></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Email *</label><input type="email" name="email" required class="form-input" placeholder="you@company.com"/></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Phone</label><input type="tel" name="phone" class="form-input" placeholder="(555) 555-5555"/></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Project Type</label><select name="project-type" class="form-input" style="background:transparent"><option value="">Select a type...</option><option value="backdrop">Backdrop / Step-and-Repeat</option><option value="banner">Banner / Banner Stand</option><option value="tradeshow">Trade Show Display</option><option value="canvas">Canvas Print</option><option value="decal">Decal / Wall Graphic</option><option value="signage">Custom Signage</option><option value="laser">Laser Engraving</option><option value="other">Other</option></select></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Project Details *</label><textarea name="message" rows="4" required class="form-input resize-none" placeholder="What you need, dimensions, timeline..."></textarea></div>
-            <div style="display:none!important" aria-hidden="true"><input type="text" name="_gotcha" tabindex="-1" autocomplete="off"/></div>
-            <button type="submit" id="submit-btn" class="group w-full flex items-center justify-between bg-brand text-white font-display font-semibold text-base py-5 px-8 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.25)] active:scale-[.98]"><span>Send Quote Request</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1 -rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-            <p class="text-white/15 text-xs text-center">Have files? Email them to <a href="mailto:orders@fuseprints.com" class="text-brand/50 hover:text-brand transition-colors">orders@fuseprints.com</a></p>
-          </form>
-          <div id="form-success" class="hidden py-20 text-center relative" style="z-index:5">
-            <div class="w-20 h-20 rounded-full border-2 border-brand flex items-center justify-center mx-auto mb-6"><i data-lucide="check" class="w-8 h-8 text-brand"></i></div>
-            <h3 class="font-display font-bold text-3xl mb-3">Request Sent</h3>
-            <p class="text-white/30 text-base">We'll be in touch within 24 hours.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
   <!-- ============ FOOTER ============ -->
   <footer class="border-t border-white/[.06] py-10">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-6">
-      <div class="flex items-center gap-3"><img src="https://fuseprints.com/wp-content/uploads/2019/01/cropped-Etsy-Icon-192x192.png" alt="" class="w-6 h-6 opacity-50"/><span class="font-display font-bold text-sm text-white/30">FUSE PRINTS</span></div>
+      <div class="flex items-center"><img src="assets/logo-white.png" alt="Fuse Prints" class="h-6 w-auto opacity-40"/></div>
       <p class="text-white/15 text-xs">&copy; 2026 Fuse Prints. Family-owned in Bradford, PA.</p>
       <div class="flex items-center gap-6">
-        <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
-        <a href="https://www.facebook.com/fuseprints/" target="_blank" rel="noopener noreferrer" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://www.facebook.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://www.tiktok.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.56a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.03Z"/></svg></a>
+        <a href="https://www.youtube.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
       </div>
     </div>
   </footer>
@@ -681,7 +738,11 @@
 
     // GSAP
     gsap.registerPlugin(ScrollTrigger,ScrollToPlugin);
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)gsap.to(window,{duration:1.2,scrollTo:{y:t,offsetY:80},ease:'power3.inOut'})})});
+    const isMobile = window.matchMedia('(max-width:768px)').matches;
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const href=a.getAttribute('href');let t=document.querySelector(href);if(!t)return;
+      // On mobile, scrolling to #contact should land on the form, not the heading above it
+      if(isMobile&&href==='#contact'){const formCard=document.getElementById('holo-form-card');if(formCard)t=formCard;}
+      gsap.to(window,{duration:isMobile?.7:1.2,scrollTo:{y:t,offsetY:isMobile?20:80},ease:'power2.out'})})});
 
     // Hero mosaic reveal
     const htl=gsap.timeline({delay:.3});
@@ -692,16 +753,16 @@
        .to('#hero-eyebrow',{opacity:1,duration:.8,ease:'power3.out'},'-=.5')
 ;
 
-    // Hero content cell (subtitle + CTA inside mosaic)
+    // Hero subtitle + CTA
     gsap.set('#hero-sub',{y:20});gsap.set('#hero-cta',{y:20});
-    htl.to('#hero-sub',{opacity:1,y:0,duration:1,ease:'power3.out'},'-=.4')
+    htl.to('#hero-sub',{opacity:1,y:0,duration:1,ease:'power3.out'},'-=.3')
        .to('#hero-cta',{opacity:1,y:0,duration:1,ease:'power3.out'},'-=.6');
 
-    // Parallax mosaic
-    gsap.to('#hero-mosaic',{yPercent:30,ease:'none',scrollTrigger:{trigger:'#hero-mosaic',start:'top top',end:'bottom top',scrub:true}});
+    // Parallax mosaic — desktop only (scrub-based parallax janks mobile scroll)
+    if(!isMobile){gsap.to('#hero-mosaic',{yPercent:30,ease:'none',scrollTrigger:{trigger:'#hero-mosaic',start:'top top',end:'bottom top',scrub:true}});}
 
-    // Line reveals
-    document.querySelectorAll('.line-reveal').forEach(el=>{const s=el.querySelector('span');if(!s)return;gsap.to(s,{y:0,duration:1,ease:'power4.out',scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'}})});
+    // Line reveals — animate ALL direct child spans, not just the first
+    document.querySelectorAll('.line-reveal').forEach(el=>{const spans=el.querySelectorAll(':scope>span');if(!spans.length)return;gsap.to(spans,{y:0,duration:1,stagger:.08,ease:'power4.out',scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'}})});
 
     // Process steps
     gsap.utils.toArray('.process-step').forEach((s,i)=>{gsap.from(s,{y:40,opacity:0,duration:.8,ease:'power3.out',delay:i*.08,scrollTrigger:{trigger:s,start:'top 85%',toggleActions:'play none none none'}})});
@@ -721,38 +782,129 @@
     // Contact form
     gsap.from('#quote-form',{y:50,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#contact',start:'top 60%',toggleActions:'play none none none'}});
 
-    // Lightbox
+    // Lightbox (uses event delegation so dynamically-added gallery cards work too)
     const lb=document.getElementById('lightbox'),lbImg=document.getElementById('lb-img'),lbT=document.getElementById('lb-title'),lbC=document.getElementById('lb-cat');
-    const cards=document.querySelectorAll('.gallery-card');let ci=0;
-    function oLB(i){ci=i;const c=cards[i];lbImg.src=c.querySelector('img').src;lbT.textContent=c.dataset.title;lbC.textContent=c.dataset.category;lb.classList.add('active');document.body.style.overflow='hidden'}
+    function getCards(){return Array.from(document.querySelectorAll('.gallery-card'))}
+    let ci=0;
+    function oLB(i){const cards=getCards();ci=i;const c=cards[i];if(!c)return;lbImg.src=c.querySelector('img').src;lbT.textContent=c.dataset.title||'';lbC.textContent=c.dataset.category||'';lb.classList.add('active');document.body.style.overflow='hidden'}
     function cLB(){lb.classList.remove('active');document.body.style.overflow=''}
-    cards.forEach((c,i)=>c.addEventListener('click',()=>oLB(i)));
+    document.addEventListener('click',e=>{const card=e.target.closest('.gallery-card');if(!card)return;const cards=getCards();oLB(cards.indexOf(card))});
     document.getElementById('lb-close').addEventListener('click',cLB);
     lb.addEventListener('click',e=>{if(e.target===lb)cLB()});
-    document.getElementById('lb-prev').addEventListener('click',e=>{e.stopPropagation();ci=(ci-1+cards.length)%cards.length;oLB(ci)});
-    document.getElementById('lb-next').addEventListener('click',e=>{e.stopPropagation();ci=(ci+1)%cards.length;oLB(ci)});
-    document.addEventListener('keydown',e=>{if(!lb.classList.contains('active'))return;if(e.key==='Escape')cLB();if(e.key==='ArrowLeft'){ci=(ci-1+cards.length)%cards.length;oLB(ci)}if(e.key==='ArrowRight'){ci=(ci+1)%cards.length;oLB(ci)}});
+    document.getElementById('lb-prev').addEventListener('click',e=>{e.stopPropagation();const cards=getCards();ci=(ci-1+cards.length)%cards.length;oLB(ci)});
+    document.getElementById('lb-next').addEventListener('click',e=>{e.stopPropagation();const cards=getCards();ci=(ci+1)%cards.length;oLB(ci)});
+    document.addEventListener('keydown',e=>{if(!lb.classList.contains('active'))return;const cards=getCards();if(e.key==='Escape')cLB();if(e.key==='ArrowLeft'){ci=(ci-1+cards.length)%cards.length;oLB(ci)}if(e.key==='ArrowRight'){ci=(ci+1)%cards.length;oLB(ci)}});
 
-    // Form
-    const form=document.getElementById('quote-form');
-    form.addEventListener('submit',async e=>{e.preventDefault();const fd=new FormData(form),n=fd.get('name')?.trim(),em=fd.get('email')?.trim(),msg=fd.get('message')?.trim();
-    if(!n||n.length<2)return alert('Please enter your name.');if(!em||!em.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))return alert('Please enter a valid email.');if(!msg||msg.length<10)return alert('Please share more project details.');
-    const btn=document.getElementById('submit-btn');btn.querySelector('span').textContent='Sending...';btn.disabled=true;
-    try{const r=await fetch('https://formspree.io/f/xpwdgqkr',{method:'POST',body:fd,headers:{'Accept':'application/json'}});if(r.ok){form.style.display='none';document.getElementById('form-success').classList.remove('hidden')}else throw 0}
-    catch{const s=encodeURIComponent('Quote Request from '+n),b=encodeURIComponent(`Name: ${n}\nEmail: ${em}\nPhone: ${fd.get('phone')}\nType: ${fd.get('project-type')}\n\nDetails:\n${msg}`);window.location.href=`mailto:kendellproduction@gmail.com?subject=${s}&body=${b}`;btn.querySelector('span').textContent='Send Quote Request';btn.disabled=false}});
+    // Form handler is defined in the bottom <script type="module"> block so it can use Firestore.
 
-    // Animate --holo-angle via JS (no @property needed)
+    // Animate --holo-angle via rAF (pause when offscreen; throttle on mobile)
     (function(){
       var card=document.getElementById('holo-form-card');
       if(!card)return;
       var glow=card.querySelector('.holo-glow');
-      var start=Date.now();
-      setInterval(function(){
-        var angle=((Date.now()-start)/6000*360)%360;
-        card.style.setProperty('--holo-angle',angle+'deg');
-        if(glow)glow.style.setProperty('--holo-angle',angle+'deg');
-      },16);
+      var start=performance.now();
+      var visible=true;
+      if('IntersectionObserver' in window){
+        new IntersectionObserver(function(entries){visible=entries[0].isIntersecting},{threshold:0}).observe(card);
+      }
+      var lastT=0, minDelta=isMobile?50:16;
+      function tick(now){
+        if(visible && now-lastT>=minDelta){
+          var angle=((now-start)/6000*360)%360;
+          card.style.setProperty('--holo-angle',angle+'deg');
+          if(glow)glow.style.setProperty('--holo-angle',angle+'deg');
+          lastT=now;
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
     })();
+  </script>
+
+  <!-- ============ FIRESTORE CONTENT LOADER ============ -->
+  <script type="module">
+    import { fetchProducts, fetchGallery, renderProducts, submitInquiry } from './assets/js/content.js';
+
+    function esc(s){if(s==null)return'';return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+    function galleryCardHtml(item){
+      const w = item.width || 320, h = item.height || 260;
+      return `<div class="gallery-card rounded-2xl cursor-pointer" style="width:${w}px;height:${h}px;flex-shrink:0" data-title="${esc(item.title||'')}" data-category="${esc(item.category||'')}"><img src="${esc(item.imageUrl||'')}" alt="${esc(item.title||'')}" class="w-full h-full object-cover rounded-2xl" loading="lazy"/><div class="card-overlay rounded-2xl"></div><div class="card-content"><span class="text-brand text-[11px] font-semibold tracking-[.2em] uppercase">${esc(item.category||'')}</span><p class="text-white font-display font-semibold text-lg mt-1">${esc(item.title||'')}</p></div></div>`;
+    }
+
+    function buildMarqueeRow(items){
+      if(!items.length)return'';
+      // Two groups for seamless marquee loop
+      const group = `<div class="flex gap-4 px-2">${items.map(galleryCardHtml).join('')}</div>`;
+      return group + group;
+    }
+
+    (async function(){
+      // Products
+      try{
+        const products = await fetchProducts();
+        const grid = document.getElementById('product-grid');
+        const fallback = document.getElementById('product-grid-fallback');
+        if(products.length && grid){
+          renderProducts(products, grid);
+          grid.classList.remove('hidden');
+          if(fallback) fallback.style.display='none';
+        }
+      }catch(e){console.warn('Products load failed',e)}
+
+      // Gallery
+      try{
+        const items = await fetchGallery();
+        if(items.length){
+          // Split into two rows for visual variety — odds + evens
+          const row1 = items.filter((_,i)=>i%2===0);
+          const row2 = items.filter((_,i)=>i%2===1);
+          const r1 = document.getElementById('gallery-row-1');
+          const r2 = document.getElementById('gallery-row-2');
+          if(r1) r1.innerHTML = buildMarqueeRow(row1.length?row1:items);
+          if(r2) r2.innerHTML = buildMarqueeRow(row2.length?row2:items);
+        }
+      }catch(e){console.warn('Gallery load failed',e)}
+    })();
+
+    // ---------- Quote form → Firestore inquiries (with mailto fallback) ----------
+    const quoteForm = document.getElementById('quote-form');
+    if (quoteForm) {
+      quoteForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const fd = new FormData(quoteForm);
+        const name = (fd.get('name') || '').toString().trim();
+        const email = (fd.get('email') || '').toString().trim();
+        const phone = (fd.get('phone') || '').toString().trim();
+        const projectType = (fd.get('project-type') || '').toString().trim();
+        const message = (fd.get('message') || '').toString().trim();
+
+        if (!name || name.length < 2) return alert('Please enter your name.');
+        if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return alert('Please enter a valid email.');
+        if (!message || message.length < 10) return alert('Please share more project details.');
+        // Simple honeypot / length caps
+        if (name.length > 200 || email.length > 200 || message.length > 5000) return alert('Input too long.');
+
+        const btn = document.getElementById('submit-btn');
+        const btnSpan = btn.querySelector('span');
+        const originalText = btnSpan.textContent;
+        btnSpan.textContent = 'Sending...';
+        btn.disabled = true;
+
+        try {
+          await submitInquiry({ name, email, phone, projectType, message });
+          quoteForm.style.display = 'none';
+          document.getElementById('form-success').classList.remove('hidden');
+        } catch (err) {
+          console.warn('Firestore submit failed, falling back to mailto:', err);
+          const subject = encodeURIComponent('Quote Request from ' + name);
+          const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nType: ${projectType}\n\nDetails:\n${message}`);
+          window.location.href = `mailto:kendellproduction@gmail.com?subject=${subject}&body=${body}`;
+          btnSpan.textContent = originalText;
+          btn.disabled = false;
+        }
+      });
+    }
   </script>
 </body>
 </html>

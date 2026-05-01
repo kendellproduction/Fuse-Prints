@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuse Prints — Admin</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="icon" type="image/png" href="../assets/logo-white.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT:'#2196F3', light:'#64B5F6', dark:'#1565C0' },
+            etsy: { DEFAULT:'#F16521' },
+            surface: { 50:'#1A1A1A', 100:'#111111', 200:'#0A0A0A', 300:'#050505', 400:'#020202' }
+          },
+          fontFamily: {
+            display: ['"Clash Display"','system-ui','sans-serif'],
+            body: ['"General Sans"','system-ui','sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,600&display=swap" rel="stylesheet" />
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    body{font-family:'General Sans',system-ui,sans-serif;background:#020202;color:#FAFAFA;margin:0;min-height:100vh}
+    h1,h2,h3,h4,h5,h6{font-family:'Clash Display',system-ui,sans-serif}
+    ::selection{background:#2196F3;color:#fff}
+    ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:#050505}::-webkit-scrollbar-thumb{background:#333;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#2196F3}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:999px;font-family:'Clash Display',system-ui,sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:all .25s;border:none;white-space:nowrap}
+    .btn-primary{background:#2196F3;color:#fff}
+    .btn-primary:hover{background:#64B5F6;box-shadow:0 0 30px rgba(33,150,243,.3)}
+    .btn-etsy{background:#F16521;color:#fff}
+    .btn-etsy:hover{background:#F99970}
+    .btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+    .btn-danger:hover{background:rgba(239,68,68,.25)}
+    .btn-ghost{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.15)}
+    .btn-ghost:hover{border-color:rgba(255,255,255,.35);color:#fff}
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+
+    .input{width:100%;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 16px;color:#fafafa;font-family:inherit;font-size:14px;transition:border-color .2s,background .2s}
+    .input:focus{outline:none;border-color:#2196F3;background:rgba(255,255,255,.06)}
+    .input::placeholder{color:rgba(255,255,255,.25)}
+    textarea.input{resize:vertical;min-height:80px}
+    label.lbl{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,.5);margin-bottom:6px}
+
+    .card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;transition:border-color .25s}
+    .card:hover{border-color:rgba(255,255,255,.12)}
+
+    .tab{padding:10px 16px;border-radius:10px;font-family:'Clash Display',system-ui,sans-serif;font-weight:600;font-size:13px;color:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px}
+    .tab:hover{color:#fff;background:rgba(255,255,255,.04)}
+    .tab.active{color:#fff;background:rgba(33,150,243,.12);box-shadow:inset 2px 0 0 #2196F3}
+
+    .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+    .modal-bg.active{display:flex}
+    .modal{background:#0a0a0a;border:1px solid rgba(255,255,255,.08);border-radius:20px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+
+    .toast{position:fixed;bottom:24px;right:24px;background:#0a0a0a;border:1px solid rgba(33,150,243,.3);border-radius:12px;padding:14px 20px;color:#fff;font-size:14px;font-weight:500;box-shadow:0 10px 40px rgba(0,0,0,.4);z-index:9999;transform:translateY(120%);transition:transform .35s cubic-bezier(.2,0,.2,1);max-width:400px}
+    .toast.show{transform:translateY(0)}
+    .toast.error{border-color:rgba(239,68,68,.4)}
+    .toast.success{border-color:rgba(34,197,94,.4)}
+
+    .drop-zone{border:2px dashed rgba(255,255,255,.15);border-radius:14px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.02)}
+    .drop-zone:hover,.drop-zone.drag{border-color:#2196F3;background:rgba(33,150,243,.05)}
+    .drop-zone.has-image{padding:0;border-style:solid;aspect-ratio:1/1;overflow:hidden;position:relative}
+    .drop-zone.has-image img{width:100%;height:100%;object-fit:cover;display:block}
+    .drop-zone-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;font-size:13px;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:.1em}
+    .drop-zone.has-image:hover .drop-zone-overlay{opacity:1}
+
+    .spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.15);border-top-color:#2196F3;border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .grid-item{position:relative;overflow:hidden;border-radius:14px;background:#0a0a0a;border:1px solid rgba(255,255,255,.06);transition:border-color .2s}
+    .grid-item:hover{border-color:rgba(255,255,255,.18)}
+    .grid-item-img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+    .grid-item-body{padding:14px 16px}
+    .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.12em}
+    .badge-active{background:rgba(34,197,94,.15);color:#22c55e}
+    .badge-inactive{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
+
+    .hidden{display:none!important}
+  </style>
+</head>
+<body>
+
+  <!-- ============ TOAST ============ -->
+  <div id="toast" class="toast"></div>
+
+  <!-- ============ CONFIG WARNING ============ -->
+  <div id="config-warning" class="hidden fixed inset-0 z-[10000] bg-surface-400 flex items-center justify-center p-6">
+    <div class="max-w-lg w-full card p-8 text-center">
+      <div class="w-16 h-16 rounded-2xl bg-yellow-500/10 flex items-center justify-center mx-auto mb-5">
+        <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3.75h.008v.008H12v-.008zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <h2 class="font-display font-bold text-2xl mb-3">Firebase Not Configured</h2>
+      <p class="text-white/50 mb-5 leading-relaxed">Open <code class="text-brand bg-white/5 px-2 py-1 rounded text-sm">assets/js/firebase-config.js</code> and paste your Firebase web config from <a href="https://console.firebase.google.com/project/fuse-prints/settings/general" target="_blank" class="text-brand hover:underline">Firebase Console → Project Settings</a>.</p>
+      <p class="text-white/35 text-xs">Then also enable <strong class="text-white/60">Authentication (Email/Password)</strong>, <strong class="text-white/60">Firestore Database</strong>, and <strong class="text-white/60">Storage</strong> in the Firebase Console.</p>
+    </div>
+  </div>
+
+  <!-- ============ LOGIN SCREEN ============ -->
+  <div id="screen-login" class="hidden min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-10">
+        <img src="../assets/logo-white.png" alt="Fuse Prints" class="h-10 w-auto mx-auto mb-6 opacity-90" />
+        <h1 class="font-display font-bold text-3xl mb-2">Admin Panel</h1>
+        <p class="text-white/40 text-sm">Sign in to manage products and gallery.</p>
+      </div>
+      <form id="login-form" class="card p-8 space-y-5">
+        <div>
+          <label class="lbl" for="login-email">Email</label>
+          <input id="login-email" type="email" class="input" placeholder="chris@fuseprints.com" required autocomplete="username" />
+        </div>
+        <div>
+          <label class="lbl" for="login-password">Password</label>
+          <input id="login-password" type="password" class="input" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+        <button type="submit" id="login-btn" class="btn btn-primary w-full">Sign In</button>
+        <p id="login-error" class="hidden text-red-400 text-sm text-center"></p>
+        <div class="text-center pt-2">
+          <button type="button" id="forgot-pw-btn" class="text-white/50 hover:text-brand text-xs transition-colors">Forgot password?</button>
+        </div>
+      </form>
+      <p class="text-white/30 text-xs text-center mt-6"><a href="../" class="hover:text-white transition-colors">← Back to site</a></p>
+
+      <!-- Forgot password card (toggles with login) -->
+      <div id="forgot-form-wrap" class="hidden mt-4">
+        <form id="forgot-form" class="card p-8 space-y-5">
+          <div>
+            <h3 class="font-display font-semibold text-xl mb-2">Reset Password</h3>
+            <p class="text-white/40 text-sm">Enter your email and we'll send you a reset link.</p>
+          </div>
+          <div>
+            <label class="lbl" for="forgot-email">Email</label>
+            <input id="forgot-email" type="email" class="input" placeholder="chris@fuseprints.com" required autocomplete="username" />
+          </div>
+          <button type="submit" id="forgot-btn" class="btn btn-primary w-full">Send Reset Link</button>
+          <p id="forgot-message" class="hidden text-sm text-center"></p>
+          <button type="button" id="forgot-back-btn" class="block w-full text-white/50 hover:text-brand text-xs transition-colors">← Back to sign in</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ACCESS DENIED ============ -->
+  <div id="screen-denied" class="hidden min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-md text-center card p-8">
+      <h2 class="font-display font-bold text-2xl mb-3">Access Denied</h2>
+      <p class="text-white/50 mb-6 text-sm">You're signed in, but your account isn't authorized as an admin. Ask Kendell to add your UID to the <code class="text-brand bg-white/5 px-2 py-0.5 rounded text-xs">admins</code> collection in Firestore.</p>
+      <p class="text-white/35 text-xs mb-6">Your UID: <code id="denied-uid" class="text-white/60"></code></p>
+      <button id="denied-signout" class="btn btn-ghost">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- ============ MAIN ADMIN APP ============ -->
+  <div id="screen-admin" class="hidden min-h-screen flex flex-col lg:flex-row">
+    <!-- Sidebar -->
+    <aside class="lg:w-64 border-b lg:border-b-0 lg:border-r border-white/[.06] p-5 flex lg:flex-col gap-6 lg:gap-0 items-center lg:items-stretch justify-between lg:justify-start">
+      <div class="flex items-center gap-3 lg:mb-10">
+        <img src="../assets/logo-white.png" alt="Fuse Prints" class="h-7 w-auto opacity-90" />
+        <span class="text-white/35 text-xs uppercase tracking-[.2em] font-semibold">Admin</span>
+      </div>
+      <nav class="flex lg:flex-col gap-1 flex-1">
+        <button class="tab active" data-tab="dashboard">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="tab" data-tab="products">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
+          <span>Products</span>
+        </button>
+        <button class="tab" data-tab="gallery">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+          <span>Gallery</span>
+        </button>
+        <button class="tab" data-tab="inquiries">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+          <span class="flex-1 text-left">Inquiries</span>
+          <span id="inbox-badge" class="hidden ml-auto text-[10px] font-bold bg-brand text-white px-2 py-0.5 rounded-full">0</span>
+        </button>
+        <button class="tab" data-tab="settings">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span>Settings</span>
+        </button>
+      </nav>
+      <div class="lg:mt-auto pt-0 lg:pt-6 lg:border-t lg:border-white/[.06] flex items-center gap-3">
+        <div class="hidden lg:block flex-1 min-w-0">
+          <p id="user-email" class="text-xs text-white/50 truncate"></p>
+        </div>
+        <button id="signout-btn" class="btn btn-ghost text-xs !py-2 !px-3">Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 p-6 sm:p-10 overflow-x-hidden">
+
+      <!-- Dashboard -->
+      <section class="panel" data-panel="dashboard">
+        <header class="mb-8">
+          <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Dashboard</h1>
+          <p class="text-white/40 text-sm">Welcome back. Manage your site content below.</p>
+        </header>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          <div class="card p-6">
+            <p class="text-white/40 text-xs uppercase tracking-[.15em] font-semibold mb-3">Active Products</p>
+            <p class="font-display font-bold text-4xl" id="stat-products">—</p>
+            <button class="tab-link text-brand text-xs font-semibold mt-4 hover:underline" data-tab="products">Manage →</button>
+          </div>
+          <div class="card p-6">
+            <p class="text-white/40 text-xs uppercase tracking-[.15em] font-semibold mb-3">Gallery Images</p>
+            <p class="font-display font-bold text-4xl" id="stat-gallery">—</p>
+            <button class="tab-link text-brand text-xs font-semibold mt-4 hover:underline" data-tab="gallery">Manage →</button>
+          </div>
+          <div class="card p-6">
+            <p class="text-white/40 text-xs uppercase tracking-[.15em] font-semibold mb-3">New Inquiries</p>
+            <p class="font-display font-bold text-4xl" id="stat-inquiries">—</p>
+            <button class="tab-link text-brand text-xs font-semibold mt-4 hover:underline" data-tab="inquiries">View →</button>
+          </div>
+          <div class="card p-6">
+            <p class="text-white/40 text-xs uppercase tracking-[.15em] font-semibold mb-3">Live Site</p>
+            <p class="font-display font-bold text-2xl mb-2">fuseprints.com</p>
+            <a href="../" target="_blank" class="text-brand text-xs font-semibold hover:underline">Open site →</a>
+          </div>
+        </div>
+        <div class="card p-6">
+          <h3 class="font-display font-semibold text-lg mb-4">Quick actions</h3>
+          <div class="flex flex-wrap gap-3">
+            <button class="btn btn-primary tab-link" data-tab="products">+ Add Product</button>
+            <button class="btn btn-ghost tab-link" data-tab="gallery">+ Add Gallery Image</button>
+            <button class="btn btn-ghost tab-link" data-tab="inquiries">View Inquiries</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Products -->
+      <section class="panel hidden" data-panel="products">
+        <header class="flex items-end justify-between mb-8 gap-4 flex-wrap">
+          <div>
+            <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Products</h1>
+            <p class="text-white/40 text-sm">Product cards displayed in the Etsy Collection section. Each card links to its Etsy listing.</p>
+          </div>
+          <button id="add-product-btn" class="btn btn-primary">+ Add Product</button>
+        </header>
+        <div id="products-loading" class="flex items-center gap-3 text-white/40"><div class="spinner"></div> Loading products…</div>
+        <div id="products-empty" class="hidden card p-10 text-center">
+          <p class="text-white/50 mb-4">No products yet.</p>
+          <button class="btn btn-primary" onclick="document.getElementById('add-product-btn').click()">+ Add Your First Product</button>
+        </div>
+        <div id="products-grid" class="hidden grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+      </section>
+
+      <!-- Gallery -->
+      <section class="panel hidden" data-panel="gallery">
+        <header class="flex items-end justify-between mb-8 gap-4 flex-wrap">
+          <div>
+            <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Gallery</h1>
+            <p class="text-white/40 text-sm">Images shown in the "Our Work" marquee on the landing page.</p>
+          </div>
+          <button id="add-gallery-btn" class="btn btn-primary">+ Add Image</button>
+        </header>
+        <div id="gallery-loading" class="flex items-center gap-3 text-white/40"><div class="spinner"></div> Loading gallery…</div>
+        <div id="gallery-empty" class="hidden card p-10 text-center">
+          <p class="text-white/50 mb-4">No gallery images yet.</p>
+          <button class="btn btn-primary" onclick="document.getElementById('add-gallery-btn').click()">+ Add First Image</button>
+        </div>
+        <div id="gallery-grid" class="hidden grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+      </section>
+
+      <!-- Inquiries -->
+      <section class="panel hidden" data-panel="inquiries">
+        <header class="flex items-end justify-between mb-8 gap-4 flex-wrap">
+          <div>
+            <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Inquiries</h1>
+            <p class="text-white/40 text-sm">Quote requests submitted through the contact form.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="btn btn-ghost inq-filter active" data-filter="new">New</button>
+            <button class="btn btn-ghost inq-filter" data-filter="read">Read</button>
+            <button class="btn btn-ghost inq-filter" data-filter="archived">Archived</button>
+            <button class="btn btn-ghost inq-filter" data-filter="all">All</button>
+          </div>
+        </header>
+        <div id="inquiries-loading" class="flex items-center gap-3 text-white/40"><div class="spinner"></div> Loading inquiries…</div>
+        <div id="inquiries-empty" class="hidden card p-10 text-center">
+          <p class="text-white/50">No inquiries here.</p>
+        </div>
+        <div id="inquiries-list" class="hidden space-y-3"></div>
+      </section>
+
+      <!-- Settings -->
+      <section class="panel hidden" data-panel="settings">
+        <header class="mb-8">
+          <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Settings</h1>
+          <p class="text-white/40 text-sm">Account preferences and security.</p>
+        </header>
+        <div class="grid lg:grid-cols-2 gap-6">
+          <div class="card p-6">
+            <h3 class="font-display font-semibold text-lg mb-4">Account</h3>
+            <dl class="space-y-3 text-sm">
+              <div class="flex justify-between"><dt class="text-white/40">Email</dt><dd id="settings-email" class="text-white/80"></dd></div>
+              <div class="flex justify-between"><dt class="text-white/40">User ID</dt><dd id="settings-uid" class="text-white/50 text-xs font-mono truncate max-w-[200px]"></dd></div>
+            </dl>
+          </div>
+          <div class="card p-6">
+            <h3 class="font-display font-semibold text-lg mb-4">Change Password</h3>
+            <form id="change-pw-form" class="space-y-4">
+              <div>
+                <label class="lbl" for="current-pw">Current password</label>
+                <input id="current-pw" type="password" class="input" autocomplete="current-password" required />
+              </div>
+              <div>
+                <label class="lbl" for="new-pw">New password (min 8 characters)</label>
+                <input id="new-pw" type="password" class="input" autocomplete="new-password" minlength="8" required />
+              </div>
+              <div>
+                <label class="lbl" for="confirm-pw">Confirm new password</label>
+                <input id="confirm-pw" type="password" class="input" autocomplete="new-password" minlength="8" required />
+              </div>
+              <button type="submit" id="change-pw-btn" class="btn btn-primary">Update Password</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ============ PRODUCT MODAL ============ -->
+  <div id="product-modal" class="modal-bg">
+    <div class="modal p-6 sm:p-8">
+      <div class="flex items-start justify-between mb-6">
+        <h2 id="product-modal-title" class="font-display font-bold text-2xl">Add Product</h2>
+        <button class="btn btn-ghost !py-1.5 !px-3 text-xs modal-close" data-modal="product-modal">Close</button>
+      </div>
+      <form id="product-form" class="space-y-5">
+        <input type="hidden" id="product-id" />
+        <div>
+          <label class="lbl">Product Image</label>
+          <div id="product-drop-zone" class="drop-zone">
+            <svg class="w-8 h-8 mx-auto mb-2 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+            <p class="text-white/50 text-sm mb-1">Click or drag image here</p>
+            <p class="text-white/25 text-xs">JPG, PNG, or WebP up to 8MB</p>
+            <input type="file" id="product-image-input" accept="image/*" class="hidden" />
+            <div class="drop-zone-overlay">Click to change</div>
+          </div>
+          <p id="product-upload-status" class="text-xs text-white/40 mt-2"></p>
+        </div>
+        <div>
+          <label class="lbl" for="product-title">Title</label>
+          <input id="product-title" type="text" class="input" placeholder="Custom Wood Sign" required />
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="lbl" for="product-price">Price</label>
+            <input id="product-price" type="text" class="input" placeholder="$45.00" />
+          </div>
+          <div>
+            <label class="lbl" for="product-order">Display Order</label>
+            <input id="product-order" type="number" class="input" value="0" />
+          </div>
+        </div>
+        <div>
+          <label class="lbl" for="product-desc">Short description</label>
+          <textarea id="product-desc" class="input" placeholder="One or two lines about the product…"></textarea>
+        </div>
+        <div>
+          <label class="lbl" for="product-etsy">Etsy URL</label>
+          <input id="product-etsy" type="url" class="input" placeholder="https://www.etsy.com/listing/..." required />
+        </div>
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input id="product-active" type="checkbox" checked class="w-4 h-4 accent-brand" />
+          <span class="text-sm text-white/70">Show on the live site</span>
+        </label>
+        <div class="flex items-center justify-between gap-3 pt-2">
+          <button type="button" id="product-delete-btn" class="btn btn-danger hidden">Delete</button>
+          <div class="flex gap-2 ml-auto">
+            <button type="button" class="btn btn-ghost modal-close" data-modal="product-modal">Cancel</button>
+            <button type="submit" id="product-save-btn" class="btn btn-primary">Save Product</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ GALLERY MODAL ============ -->
+  <div id="gallery-modal" class="modal-bg">
+    <div class="modal p-6 sm:p-8">
+      <div class="flex items-start justify-between mb-6">
+        <h2 id="gallery-modal-title" class="font-display font-bold text-2xl">Add Gallery Image</h2>
+        <button class="btn btn-ghost !py-1.5 !px-3 text-xs modal-close" data-modal="gallery-modal">Close</button>
+      </div>
+      <form id="gallery-form" class="space-y-5">
+        <input type="hidden" id="gallery-id" />
+        <div>
+          <label class="lbl">Image</label>
+          <div id="gallery-drop-zone" class="drop-zone">
+            <svg class="w-8 h-8 mx-auto mb-2 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+            <p class="text-white/50 text-sm mb-1">Click or drag image here</p>
+            <p class="text-white/25 text-xs">JPG, PNG, or WebP up to 8MB</p>
+            <input type="file" id="gallery-image-input" accept="image/*" class="hidden" />
+            <div class="drop-zone-overlay">Click to change</div>
+          </div>
+          <p id="gallery-upload-status" class="text-xs text-white/40 mt-2"></p>
+        </div>
+        <div>
+          <label class="lbl" for="gallery-title">Title</label>
+          <input id="gallery-title" type="text" class="input" placeholder="Trade Show Booth" required />
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="lbl" for="gallery-category">Category</label>
+            <input id="gallery-category" type="text" class="input" placeholder="Trade Shows" list="gallery-categories" />
+            <datalist id="gallery-categories">
+              <option value="Trade Shows"></option>
+              <option value="Signage"></option>
+              <option value="Banners"></option>
+              <option value="Canvas"></option>
+              <option value="Decals"></option>
+              <option value="Laser"></option>
+              <option value="Home Decor"></option>
+              <option value="Wall Graphics"></option>
+            </datalist>
+          </div>
+          <div>
+            <label class="lbl" for="gallery-order">Display Order</label>
+            <input id="gallery-order" type="number" class="input" value="0" />
+          </div>
+        </div>
+        <div class="flex items-center justify-between gap-3 pt-2">
+          <button type="button" id="gallery-delete-btn" class="btn btn-danger hidden">Delete</button>
+          <div class="flex gap-2 ml-auto">
+            <button type="button" class="btn btn-ghost modal-close" data-modal="gallery-modal">Cancel</button>
+            <button type="submit" id="gallery-save-btn" class="btn btn-primary">Save Image</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ CONFIRM DIALOG ============ -->
+  <div id="confirm-modal" class="modal-bg">
+    <div class="modal p-6 sm:p-8 max-w-md">
+      <h3 class="font-display font-bold text-xl mb-3" id="confirm-title">Are you sure?</h3>
+      <p class="text-white/50 text-sm mb-6" id="confirm-msg">This action cannot be undone.</p>
+      <div class="flex gap-3 justify-end">
+        <button class="btn btn-ghost modal-close" data-modal="confirm-modal">Cancel</button>
+        <button class="btn btn-danger" id="confirm-ok">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>

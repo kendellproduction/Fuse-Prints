@@ -1,0 +1,56 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isValidString(value, maxLen) {
+      return value is string && value.size() <= maxLen;
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /gallery/{galleryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /settings/{key} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /admins/{uid} {
+      // A signed-in user can verify their own admin status
+      allow read: if request.auth != null && request.auth.uid == uid;
+      // Admins are managed via the Firebase Console, never the client
+      allow write: if false;
+    }
+
+    // Contact form inquiries — anyone can submit, only admins can read/update/delete.
+    // Create rules enforce field validation + size limits to prevent abuse.
+    match /inquiries/{inquiryId} {
+      allow read: if isAdmin();
+      allow update, delete: if isAdmin();
+      allow create: if
+        request.resource.data.keys().hasOnly(['name','email','phone','projectType','message','status','source','createdAt'])
+        && isValidString(request.resource.data.name, 200)
+        && request.resource.data.name.size() >= 2
+        && isValidString(request.resource.data.email, 200)
+        && request.resource.data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+        && isValidString(request.resource.data.phone, 50)
+        && isValidString(request.resource.data.projectType, 100)
+        && isValidString(request.resource.data.message, 5000)
+        && request.resource.data.message.size() >= 10
+        && request.resource.data.status == 'new'
+        && request.resource.data.source is string;
+    }
+  }
+}
