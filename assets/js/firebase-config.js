@@ -5,7 +5,7 @@
 
 export const firebaseConfig = {
   apiKey: "AIzaSyDLztuQk50vgHguzuB0VdOy4Z_5ReWgII0",
-  authDomain: "fuse-prints.web.app",
+  authDomain: "fuse-prints.firebaseapp.com",
   projectId: "fuse-prints",
   storageBucket: "fuse-prints.firebasestorage.app",
   messagingSenderId: "367403679147",
