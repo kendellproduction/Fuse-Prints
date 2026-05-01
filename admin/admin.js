@@ -4,7 +4,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
   getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
-  sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword
+  sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword,
+  GoogleAuthProvider, signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc,
@@ -111,6 +112,23 @@ $("login-form").addEventListener("submit", async e => {
     err.classList.remove("hidden");
   } finally {
     btn.disabled = false; btn.textContent = "Sign In";
+  }
+});
+
+$("google-signin-btn").addEventListener("click", async () => {
+  const btn = $("google-signin-btn");
+  const err = $("login-error");
+  btn.disabled = true; btn.textContent = "Signing in…"; err.classList.add("hidden");
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch (e) {
+    err.textContent = e.code === "auth/popup-closed-by-user"
+      ? "Sign-in cancelled."
+      : (e.message || "Google sign-in failed.");
+    err.classList.remove("hidden");
+  } finally {
+    btn.disabled = false; btn.textContent = "Sign in with Google";
   }
 });
 
