@@ -9,8 +9,9 @@
   <meta name="author" content="Fuse Prints" />
   <meta name="theme-color" content="#020202" />
   <link rel="canonical" href="https://fuseprints.com/" />
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <link rel="apple-touch-icon" href="assets/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="256x256" href="assets/favicon-256.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
@@ -934,28 +935,32 @@
           if (mosaic) {
             const escAttr = s => String(s ?? '').replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 
-            // Pack items into a 5×3 = 15-cell grid on desktop. Wide items take 2 cells.
-            // If items don't fill the grid, repeat from the start so there are no black gaps.
-            // If a wide item won't fit at the end, swap in a normal item to close the row.
-            const TARGET = 15;
+            // Pack items into a 5-column × 3-row = 15-cell grid on desktop.
+            // CRITICAL: pack row-by-row so each row sums to exactly 5 — otherwise a wide
+            // item could wrap to the next row and leave a gap in the previous one.
+            const ROW_SIZE = 5, ROWS = 3;
             const normals = hero.filter(h => !h.wide);
             const desktopLayout = [];
-            let cells = 0, idx = 0, safety = 0;
-            while (cells < TARGET && safety++ < 200) {
+            let row = 0, rowCells = 0, idx = 0, safety = 0;
+            while (row < ROWS && safety++ < 500) {
               const item = hero[idx % hero.length];
               const w = item.wide ? 2 : 1;
-              if (cells + w <= TARGET) {
+              if (rowCells + w <= ROW_SIZE) {
                 desktopLayout.push(item);
-                cells += w;
+                rowCells += w;
                 idx++;
+                if (rowCells === ROW_SIZE) { row++; rowCells = 0; }
               } else if (normals.length) {
-                // Wide overflows the last cell — fill with a normal instead
-                desktopLayout.push(normals[idx % normals.length]);
-                cells += 1;
-                idx++;
+                // Wide overflows this row's remaining space — fill the rest with normals
+                const remaining = ROW_SIZE - rowCells;
+                for (let i = 0; i < remaining; i++) {
+                  desktopLayout.push(normals[(idx + i) % normals.length]);
+                }
+                idx += remaining;
+                row++;
+                rowCells = 0;
               } else {
-                // Only wides available and doesn't fit — bail
-                break;
+                break; // Only wides and they don't tile cleanly into 5 cols
               }
             }
 
