@@ -9,8 +9,8 @@
   <meta name="author" content="Fuse Prints" />
   <meta name="theme-color" content="#020202" />
   <link rel="canonical" href="https://fuseprints.com/" />
-  <link rel="icon" type="image/png" href="assets/logo-white.png" />
-  <link rel="apple-touch-icon" href="assets/logo-white.png" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/favicon.svg" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
@@ -933,13 +933,40 @@
           const mosaic = document.getElementById('hero-mosaic');
           if (mosaic) {
             const escAttr = s => String(s ?? '').replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-            mosaic.innerHTML = hero.map(h => {
-              const wide = h.wide === true ? "hidden sm:block sm:col-span-2" : "";
-              const mobile = h.mobileVisible === false ? "hidden sm:block" : "";
-              const cls = `overflow-hidden ${wide || mobile}`.trim();
-              // Skip the .hero-img-reveal class so admin-managed images bypass the clip-path
-              // (the GSAP reveal already finished by the time Firestore returns)
-              return `<div class="${cls}"><img src="${escAttr(h.imageUrl)}" alt="${escAttr(h.title || '')}" class="w-full h-full object-cover" /></div>`;
+
+            // Pack items into a 5×3 = 15-cell grid on desktop. Wide items take 2 cells.
+            // If items don't fill the grid, repeat from the start so there are no black gaps.
+            // If a wide item won't fit at the end, swap in a normal item to close the row.
+            const TARGET = 15;
+            const normals = hero.filter(h => !h.wide);
+            const desktopLayout = [];
+            let cells = 0, idx = 0, safety = 0;
+            while (cells < TARGET && safety++ < 200) {
+              const item = hero[idx % hero.length];
+              const w = item.wide ? 2 : 1;
+              if (cells + w <= TARGET) {
+                desktopLayout.push(item);
+                cells += w;
+                idx++;
+              } else if (normals.length) {
+                // Wide overflows the last cell — fill with a normal instead
+                desktopLayout.push(normals[idx % normals.length]);
+                cells += 1;
+                idx++;
+              } else {
+                // Only wides available and doesn't fit — bail
+                break;
+              }
+            }
+
+            // Mobile only sees the items the admin marked mobileVisible (max 6 cells in 2×3)
+            const mobileItems = hero.filter(h => h.mobileVisible !== false).slice(0, 6);
+            const mobileSet = new Set(mobileItems.map(h => h.id));
+
+            mosaic.innerHTML = desktopLayout.map(h => {
+              const isMobile = mobileSet.has(h.id);
+              const wideCls = h.wide ? "hidden sm:block sm:col-span-2" : (isMobile ? "" : "hidden sm:block");
+              return `<div class="overflow-hidden ${wideCls}"><img src="${escAttr(h.imageUrl)}" alt="${escAttr(h.title || '')}" class="w-full h-full object-cover" /></div>`;
             }).join('');
             mosaic.style.opacity = '1';
           }
