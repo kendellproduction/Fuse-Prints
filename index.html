@@ -471,7 +471,7 @@
 
         <!-- Image card -->
         <div class="bento-card p-0 lg:row-span-1">
-          <img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/IMG_2267-1024x768.jpg?ssl=1&resize=1512%2C1512" alt="Fuse Prints at work" class="w-full h-full object-cover rounded-3xl" loading="lazy" />
+          <img id="about-card-img" src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/IMG_2267-1024x768.jpg?ssl=1&resize=1512%2C1512" alt="Fuse Prints at work" class="w-full h-full object-cover rounded-3xl" loading="lazy" />
         </div>
       </div>
     </div>
@@ -573,11 +573,11 @@
   <section id="etsy" class="relative py-24 sm:py-32 overflow-hidden">
     <!-- Background image -->
     <div class="absolute inset-0">
-      <img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/LaserEngraving_EtsyStore.jpg?ssl=1&resize=2000%2C2000" alt="" class="w-full h-full object-cover" loading="lazy" />
+      <img id="etsy-bg-img" src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/LaserEngraving_EtsyStore.jpg?ssl=1&resize=2000%2C2000" alt="" class="w-full h-full object-cover" loading="lazy" />
     </div>
-    <!-- Dark overlay -->
-    <div class="absolute inset-0 bg-surface-400/[.92]"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-surface-400/95 via-[#0f0604]/85 to-surface-400/95"></div>
+    <!-- Dark overlay (lighter so the bg image shows through) -->
+    <div class="absolute inset-0 bg-surface-400/70"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-surface-400/80 via-[#0f0604]/55 to-surface-400/80"></div>
     <!-- Orange accent glows -->
     <div class="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#F16521]/[.12] rounded-full blur-[180px] pointer-events-none"></div>
     <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#F16521]/[.08] rounded-full blur-[160px] pointer-events-none"></div>
@@ -708,11 +708,11 @@
 
   <!-- ============ READY CTA — FULL WIDTH VISUAL BREAK ============ -->
   <section class="relative py-32 sm:py-44 overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-b from-brand-dark/30 via-brand/10 to-surface-400"></div>
-    <div class="absolute inset-0 opacity-10">
-      <img src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/FabricBackdrops.jpg?ssl=1&resize=642%2C642" alt="" class="w-full h-full object-cover" loading="lazy" />
+    <div class="absolute inset-0">
+      <img id="cta-bg-img" src="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/FabricBackdrops.jpg?ssl=1&resize=2000%2C2000" alt="" class="w-full h-full object-cover" loading="lazy" />
     </div>
-    <div class="absolute inset-0 bg-surface-400/80"></div>
+    <div class="absolute inset-0 bg-surface-400/65"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-brand-dark/40 via-brand/15 to-surface-400/70"></div>
     <div class="relative z-10 max-w-4xl mx-auto px-6 sm:px-10 text-center">
       <img src="assets/logo-white.png" alt="Fuse Prints" class="h-12 sm:h-14 w-auto mx-auto mb-8 opacity-70" />
       <h2 class="font-display font-bold text-5xl sm:text-6xl lg:text-8xl tracking-[-.03em] leading-[.9] mb-6">
@@ -906,7 +906,7 @@
 
   <!-- ============ FIRESTORE CONTENT LOADER ============ -->
   <script type="module">
-    import { fetchProducts, fetchGallery, fetchHero, renderProducts, submitInquiry } from './assets/js/content.js';
+    import { fetchProducts, fetchGallery, fetchHero, fetchSiteImages, renderProducts, submitInquiry } from './assets/js/content.js';
     import { emailjsConfig, isEmailjsConfigured } from './assets/js/emailjs-config.js';
     if (isEmailjsConfigured() && window.emailjs) {
       window.emailjs.init({ publicKey: emailjsConfig.publicKey });
@@ -927,6 +927,22 @@
     }
 
     (async function(){
+      // Site Images — swap in admin-managed photos for the 4 named slots
+      try{
+        const slots = await fetchSiteImages();
+        const map = {
+          'about-card':       'about-card-img',
+          'services-feature': 'service-feature-img',
+          'etsy-bg':          'etsy-bg-img',
+          'cta-bg':           'cta-bg-img'
+        };
+        Object.entries(map).forEach(([key, elId]) => {
+          const url = slots[key]?.imageUrl;
+          const el = document.getElementById(elId);
+          if (url && el) el.src = url;
+        });
+      }catch(e){console.warn('Site images load failed',e)}
+
       // Hero — replace hardcoded mosaic with admin-managed images if available
       try{
         const hero = await fetchHero();

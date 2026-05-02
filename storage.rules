@@ -26,5 +26,10 @@ service firebase.storage {
       allow read: if true;
       allow write: if isAdmin() && isValidImageUpload();
     }
+
+    match /site-images/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImageUpload();
+    }
   }
 }

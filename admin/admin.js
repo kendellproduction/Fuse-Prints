@@ -8,7 +8,7 @@ import {
   GoogleAuthProvider, signInWithPopup, browserPopupRedirectResolver
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
-  getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc,
+  getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, setDoc,
   getDocs, query, where, orderBy, serverTimestamp, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import {
@@ -58,6 +58,7 @@ function closeModal(id) {
   if (id === "product-modal") _pendingProductImage = null;
   if (id === "gallery-modal") _pendingGalleryImage = null;
   if (id === "hero-modal") _pendingHeroImage = null;
+  if (id === "site-image-modal") _pendingSiteImage = null;
   // If the crop modal is being closed, tear down the cropper instance and reject any pending crop promise
   if (id === "crop-modal") {
     if (_cropper) { _cropper.destroy(); _cropper = null; }
@@ -260,6 +261,7 @@ document.querySelectorAll(".tab, .tab-link").forEach(el => {
     if (tab === "products") loadProducts();
     if (tab === "gallery") loadGallery();
     if (tab === "hero") loadHero();
+    if (tab === "site-images") loadSiteImages();
     if (tab === "inquiries") loadInquiries();
     if (tab === "dashboard") loadDashboard();
   });
@@ -939,6 +941,126 @@ $("hero-delete-btn").addEventListener("click", async () => {
     closeModal("hero-modal");
     loadHero();
   } catch (e) { toast("Delete failed: " + e.message, "error"); }
+});
+
+// ---------- Site Images (single named slots: about-card, services-feature, etsy-bg, cta-bg) ----------
+const SITE_IMAGE_SLOTS = [
+  { key: "about-card",       label: "About — Bento Image",       description: "The lifestyle photo in the About bento grid (lower right cell).",          aspect: 1 },
+  { key: "services-feature", label: "Services — Feature Image",  description: "The sticky 4:5 image next to the services list on desktop.",                 aspect: 4 / 5 },
+  { key: "etsy-bg",          label: "Etsy Section — Background", description: "Full-bleed image behind the Etsy Collection section (overlay sits on top).", aspect: 16 / 9 },
+  { key: "cta-bg",           label: "Ready CTA — Background",    description: "Full-bleed image behind the 'Ready to Print Something Bold?' CTA.",           aspect: 16 / 9 }
+];
+let _pendingSiteImage = null;
+let _currentSiteImageSlot = null;
+
+setupDropZone("site-image-drop-zone", "site-image-input", async file => {
+  const status = $("site-image-upload-status");
+  try {
+    const aspect = _currentSiteImageSlot?.aspect ?? 1;
+    const cropped = await openCropper(file, aspect);
+    const res = await uploadImage(cropped, "site-images", status);
+    _pendingSiteImage = res;
+    setDropZoneImage("site-image-drop-zone", res.url);
+  } catch (e) {
+    if (e.message === "Cancelled") return;
+    console.error(e);
+    if (e.message !== "Not an image" && e.message !== "Too big") toast("Upload failed: " + e.message, "error");
+  }
+});
+
+async function loadSiteImages() {
+  const loading = $("site-images-loading"), grid = $("site-images-grid");
+  loading.classList.remove("hidden"); grid.classList.add("hidden");
+  try {
+    const docs = await Promise.all(SITE_IMAGE_SLOTS.map(async slot => {
+      const snap = await getDoc(doc(db, "siteImages", slot.key));
+      return { slot, data: snap.exists() ? snap.data() : null };
+    }));
+    loading.classList.add("hidden");
+    grid.innerHTML = docs.map(({ slot, data }) => `
+      <article class="grid-item" data-key="${slot.key}" style="cursor:pointer">
+        <img class="grid-item-img" src="${esc(data?.imageUrl || "")}" alt="${esc(slot.label)}" loading="lazy" onerror="this.style.display='none'" />
+        <div class="grid-item-body">
+          <h3 class="font-display font-semibold text-base mb-1">${esc(slot.label)}</h3>
+          <p class="text-white/40 text-xs leading-relaxed">${esc(slot.description)}</p>
+        </div>
+      </article>
+    `).join("");
+    grid.classList.remove("hidden");
+    grid.querySelectorAll(".grid-item").forEach(el => {
+      el.addEventListener("click", () => {
+        const slot = SITE_IMAGE_SLOTS.find(s => s.key === el.dataset.key);
+        const item = docs.find(d => d.slot.key === el.dataset.key)?.data;
+        if (slot) openSiteImageModal(slot, item);
+      });
+    });
+  } catch (e) {
+    loading.classList.add("hidden");
+    console.error(e);
+    toast("Couldn't load site images: " + e.message, "error");
+  }
+}
+
+function openSiteImageModal(slot, item) {
+  _pendingSiteImage = null;
+  _currentSiteImageSlot = slot;
+  $("site-image-form").reset();
+  $("site-image-key").value = slot.key;
+  $("site-image-modal-title").textContent = `Edit: ${slot.label}`;
+  $("site-image-modal-desc").textContent = slot.description;
+  $("site-image-upload-status").textContent = "";
+  setDropZoneImage("site-image-drop-zone", item?.imageUrl || "");
+  $("site-image-form").dataset.existingImagePath = item?.imagePath || "";
+  $("site-image-form").dataset.existingImageUrl = item?.imageUrl || "";
+  $("site-image-recrop-btn").style.display = item?.imageUrl ? "inline-flex" : "none";
+  openModal("site-image-modal");
+}
+
+$("site-image-recrop-btn").addEventListener("click", async () => {
+  const url = $("site-image-form").dataset.existingImageUrl;
+  if (!url || !_currentSiteImageSlot) return;
+  const cropped = await recropExistingImage(url, _currentSiteImageSlot.aspect);
+  if (!cropped) return;
+  const status = $("site-image-upload-status");
+  try {
+    const res = await uploadImage(cropped, "site-images", status);
+    _pendingSiteImage = res;
+    setDropZoneImage("site-image-drop-zone", res.url);
+  } catch (e) {
+    console.error(e);
+    toast("Upload failed: " + e.message, "error");
+  }
+});
+
+$("site-image-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const key = $("site-image-key").value;
+  if (!key) return;
+  const btn = $("site-image-save-btn"); btn.disabled = true; btn.textContent = "Saving…";
+  const existingPath = $("site-image-form").dataset.existingImagePath;
+  const existingUrl = $("site-image-form").dataset.existingImageUrl;
+  const data = {
+    imageUrl: _pendingSiteImage?.url || existingUrl || "",
+    imagePath: _pendingSiteImage?.path || existingPath || "",
+    updatedAt: serverTimestamp()
+  };
+  if (!data.imageUrl) { toast("Please upload an image.", "error"); btn.disabled = false; btn.textContent = "Save Image"; return; }
+  try {
+    // setDoc semantics via updateDoc fallback — since these are keyed slots, use the key as doc id
+    // Upsert by slot key (about-card, services-feature, etc.)
+    await setDoc(doc(db, "siteImages", key), { ...data, createdAt: serverTimestamp() }, { merge: true });
+    if (_pendingSiteImage && existingPath && existingPath !== _pendingSiteImage.path) {
+      deleteStorageFile(existingPath);
+    }
+    toast("Image updated.", "success");
+    closeModal("site-image-modal");
+    loadSiteImages();
+  } catch (e) {
+    console.error(e);
+    toast("Save failed: " + e.message, "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "Save Image";
+  }
 });
 
 // ---------- Inquiries ----------

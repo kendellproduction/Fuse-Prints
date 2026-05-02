@@ -53,6 +53,20 @@ export async function submitInquiry(data) {
   return addDoc(collection(d, "inquiries"), payload);
 }
 
+export async function fetchSiteImages() {
+  const d = db();
+  if (!d) return {};
+  try {
+    const snap = await getDocs(collection(d, "siteImages"));
+    const out = {};
+    snap.docs.forEach(doc => { out[doc.id] = doc.data(); });
+    return out;
+  } catch (e) {
+    console.warn("fetchSiteImages failed:", e);
+    return {};
+  }
+}
+
 export async function fetchHero() {
   const d = db();
   if (!d) return [];
