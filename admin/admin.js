@@ -136,9 +136,29 @@ $("crop-reset").addEventListener("click", () => _cropper?.reset());
 // buttons so admins can re-crop without re-uploading. Returns a File or null.
 async function recropExistingImage(imageUrl, aspectRatio) {
   try {
-    const res = await fetch(imageUrl, { mode: "cors" });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const blob = await res.blob();
+    // Try a direct fetch first (works for Firebase Storage uploads)
+    let blob;
+    try {
+      const res = await fetch(imageUrl, { mode: "cors" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      blob = await res.blob();
+    } catch (corsErr) {
+      // CORS-blocked source (common for WordPress CDN images) — render the image
+      // into a canvas via crossOrigin=anonymous, then export to a blob. This works
+      // for any host that allows hotlinking with crossorigin headers.
+      blob = await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          const c = document.createElement("canvas");
+          c.width = img.naturalWidth; c.height = img.naturalHeight;
+          c.getContext("2d").drawImage(img, 0, 0);
+          c.toBlob(b => b ? resolve(b) : reject(new Error("Canvas export failed")), "image/jpeg", 0.95);
+        };
+        img.onerror = () => reject(new Error("Couldn't load image — CORS blocked"));
+        img.src = imageUrl;
+      });
+    }
     const ext = (blob.type.split("/")[1] || "jpg").replace("jpeg", "jpg");
     const file = new File([blob], `recrop.${ext}`, { type: blob.type || "image/jpeg" });
     return await openCropper(file, aspectRatio);
