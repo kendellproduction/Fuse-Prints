@@ -132,6 +132,24 @@ $("crop-rotate-left").addEventListener("click", () => _cropper?.rotate(-90));
 $("crop-rotate-right").addEventListener("click", () => _cropper?.rotate(90));
 $("crop-reset").addEventListener("click", () => _cropper?.reset());
 
+// Pull an existing image URL back into the cropper. Used by the "Adjust crop"
+// buttons so admins can re-crop without re-uploading. Returns a File or null.
+async function recropExistingImage(imageUrl, aspectRatio) {
+  try {
+    const res = await fetch(imageUrl, { mode: "cors" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const blob = await res.blob();
+    const ext = (blob.type.split("/")[1] || "jpg").replace("jpeg", "jpg");
+    const file = new File([blob], `recrop.${ext}`, { type: blob.type || "image/jpeg" });
+    return await openCropper(file, aspectRatio);
+  } catch (e) {
+    if (e.message === "Cancelled") return null;
+    console.error(e);
+    toast("Couldn't load image for re-crop: " + e.message, "error");
+    return null;
+  }
+}
+
 $("crop-apply-btn").addEventListener("click", () => {
   if (!_cropper || !_cropResolver) return;
   const canvas = _cropper.getCroppedCanvas({
@@ -529,8 +547,25 @@ function openProductModal(product) {
   // Stash existing image path for cleanup if replaced
   $("product-form").dataset.existingImagePath = product?.imagePath || "";
   $("product-form").dataset.existingImageUrl = product?.imageUrl || "";
+  $("product-recrop-btn").classList.toggle("hidden", !product?.imageUrl);
   openModal("product-modal");
 }
+
+$("product-recrop-btn").addEventListener("click", async () => {
+  const url = $("product-form").dataset.existingImageUrl;
+  if (!url) return;
+  const cropped = await recropExistingImage(url, 1);
+  if (!cropped) return;
+  const status = $("product-upload-status");
+  try {
+    const res = await uploadImage(cropped, "products", status);
+    _pendingProductImage = res;
+    setDropZoneImage("product-drop-zone", res.url);
+  } catch (e) {
+    console.error(e);
+    toast("Upload failed: " + e.message, "error");
+  }
+});
 
 $("product-form").addEventListener("submit", async e => {
   e.preventDefault();
@@ -659,8 +694,25 @@ function openGalleryModal(item) {
   setDropZoneImage("gallery-drop-zone", item?.imageUrl || "");
   $("gallery-form").dataset.existingImagePath = item?.imagePath || "";
   $("gallery-form").dataset.existingImageUrl = item?.imageUrl || "";
+  $("gallery-recrop-btn").classList.toggle("hidden", !item?.imageUrl);
   openModal("gallery-modal");
 }
+
+$("gallery-recrop-btn").addEventListener("click", async () => {
+  const url = $("gallery-form").dataset.existingImageUrl;
+  if (!url) return;
+  const cropped = await recropExistingImage(url, 4 / 3);
+  if (!cropped) return;
+  const status = $("gallery-upload-status");
+  try {
+    const res = await uploadImage(cropped, "gallery", status);
+    _pendingGalleryImage = res;
+    setDropZoneImage("gallery-drop-zone", res.url);
+  } catch (e) {
+    console.error(e);
+    toast("Upload failed: " + e.message, "error");
+  }
+});
 
 $("gallery-form").addEventListener("submit", async e => {
   e.preventDefault();
@@ -793,8 +845,27 @@ function openHeroModal(item) {
   setDropZoneImage("hero-drop-zone", item?.imageUrl || "");
   $("hero-form").dataset.existingImagePath = item?.imagePath || "";
   $("hero-form").dataset.existingImageUrl = item?.imageUrl || "";
+  $("hero-recrop-btn").classList.toggle("hidden", !item?.imageUrl);
   openModal("hero-modal");
 }
+
+$("hero-recrop-btn").addEventListener("click", async () => {
+  const url = $("hero-form").dataset.existingImageUrl;
+  if (!url) return;
+  // Match the aspect ratio used at upload time — 16:9 if marked wide, 1:1 otherwise
+  const wide = $("hero-wide").checked;
+  const cropped = await recropExistingImage(url, wide ? 16 / 9 : 1);
+  if (!cropped) return;
+  const status = $("hero-upload-status");
+  try {
+    const res = await uploadImage(cropped, "hero", status);
+    _pendingHeroImage = res;
+    setDropZoneImage("hero-drop-zone", res.url);
+  } catch (e) {
+    console.error(e);
+    toast("Upload failed: " + e.message, "error");
+  }
+});
 
 $("hero-form").addEventListener("submit", async e => {
   e.preventDefault();
