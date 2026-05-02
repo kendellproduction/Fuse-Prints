@@ -48,13 +48,35 @@ function toast(message, type = "info") {
 }
 
 function openModal(id) { $(id).classList.add("active"); }
-function closeModal(id) { $(id).classList.remove("active"); }
+function closeModal(id) {
+  const modal = $(id);
+  if (!modal) return;
+  modal.classList.remove("active");
+  // Reset file inputs inside the modal so a stale .click() can't reopen the picker
+  modal.querySelectorAll('input[type="file"]').forEach(i => { i.value = ""; });
+  // Clear any pending image state when modals are dismissed without saving
+  if (id === "product-modal") _pendingProductImage = null;
+  if (id === "gallery-modal") _pendingGalleryImage = null;
+  // Drop focus from anything inside the modal to prevent stray Enter/click reactivation
+  if (document.activeElement && modal.contains(document.activeElement)) document.activeElement.blur();
+}
 
 document.querySelectorAll(".modal-close").forEach(btn => {
-  btn.addEventListener("click", () => closeModal(btn.dataset.modal));
+  btn.addEventListener("click", e => {
+    e.preventDefault();
+    e.stopPropagation();
+    closeModal(btn.dataset.modal);
+  });
 });
 document.querySelectorAll(".modal-bg").forEach(bg => {
   bg.addEventListener("click", e => { if (e.target === bg) closeModal(bg.id); });
+});
+
+// Close any open modal on Escape key
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    document.querySelectorAll(".modal-bg.active").forEach(m => closeModal(m.id));
+  }
 });
 
 // Drag-and-drop reordering. Saves new order to Firestore via batched write.
