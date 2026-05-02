@@ -907,8 +907,9 @@ async function loadInquiries() {
           ${i.phone ? `<div><span class="text-white/40">Phone:</span> <a class="text-brand hover:underline" href="tel:${esc(i.phone)}">${esc(i.phone)}</a></div>` : ""}
         </div>
         <div class="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">${esc(i.message || "")}</div>
-        <div class="mt-4 flex gap-2">
-          <a class="btn btn-primary !py-2 !px-4 text-xs" href="mailto:${esc(i.email || "")}?subject=${encodeURIComponent("Re: Your Fuse Prints inquiry")}">Reply via Email</a>
+        <div class="mt-4 flex gap-2 flex-wrap">
+          <a class="btn btn-primary !py-2 !px-4 text-xs" target="_blank" rel="noopener noreferrer" href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(i.email || "")}&su=${encodeURIComponent("Re: Your Fuse Prints inquiry")}&body=${encodeURIComponent("Hi " + (i.name || "there") + ",\n\nThanks for reaching out — ")}">Reply in Gmail</a>
+          <a class="btn btn-ghost !py-2 !px-4 text-xs" href="mailto:${esc(i.email || "")}?subject=${encodeURIComponent("Re: Your Fuse Prints inquiry")}">Open in Mail App</a>
         </div>
       </article>`;
     }).join("");
