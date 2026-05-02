@@ -8,18 +8,19 @@ service firebase.storage {
         && firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid));
     }
 
-    match /products/{productId}/{fileName} {
-      allow read: if true;
-      allow write: if isAdmin()
-        && request.resource.size < 8 * 1024 * 1024
+    function isValidImageUpload() {
+      return request.resource.size < 8 * 1024 * 1024
         && request.resource.contentType.matches('image/.*');
     }
 
-    match /gallery/{galleryId}/{fileName} {
+    match /products/{fileName} {
       allow read: if true;
-      allow write: if isAdmin()
-        && request.resource.size < 8 * 1024 * 1024
-        && request.resource.contentType.matches('image/.*');
+      allow write: if isAdmin() && isValidImageUpload();
+    }
+
+    match /gallery/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidImageUpload();
     }
   }
 }
