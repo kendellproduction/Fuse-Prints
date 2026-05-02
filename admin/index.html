@@ -195,6 +195,10 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
           <span>Products</span>
         </button>
+        <button class="tab" data-tab="hero">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></svg>
+          <span>Hero Images</span>
+        </button>
         <button class="tab" data-tab="gallery">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
           <span>Carousel</span>
@@ -273,6 +277,23 @@
           <button class="btn btn-primary" onclick="document.getElementById('add-product-btn').click()">+ Add Your First Product</button>
         </div>
         <div id="products-grid" class="hidden grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+      </section>
+
+      <!-- Hero Images -->
+      <section class="panel hidden" data-panel="hero">
+        <header class="flex items-end justify-between mb-8 gap-4 flex-wrap">
+          <div>
+            <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Hero Images</h1>
+            <p class="text-white/40 text-sm max-w-2xl">The mosaic at the top of the homepage. Mark images as <span class="text-brand">Wide</span> to span 2 columns and <span class="text-brand">Mobile</span> to show on phones. Each row on desktop fits 5 columns total. <span class="text-brand">Drag to reorder.</span></p>
+          </div>
+          <button id="add-hero-btn" class="btn btn-primary">+ Add Image</button>
+        </header>
+        <div id="hero-loading" class="flex items-center gap-3 text-white/40"><div class="spinner"></div> Loading hero images…</div>
+        <div id="hero-empty" class="hidden card p-10 text-center">
+          <p class="text-white/50 mb-4">No hero images yet — the homepage will show the default fallback.</p>
+          <button class="btn btn-primary" onclick="document.getElementById('add-hero-btn').click()">+ Add First Image</button>
+        </div>
+        <div id="hero-grid" class="hidden grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
       </section>
 
       <!-- Gallery -->
@@ -406,6 +427,57 @@
           <div class="flex gap-2 ml-auto">
             <button type="button" class="btn btn-ghost modal-close" data-modal="product-modal">Cancel</button>
             <button type="submit" id="product-save-btn" class="btn btn-primary">Save Product</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ HERO MODAL ============ -->
+  <div id="hero-modal" class="modal-bg">
+    <div class="modal p-6 sm:p-8">
+      <div class="flex items-start justify-between mb-6">
+        <h2 id="hero-modal-title" class="font-display font-bold text-2xl">Add Hero Image</h2>
+        <button class="btn btn-ghost !py-1.5 !px-3 text-xs modal-close" data-modal="hero-modal">Close</button>
+      </div>
+      <form id="hero-form" class="space-y-5">
+        <input type="hidden" id="hero-id" />
+        <div>
+          <label class="lbl">Image</label>
+          <div id="hero-drop-zone" class="drop-zone">
+            <svg class="w-8 h-8 mx-auto mb-2 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+            <p class="text-white/50 text-sm mb-1">Click or drag image here</p>
+            <p class="text-white/25 text-xs">JPG, PNG, or WebP up to 8MB</p>
+            <input type="file" id="hero-image-input" accept="image/*" class="hidden" />
+            <div class="drop-zone-overlay">Click to change</div>
+          </div>
+          <p id="hero-upload-status" class="text-xs text-white/40 mt-2"></p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="lbl" for="hero-title">Title (alt text)</label>
+            <input id="hero-title" type="text" class="input" placeholder="Optional alt text" />
+          </div>
+          <div>
+            <label class="lbl" for="hero-order">Display Order</label>
+            <input id="hero-order" type="number" class="input" value="0" />
+          </div>
+        </div>
+        <div class="space-y-3 pt-2">
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input id="hero-wide" type="checkbox" class="w-4 h-4 accent-brand" />
+            <span class="text-sm text-white/70">Wide rectangle <span class="text-white/40">(spans 2 columns on desktop)</span></span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input id="hero-mobile" type="checkbox" checked class="w-4 h-4 accent-brand" />
+            <span class="text-sm text-white/70">Show on mobile <span class="text-white/40">(mobile shows max 6 small images)</span></span>
+          </label>
+        </div>
+        <div class="flex items-center justify-between gap-3 pt-2">
+          <button type="button" id="hero-delete-btn" class="btn btn-danger hidden">Delete</button>
+          <div class="flex gap-2 ml-auto">
+            <button type="button" class="btn btn-ghost modal-close" data-modal="hero-modal">Cancel</button>
+            <button type="submit" id="hero-save-btn" class="btn btn-primary">Save Image</button>
           </div>
         </div>
       </form>

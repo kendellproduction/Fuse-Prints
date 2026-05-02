@@ -53,6 +53,18 @@ export async function submitInquiry(data) {
   return addDoc(collection(d, "inquiries"), payload);
 }
 
+export async function fetchHero() {
+  const d = db();
+  if (!d) return [];
+  try {
+    const snap = await getDocs(query(collection(d, "hero"), orderBy("order", "asc")));
+    return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (e) {
+    console.warn("fetchHero failed:", e);
+    return [];
+  }
+}
+
 export async function fetchGallery() {
   const d = db();
   if (!d) return [];

@@ -842,7 +842,7 @@
 
   <!-- ============ FIRESTORE CONTENT LOADER ============ -->
   <script type="module">
-    import { fetchProducts, fetchGallery, renderProducts, submitInquiry } from './assets/js/content.js';
+    import { fetchProducts, fetchGallery, fetchHero, renderProducts, submitInquiry } from './assets/js/content.js';
 
     function esc(s){if(s==null)return'';return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
@@ -859,6 +859,26 @@
     }
 
     (async function(){
+      // Hero — replace hardcoded mosaic with admin-managed images if available
+      try{
+        const hero = await fetchHero();
+        if (hero.length) {
+          const mosaic = document.getElementById('hero-mosaic');
+          if (mosaic) {
+            const escAttr = s => String(s ?? '').replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+            mosaic.innerHTML = hero.map(h => {
+              const wide = h.wide === true ? "hidden sm:block sm:col-span-2" : "";
+              const mobile = h.mobileVisible === false ? "hidden sm:block" : "";
+              const cls = `overflow-hidden ${wide || mobile}`.trim();
+              // Skip the .hero-img-reveal class so admin-managed images bypass the clip-path
+              // (the GSAP reveal already finished by the time Firestore returns)
+              return `<div class="${cls}"><img src="${escAttr(h.imageUrl)}" alt="${escAttr(h.title || '')}" class="w-full h-full object-cover" /></div>`;
+            }).join('');
+            mosaic.style.opacity = '1';
+          }
+        }
+      }catch(e){console.warn('Hero load failed',e)}
+
       // Products — only show featured ones on the homepage
       try{
         const products = await fetchProducts({ featuredOnly: true });

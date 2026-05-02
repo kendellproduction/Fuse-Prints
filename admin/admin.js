@@ -57,6 +57,7 @@ function closeModal(id) {
   // Clear any pending image state when modals are dismissed without saving
   if (id === "product-modal") _pendingProductImage = null;
   if (id === "gallery-modal") _pendingGalleryImage = null;
+  if (id === "hero-modal") _pendingHeroImage = null;
   // If the crop modal is being closed, tear down the cropper instance and reject any pending crop promise
   if (id === "crop-modal") {
     if (_cropper) { _cropper.destroy(); _cropper = null; }
@@ -220,6 +221,7 @@ document.querySelectorAll(".tab, .tab-link").forEach(el => {
     document.querySelectorAll(".panel").forEach(p => p.classList.toggle("hidden", p.dataset.panel !== tab));
     if (tab === "products") loadProducts();
     if (tab === "gallery") loadGallery();
+    if (tab === "hero") loadHero();
     if (tab === "inquiries") loadInquiries();
     if (tab === "dashboard") loadDashboard();
   });
@@ -714,6 +716,137 @@ $("gallery-delete-btn").addEventListener("click", async () => {
     closeModal("gallery-modal");
     loadGallery();
     loadDashboard();
+  } catch (e) { toast("Delete failed: " + e.message, "error"); }
+});
+
+// ---------- Hero Images ----------
+let _pendingHeroImage = null;
+
+setupDropZone("hero-drop-zone", "hero-image-input", async file => {
+  const status = $("hero-upload-status");
+  try {
+    // Use 4:3 if wide is checked, 1:1 otherwise — matches roughly how cells render
+    const wide = $("hero-wide").checked;
+    const cropped = await openCropper(file, wide ? 16 / 9 : 1);
+    const res = await uploadImage(cropped, "hero", status);
+    _pendingHeroImage = res;
+    setDropZoneImage("hero-drop-zone", res.url);
+  } catch (e) {
+    if (e.message === "Cancelled") return;
+    console.error(e);
+    if (e.message !== "Not an image" && e.message !== "Too big") toast("Upload failed: " + e.message, "error");
+  }
+});
+
+$("add-hero-btn").addEventListener("click", () => openHeroModal(null));
+
+async function loadHero() {
+  const loading = $("hero-loading"), empty = $("hero-empty"), grid = $("hero-grid");
+  loading.classList.remove("hidden"); empty.classList.add("hidden"); grid.classList.add("hidden");
+  try {
+    const snap = await getDocs(query(collection(db, "hero"), orderBy("order", "asc")));
+    loading.classList.add("hidden");
+    if (snap.empty) { empty.classList.remove("hidden"); return; }
+    grid.innerHTML = snap.docs.map(d => {
+      const h = d.data();
+      return `<article class="grid-item cursor-pointer" data-id="${d.id}">
+        <img class="grid-item-img" src="${esc(h.imageUrl || "")}" alt="${esc(h.title || "")}" loading="lazy" onerror="this.style.display='none'" />
+        <div class="grid-item-body">
+          <div class="flex items-start justify-between gap-2 mb-2">
+            <h3 class="font-display font-semibold text-base truncate flex-1">${esc(h.title || "Untitled")}</h3>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            ${h.wide ? `<span class="badge" style="background:rgba(241,101,33,.15);color:#F99970">Wide 2x</span>` : `<span class="badge badge-inactive">1x</span>`}
+            ${h.mobileVisible !== false ? `<span class="badge badge-active">Mobile</span>` : `<span class="badge badge-inactive">Desktop only</span>`}
+            <span class="badge badge-inactive">order ${h.order ?? 0}</span>
+          </div>
+        </div>
+      </article>`;
+    }).join("");
+    grid.classList.remove("hidden");
+    grid.querySelectorAll(".grid-item").forEach(el => {
+      el.addEventListener("click", e => {
+        if (el.classList.contains("just-dragged")) { el.classList.remove("just-dragged"); return; }
+        const h = snap.docs.find(d => d.id === el.dataset.id);
+        if (h) openHeroModal({ id: h.id, ...h.data() });
+      });
+    });
+    setupSortable("hero-grid", "hero");
+  } catch (e) {
+    loading.classList.add("hidden");
+    console.error(e);
+    toast("Couldn't load hero images: " + e.message, "error");
+  }
+}
+
+function openHeroModal(item) {
+  _pendingHeroImage = null;
+  $("hero-form").reset();
+  $("hero-id").value = item?.id || "";
+  $("hero-title").value = item?.title || "";
+  $("hero-order").value = item?.order ?? 0;
+  $("hero-wide").checked = item?.wide === true;
+  $("hero-mobile").checked = item?.mobileVisible !== false;
+  $("hero-modal-title").textContent = item ? "Edit Hero Image" : "Add Hero Image";
+  $("hero-delete-btn").classList.toggle("hidden", !item);
+  $("hero-upload-status").textContent = "";
+  setDropZoneImage("hero-drop-zone", item?.imageUrl || "");
+  $("hero-form").dataset.existingImagePath = item?.imagePath || "";
+  $("hero-form").dataset.existingImageUrl = item?.imageUrl || "";
+  openModal("hero-modal");
+}
+
+$("hero-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const id = $("hero-id").value;
+  const btn = $("hero-save-btn"); btn.disabled = true; btn.textContent = "Saving…";
+  const existingPath = $("hero-form").dataset.existingImagePath;
+  const existingUrl = $("hero-form").dataset.existingImageUrl;
+
+  const data = {
+    title: $("hero-title").value.trim(),
+    order: Number($("hero-order").value) || 0,
+    wide: $("hero-wide").checked,
+    mobileVisible: $("hero-mobile").checked,
+    imageUrl: _pendingHeroImage?.url || existingUrl || "",
+    imagePath: _pendingHeroImage?.path || existingPath || "",
+    updatedAt: serverTimestamp()
+  };
+  if (!data.imageUrl) { toast("Please upload an image.", "error"); btn.disabled = false; btn.textContent = "Save Image"; return; }
+
+  try {
+    if (id) {
+      await updateDoc(doc(db, "hero", id), data);
+      if (_pendingHeroImage && existingPath && existingPath !== _pendingHeroImage.path) {
+        deleteStorageFile(existingPath);
+      }
+      toast("Hero image updated.", "success");
+    } else {
+      data.createdAt = serverTimestamp();
+      await addDoc(collection(db, "hero"), data);
+      toast("Hero image added.", "success");
+    }
+    closeModal("hero-modal");
+    loadHero();
+  } catch (e) {
+    console.error(e);
+    toast("Save failed: " + e.message, "error");
+  } finally {
+    btn.disabled = false; btn.textContent = "Save Image";
+  }
+});
+
+$("hero-delete-btn").addEventListener("click", async () => {
+  const id = $("hero-id").value;
+  if (!id) return;
+  if (!(await confirmDialog("Delete this hero image?", "It will be removed from the homepage immediately."))) return;
+  try {
+    const existingPath = $("hero-form").dataset.existingImagePath;
+    await deleteDoc(doc(db, "hero", id));
+    if (existingPath) deleteStorageFile(existingPath);
+    toast("Hero image deleted.", "success");
+    closeModal("hero-modal");
+    loadHero();
   } catch (e) { toast("Delete failed: " + e.message, "error"); }
 });
 

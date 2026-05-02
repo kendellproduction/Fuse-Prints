@@ -22,6 +22,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /hero/{heroId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /settings/{key} {
       allow read: if true;
       allow write: if isAdmin();
