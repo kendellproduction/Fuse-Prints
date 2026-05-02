@@ -350,7 +350,10 @@ async function loadProducts() {
         <div class="grid-item-body">
           <div class="flex items-start justify-between gap-2 mb-2">
             <h3 class="font-display font-semibold text-base truncate flex-1">${esc(p.title || "Untitled")}</h3>
-            <span class="badge ${p.active !== false ? "badge-active" : "badge-inactive"}">${p.active !== false ? "Live" : "Hidden"}</span>
+            <div class="flex flex-col gap-1 items-end">
+              <span class="badge ${p.active !== false ? "badge-active" : "badge-inactive"}">${p.active !== false ? "Live" : "Hidden"}</span>
+              ${p.featured ? `<span class="badge" style="background:rgba(241,101,33,.18);color:#F99970">★ Featured</span>` : ""}
+            </div>
           </div>
           ${p.price ? `<p class="text-etsy font-semibold text-sm mb-2">${esc(p.price)}</p>` : ""}
           <p class="text-white/35 text-xs truncate">${esc(p.etsyUrl || "—")}</p>
@@ -381,6 +384,7 @@ function openProductModal(product) {
   $("product-desc").value = product?.description || "";
   $("product-etsy").value = product?.etsyUrl || "";
   $("product-active").checked = product?.active !== false;
+  $("product-featured").checked = product?.featured === true;
   $("product-modal-title").textContent = product ? "Edit Product" : "Add Product";
   $("product-delete-btn").classList.toggle("hidden", !product);
   $("product-upload-status").textContent = "";
@@ -406,6 +410,7 @@ $("product-form").addEventListener("submit", async e => {
     description: $("product-desc").value.trim(),
     etsyUrl: $("product-etsy").value.trim(),
     active: $("product-active").checked,
+    featured: $("product-featured").checked,
     imageUrl: _pendingProductImage?.url || existingUrl || "",
     imagePath: _pendingProductImage?.path || existingPath || "",
     updatedAt: serverTimestamp()

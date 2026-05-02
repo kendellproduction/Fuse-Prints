@@ -531,8 +531,17 @@
         </a>
       </div>
 
-      <!-- Dynamic product grid (populated from Firestore) -->
+      <!-- Dynamic product grid (populated from Firestore — featured products only) -->
       <div id="product-grid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" data-hide-when-empty="false"></div>
+
+      <!-- Browse All CTA — shown when there are featured products -->
+      <div id="product-browse-all" class="hidden mt-14 text-center">
+        <p class="text-white/40 text-base mb-6">Want to see the full collection?</p>
+        <a href="https://www.etsy.com/shop/FusePrints" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 text-white font-display font-semibold text-sm uppercase tracking-[.1em] px-8 py-4 rounded-full transition-all hover:shadow-[0_0_40px_rgba(241,101,33,.4)]" style="background:#F16521">
+          Browse All Products on Etsy
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
 
       <!-- Fallback: shown when no products in Firestore -->
       <div id="product-grid-fallback" class="relative">
@@ -840,15 +849,17 @@
     }
 
     (async function(){
-      // Products
+      // Products — only show featured ones on the homepage
       try{
-        const products = await fetchProducts();
+        const products = await fetchProducts({ featuredOnly: true });
         const grid = document.getElementById('product-grid');
         const fallback = document.getElementById('product-grid-fallback');
+        const browseAll = document.getElementById('product-browse-all');
         if(products.length && grid){
           renderProducts(products, grid);
           grid.classList.remove('hidden');
           if(fallback) fallback.style.display='none';
+          if(browseAll) browseAll.classList.remove('hidden');
         }
       }catch(e){console.warn('Products load failed',e)}
 
@@ -899,7 +910,7 @@
           console.warn('Firestore submit failed, falling back to mailto:', err);
           const subject = encodeURIComponent('Quote Request from ' + name);
           const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nType: ${projectType}\n\nDetails:\n${message}`);
-          window.location.href = `mailto:kendellproduction@gmail.com?subject=${subject}&body=${body}`;
+          window.location.href = `mailto:orders@fuseprints.com?subject=${subject}&body=${body}`;
           btnSpan.textContent = originalText;
           btn.disabled = false;
         }

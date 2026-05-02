@@ -19,7 +19,7 @@ function db() {
   }
 }
 
-export async function fetchProducts() {
+export async function fetchProducts({ featuredOnly = false } = {}) {
   const d = db();
   if (!d) return [];
   try {
@@ -28,7 +28,8 @@ export async function fetchProducts() {
       where("active", "==", true),
       orderBy("order", "asc")
     ));
-    return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const items = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return featuredOnly ? items.filter(p => p.featured === true) : items;
   } catch (e) {
     console.warn("fetchProducts failed:", e);
     return [];
