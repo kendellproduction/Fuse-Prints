@@ -3,9 +3,9 @@
 // All three values are public-safe — anti-abuse is handled via EmailJS's domain allowlist.
 
 export const emailjsConfig = {
-  publicKey: "REPLACE_WITH_YOUR_PUBLIC_KEY",
-  serviceId: "REPLACE_WITH_YOUR_SERVICE_ID",
-  templateId: "REPLACE_WITH_YOUR_TEMPLATE_ID",
+  publicKey: "S5_thaUg6waOnC7bZ",
+  serviceId: "service_akbjm1p",
+  templateId: "template_gw3sk7j",
   // The "to" address is set in your EmailJS template — change it there, not here.
 };
 
