@@ -1,0 +1,15 @@
+[
+  {
+    "origin": [
+      "https://fuse-prints.web.app",
+      "https://fuse-prints.firebaseapp.com",
+      "https://fuseprints.com",
+      "https://www.fuseprints.com",
+      "http://localhost:5000",
+      "http://localhost:3000"
+    ],
+    "method": ["GET", "HEAD"],
+    "responseHeader": ["Content-Type", "Content-Length", "Access-Control-Allow-Origin"],
+    "maxAgeSeconds": 3600
+  }
+]
