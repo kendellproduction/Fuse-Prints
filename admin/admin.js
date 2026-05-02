@@ -741,14 +741,10 @@ setupDropZone("hero-drop-zone", "hero-image-input", async file => {
 $("add-hero-btn").addEventListener("click", () => openHeroModal(null));
 
 async function loadHero() {
-  console.log("[loadHero] starting");
   const loading = $("hero-loading"), empty = $("hero-empty"), grid = $("hero-grid");
-  if (!loading || !empty || !grid) { console.error("[loadHero] missing elements", {loading, empty, grid}); return; }
   loading.classList.remove("hidden"); empty.classList.add("hidden"); grid.classList.add("hidden");
   try {
-    console.log("[loadHero] querying Firestore");
     const snap = await getDocs(query(collection(db, "hero"), orderBy("order", "asc")));
-    console.log("[loadHero] got", snap.size, "docs");
     loading.classList.add("hidden");
     if (snap.empty) { empty.classList.remove("hidden"); return; }
     grid.innerHTML = snap.docs.map(d => {
