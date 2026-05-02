@@ -508,9 +508,16 @@
 
   <!-- ============ ETSY STORE — FEATURED SHOP + PRODUCTS ============ -->
   <section id="etsy" class="relative py-24 sm:py-32 overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-b from-surface-400 via-[#0f0604] to-surface-400"></div>
-    <div class="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#F16521]/[.08] rounded-full blur-[180px] pointer-events-none"></div>
-    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#F16521]/[.06] rounded-full blur-[160px] pointer-events-none"></div>
+    <!-- Background image -->
+    <div class="absolute inset-0">
+      <img src="https://i2.wp.com/fuseprints.com/wp-content/uploads/2021/11/LaserEngraving_EtsyStore.jpg?ssl=1&resize=2000%2C2000" alt="" class="w-full h-full object-cover" loading="lazy" />
+    </div>
+    <!-- Dark overlay -->
+    <div class="absolute inset-0 bg-surface-400/[.92]"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-surface-400/95 via-[#0f0604]/85 to-surface-400/95"></div>
+    <!-- Orange accent glows -->
+    <div class="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#F16521]/[.12] rounded-full blur-[180px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#F16521]/[.08] rounded-full blur-[160px] pointer-events-none"></div>
 
     <div class="max-w-[1400px] mx-auto px-6 sm:px-10 relative z-10">
       <!-- Intro -->
@@ -611,47 +618,6 @@
   </section>
 
 
-  <!-- ============ CONTACT — SPLIT WITH BLUE ACCENT ============ -->
-  <section id="contact" class="relative py-24 sm:py-40 overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-tr from-surface-400 via-surface-400 to-brand-dark/10"></div>
-    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand/[.05] rounded-full blur-[150px]"></div>
-
-    <div class="max-w-[1400px] mx-auto px-6 sm:px-10 relative z-10">
-      <div class="grid lg:grid-cols-2 gap-12 lg:gap-24">
-        <div class="order-2 lg:order-1">
-          <p class="text-brand text-[11px] font-semibold tracking-[.3em] uppercase mb-3 line-reveal"><span>Start a Project</span></p>
-          <h2 class="font-display font-bold text-4xl sm:text-6xl lg:text-7xl tracking-[-.03em] leading-[.95] mb-8 line-reveal"><span>Let's Build</span><br/><span>Something</span><br/><span class="gradient-text">Bold.</span></h2>
-          <div class="space-y-6 mt-8 lg:mt-12">
-            <a href="tel:8775753873" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="phone" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">(877) 575-3873</span></a>
-            <a href="mailto:orders@fuseprints.com" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">orders@fuseprints.com</span></a>
-            <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span><span class="font-display font-medium text-lg">@fuseprints</span></a>
-            <div class="flex items-center gap-4 text-white/20"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center"><i data-lucide="map-pin" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">Bradford, PA</span></div>
-          </div>
-        </div>
-
-        <div class="holo-card rounded-3xl p-8 sm:p-10 order-1 lg:order-2" id="holo-form-card">
-          <div class="holo-glow"></div>
-          <form id="quote-form" class="space-y-7 relative" style="z-index:5">
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Name *</label><input type="text" name="name" required class="form-input" placeholder="Your name"/></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Email *</label><input type="email" name="email" required class="form-input" placeholder="you@company.com"/></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Phone</label><input type="tel" name="phone" class="form-input" placeholder="(555) 555-5555"/></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Project Type</label><select name="project-type" class="form-input" style="background:transparent"><option value="">Select a type...</option><option value="backdrop">Backdrop / Step-and-Repeat</option><option value="banner">Banner / Banner Stand</option><option value="tradeshow">Trade Show Display</option><option value="canvas">Canvas Print</option><option value="decal">Decal / Wall Graphic</option><option value="signage">Custom Signage</option><option value="laser">Laser Engraving</option><option value="other">Other</option></select></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Project Details *</label><textarea name="message" rows="4" required class="form-input resize-none" placeholder="What you need, dimensions, timeline..."></textarea></div>
-            <div style="display:none!important" aria-hidden="true"><input type="text" name="_gotcha" tabindex="-1" autocomplete="off"/></div>
-            <button type="submit" id="submit-btn" class="group w-full flex items-center justify-between bg-brand text-white font-display font-semibold text-base py-5 px-8 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.25)] active:scale-[.98]"><span>Send Quote Request</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1 -rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-            <p class="text-white/15 text-xs text-center">Have files? Email them to <a href="mailto:orders@fuseprints.com" class="text-brand/50 hover:text-brand transition-colors">orders@fuseprints.com</a></p>
-          </form>
-          <div id="form-success" class="hidden py-20 text-center relative" style="z-index:5">
-            <div class="w-20 h-20 rounded-full border-2 border-brand flex items-center justify-center mx-auto mb-6"><i data-lucide="check" class="w-8 h-8 text-brand"></i></div>
-            <h3 class="font-display font-bold text-3xl mb-3">Request Sent</h3>
-            <p class="text-white/30 text-base">We'll be in touch within 24 hours.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
   <!-- ============ FAQ — ON DARK WITH BLUE ACCENT ============ -->
   <section class="relative py-24 sm:py-32 overflow-hidden">
     <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand/20 to-transparent"></div>
@@ -693,6 +659,47 @@
       <a href="#contact" class="inline-flex items-center gap-4 bg-brand text-white font-display font-semibold text-base uppercase tracking-[.1em] px-10 py-5 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_60px_rgba(33,150,243,.3)] active:scale-[.98]">
         Get Your Free Quote <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
+    </div>
+  </section>
+
+
+  <!-- ============ CONTACT — SPLIT WITH BLUE ACCENT ============ -->
+  <section id="contact" class="relative py-24 sm:py-40 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-tr from-surface-400 via-surface-400 to-brand-dark/10"></div>
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand/[.05] rounded-full blur-[150px]"></div>
+
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-10 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-24">
+        <div class="order-2 lg:order-1">
+          <p class="text-brand text-[11px] font-semibold tracking-[.3em] uppercase mb-3 line-reveal"><span>Start a Project</span></p>
+          <h2 class="font-display font-bold text-4xl sm:text-6xl lg:text-7xl tracking-[-.03em] leading-[.95] mb-8 line-reveal"><span>Let's Build</span><br/><span>Something</span><br/><span class="gradient-text">Bold.</span></h2>
+          <div class="space-y-6 mt-8 lg:mt-12">
+            <a href="tel:8775753873" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="phone" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">(877) 575-3873</span></a>
+            <a href="mailto:orders@fuseprints.com" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">orders@fuseprints.com</span></a>
+            <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span><span class="font-display font-medium text-lg">@fuseprints</span></a>
+            <div class="flex items-center gap-4 text-white/20"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center"><i data-lucide="map-pin" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">Bradford, PA</span></div>
+          </div>
+        </div>
+
+        <div class="holo-card rounded-3xl p-8 sm:p-10 order-1 lg:order-2" id="holo-form-card">
+          <div class="holo-glow"></div>
+          <form id="quote-form" class="space-y-7 relative" style="z-index:5">
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Name *</label><input type="text" name="name" required class="form-input" placeholder="Your name"/></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Email *</label><input type="email" name="email" required class="form-input" placeholder="you@company.com"/></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Phone</label><input type="tel" name="phone" class="form-input" placeholder="(555) 555-5555"/></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Project Type</label><select name="project-type" class="form-input" style="background:transparent"><option value="">Select a type...</option><option value="backdrop">Backdrop / Step-and-Repeat</option><option value="banner">Banner / Banner Stand</option><option value="tradeshow">Trade Show Display</option><option value="canvas">Canvas Print</option><option value="decal">Decal / Wall Graphic</option><option value="signage">Custom Signage</option><option value="laser">Laser Engraving</option><option value="other">Other</option></select></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Project Details *</label><textarea name="message" rows="4" required class="form-input resize-none" placeholder="What you need, dimensions, timeline..."></textarea></div>
+            <div style="display:none!important" aria-hidden="true"><input type="text" name="_gotcha" tabindex="-1" autocomplete="off"/></div>
+            <button type="submit" id="submit-btn" class="group w-full flex items-center justify-between bg-brand text-white font-display font-semibold text-base py-5 px-8 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.25)] active:scale-[.98]"><span>Send Quote Request</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1 -rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+            <p class="text-white/15 text-xs text-center">Have files? Email them to <a href="mailto:orders@fuseprints.com" class="text-brand/50 hover:text-brand transition-colors">orders@fuseprints.com</a></p>
+          </form>
+          <div id="form-success" class="hidden py-20 text-center relative" style="z-index:5">
+            <div class="w-20 h-20 rounded-full border-2 border-brand flex items-center justify-center mx-auto mb-6"><i data-lucide="check" class="w-8 h-8 text-brand"></i></div>
+            <h3 class="font-display font-bold text-3xl mb-3">Request Sent</h3>
+            <p class="text-white/30 text-base">We'll be in touch within 24 hours.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

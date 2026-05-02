@@ -1,0 +1,6 @@
+.claude/
+.firebase/
+New Logo/
+node_modules/
+.DS_Store
+*.log
