@@ -262,8 +262,7 @@ document.querySelectorAll(".tab, .tab-link").forEach(el => {
     if (tab === "gallery") loadGallery();
     if (tab === "hero") loadHero();
     if (tab === "site-images") loadSiteImages();
-    if (tab === "inquiries") loadInquiries();
-    if (tab === "dashboard") loadDashboard();
+    if (tab === "dashboard") { loadDashboard(); loadInquiries(); }
   });
 });
 
@@ -391,6 +390,7 @@ onAuthStateChanged(auth, async user => {
     $("settings-uid").textContent = user.uid;
     showScreen("screen-admin");
     loadDashboard();
+    loadInquiries();
   } catch (e) {
     console.error(e);
     toast("Couldn't verify admin access: " + e.message, "error");
@@ -411,12 +411,12 @@ async function loadDashboard() {
     $("stat-products").textContent = activeProducts;
     $("stat-gallery").textContent = gallSnap.size;
     $("stat-inquiries").textContent = inqSnap.size;
+    // inbox-badge was removed when the standalone Inquiries tab was consolidated
+    // into the dashboard — guard against stale references.
     const badge = $("inbox-badge");
-    if (inqSnap.size > 0) {
-      badge.textContent = inqSnap.size;
-      badge.classList.remove("hidden");
-    } else {
-      badge.classList.add("hidden");
+    if (badge) {
+      if (inqSnap.size > 0) { badge.textContent = inqSnap.size; badge.classList.remove("hidden"); }
+      else badge.classList.add("hidden");
     }
   } catch (e) {
     console.error(e);
