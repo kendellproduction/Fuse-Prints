@@ -9,7 +9,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc,
-  getDocs, query, where, orderBy, serverTimestamp
+  getDocs, query, where, orderBy, serverTimestamp, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import {
   getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, deleteObject
@@ -56,6 +56,39 @@ document.querySelectorAll(".modal-close").forEach(btn => {
 document.querySelectorAll(".modal-bg").forEach(bg => {
   bg.addEventListener("click", e => { if (e.target === bg) closeModal(bg.id); });
 });
+
+// Drag-and-drop reordering. Saves new order to Firestore via batched write.
+function setupSortable(gridId, collectionName) {
+  const grid = $(gridId);
+  if (!grid || !window.Sortable) return;
+  if (grid._sortable) grid._sortable.destroy();
+  grid._sortable = window.Sortable.create(grid, {
+    animation: 180,
+    ghostClass: "sortable-ghost",
+    chosenClass: "sortable-chosen",
+    dragClass: "sortable-drag",
+    onEnd: async (evt) => {
+      // Suppress next click on the dragged item
+      if (evt.item) {
+        evt.item.classList.add("just-dragged");
+        setTimeout(() => evt.item.classList.remove("just-dragged"), 300);
+      }
+      const ids = Array.from(grid.querySelectorAll(".grid-item")).map(el => el.dataset.id).filter(Boolean);
+      if (!ids.length) return;
+      // Skip Firestore write if order didn't actually change
+      if (evt.oldIndex === evt.newIndex) return;
+      try {
+        const batch = writeBatch(db);
+        ids.forEach((id, i) => batch.update(doc(db, collectionName, id), { order: i, updatedAt: serverTimestamp() }));
+        await batch.commit();
+        toast("Order saved.", "success");
+      } catch (e) {
+        console.error(e);
+        toast("Couldn't save order: " + e.message, "error");
+      }
+    }
+  });
+}
 
 function confirmDialog(title, message) {
   return new Promise(resolve => {
@@ -362,11 +395,14 @@ async function loadProducts() {
     }).join("");
     grid.classList.remove("hidden");
     grid.querySelectorAll(".grid-item").forEach(el => {
-      el.addEventListener("click", () => {
+      el.addEventListener("click", e => {
+        // Don't open modal if user just dragged
+        if (el.classList.contains("just-dragged")) { el.classList.remove("just-dragged"); return; }
         const p = snap.docs.find(d => d.id === el.dataset.id);
         if (p) openProductModal({ id: p.id, ...p.data() });
       });
     });
+    setupSortable("products-grid", "products");
   } catch (e) {
     loading.classList.add("hidden");
     console.error(e);
@@ -493,11 +529,13 @@ async function loadGallery() {
     }).join("");
     grid.classList.remove("hidden");
     grid.querySelectorAll(".grid-item").forEach(el => {
-      el.addEventListener("click", () => {
+      el.addEventListener("click", e => {
+        if (el.classList.contains("just-dragged")) { el.classList.remove("just-dragged"); return; }
         const g = snap.docs.find(d => d.id === el.dataset.id);
         if (g) openGalleryModal({ id: g.id, ...g.data() });
       });
     });
+    setupSortable("gallery-grid", "gallery");
   } catch (e) {
     loading.classList.add("hidden");
     console.error(e);

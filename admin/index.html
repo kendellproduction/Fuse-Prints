@@ -8,6 +8,7 @@
   <link rel="icon" type="image/png" href="../assets/logo-white.png" />
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -77,8 +78,12 @@
     .spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.15);border-top-color:#2196F3;border-radius:50%;animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    .grid-item{position:relative;overflow:hidden;border-radius:14px;background:#0a0a0a;border:1px solid rgba(255,255,255,.06);transition:border-color .2s}
+    .grid-item{position:relative;overflow:hidden;border-radius:14px;background:#0a0a0a;border:1px solid rgba(255,255,255,.06);transition:border-color .2s,transform .15s,box-shadow .2s;cursor:grab}
     .grid-item:hover{border-color:rgba(255,255,255,.18)}
+    .grid-item:active{cursor:grabbing}
+    .sortable-ghost{opacity:.35}
+    .sortable-chosen{transform:scale(1.02);box-shadow:0 10px 40px rgba(0,0,0,.5);border-color:rgba(33,150,243,.4)!important;z-index:10}
+    .sortable-drag{cursor:grabbing!important}
     .grid-item-img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
     .grid-item-body{padding:14px 16px}
     .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.12em}
@@ -256,7 +261,7 @@
         <header class="flex items-end justify-between mb-8 gap-4 flex-wrap">
           <div>
             <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Products</h1>
-            <p class="text-white/40 text-sm">Product cards displayed in the Etsy Collection section. Each card links to its Etsy listing.</p>
+            <p class="text-white/40 text-sm">Product cards displayed in the Etsy Collection section. Each card links to its Etsy listing. <span class="text-brand">Drag to reorder.</span></p>
           </div>
           <button id="add-product-btn" class="btn btn-primary">+ Add Product</button>
         </header>
@@ -273,7 +278,7 @@
         <header class="flex items-end justify-between mb-8 gap-4 flex-wrap">
           <div>
             <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Our Work Carousel</h1>
-            <p class="text-white/40 text-sm">These images appear in the "Our Work" scrolling carousel on the homepage. Lower order numbers appear first; items alternate between the top and bottom rows.</p>
+            <p class="text-white/40 text-sm">These images appear in the "Our Work" scrolling carousel on the homepage. Items alternate between the top and bottom rows. <span class="text-brand">Drag to reorder.</span></p>
           </div>
           <button id="add-gallery-btn" class="btn btn-primary">+ Add Image</button>
         </header>
