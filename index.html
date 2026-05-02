@@ -5,7 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fuse Prints — Large Format Printing Specialists</title>
   <meta name="description" content="Premium backdrops, banners, signage, and trade show graphics. Family-owned in Bradford, PA — serving brands nationwide." />
+  <meta name="keywords" content="large format printing, backdrops, banners, trade show graphics, custom signage, canvas prints, vinyl banners, laser engraving, Bradford PA" />
+  <meta name="author" content="Fuse Prints" />
+  <meta name="theme-color" content="#020202" />
+  <link rel="canonical" href="https://fuseprints.com/" />
   <link rel="icon" type="image/png" href="assets/logo-white.png" />
+  <link rel="apple-touch-icon" href="assets/logo-white.png" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://fuseprints.com/" />
+  <meta property="og:site_name" content="Fuse Prints" />
+  <meta property="og:title" content="Fuse Prints — Large Format Printing Specialists" />
+  <meta property="og:description" content="Premium backdrops, banners, signage, and trade show graphics. Family-owned in Bradford, PA — serving brands nationwide." />
+  <meta property="og:image" content="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/IMG_2266-1024x768.jpg?ssl=1&resize=1200%2C630" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Fuse Prints — Large Format Printing Specialists" />
+  <meta name="twitter:description" content="Premium backdrops, banners, signage, and trade show graphics. Family-owned in Bradford, PA." />
+  <meta name="twitter:image" content="https://i1.wp.com/fuseprints.com/wp-content/uploads/2021/11/IMG_2266-1024x768.jpg?ssl=1&resize=1200%2C630" />
+
+  <!-- Structured data: LocalBusiness for rich Google results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Fuse Prints",
+    "image": "https://fuseprints.com/assets/logo-white.png",
+    "description": "Family-owned large format printing shop specializing in backdrops, banners, signage, canvas prints, and laser engraving.",
+    "telephone": "+1-877-575-3873",
+    "email": "orders@fuseprints.com",
+    "url": "https://fuseprints.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Bradford",
+      "addressRegion": "PA",
+      "addressCountry": "US"
+    },
+    "sameAs": [
+      "https://www.instagram.com/fuseprints/",
+      "https://www.facebook.com/fuseprints/",
+      "https://www.tiktok.com/@fuseprints",
+      "https://www.youtube.com/@fuseprints",
+      "https://www.etsy.com/shop/FusePrints"
+    ]
+  }
+  </script>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -30,6 +78,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollToPlugin.min.js"></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -712,6 +761,10 @@
     <div class="max-w-[1400px] mx-auto px-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-6">
       <div class="flex items-center"><img src="assets/logo-white.png" alt="Fuse Prints" class="h-6 w-auto opacity-40"/></div>
       <p class="text-white/15 text-xs">&copy; 2026 Fuse Prints. Family-owned in Bradford, PA.</p>
+      <div class="flex items-center gap-5 text-white/30 text-xs">
+        <a href="/privacy/" class="hover:text-white transition-colors">Privacy</a>
+        <a href="/terms/" class="hover:text-white transition-colors">Terms</a>
+      </div>
       <div class="flex items-center gap-6">
         <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
         <a href="https://www.facebook.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
@@ -843,6 +896,10 @@
   <!-- ============ FIRESTORE CONTENT LOADER ============ -->
   <script type="module">
     import { fetchProducts, fetchGallery, fetchHero, renderProducts, submitInquiry } from './assets/js/content.js';
+    import { emailjsConfig, isEmailjsConfigured } from './assets/js/emailjs-config.js';
+    if (isEmailjsConfigured() && window.emailjs) {
+      window.emailjs.init({ publicKey: emailjsConfig.publicKey });
+    }
 
     function esc(s){if(s==null)return'';return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
@@ -934,6 +991,17 @@
 
         try {
           await submitInquiry({ name, email, phone, projectType, message });
+          // Fire-and-forget EmailJS notification — don't block UX if it fails
+          if (isEmailjsConfigured() && window.emailjs) {
+            window.emailjs.send(emailjsConfig.serviceId, emailjsConfig.templateId, {
+              from_name: name,
+              from_email: email,
+              phone: phone || '(none)',
+              project_type: projectType || 'General inquiry',
+              message,
+              submitted_at: new Date().toLocaleString('en-US')
+            }).catch(e => console.warn('EmailJS send failed:', e));
+          }
           quoteForm.style.display = 'none';
           document.getElementById('form-success').classList.remove('hidden');
         } catch (err) {
