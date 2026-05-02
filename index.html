@@ -132,6 +132,16 @@
     .form-input{border:none;border-bottom:1px solid rgba(255,255,255,.15);padding:16px 0;color:#FAFAFA;background:transparent;font-family:'General Sans',system-ui,sans-serif;font-size:16px;width:100%;transition:border-color .3s}
     .form-input:focus{outline:none;border-bottom-color:#2196F3}
     .form-input::placeholder{color:rgba(255,255,255,.2)}
+    /* Override browser autofill background and text color so fields stay on-brand */
+    .form-input:-webkit-autofill,
+    .form-input:-webkit-autofill:hover,
+    .form-input:-webkit-autofill:focus,
+    .form-input:-webkit-autofill:active{
+      -webkit-text-fill-color:#FAFAFA !important;
+      -webkit-box-shadow:0 0 0 30px transparent inset !important;
+      transition:background-color 9999s ease-in-out 0s !important;
+      caret-color:#FAFAFA;
+    }
 
     /* Lightbox */
     .lightbox{position:fixed;inset:0;z-index:9000;background:rgba(2,2,2,.97);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
