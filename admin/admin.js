@@ -57,6 +57,11 @@ function closeModal(id) {
   // Clear any pending image state when modals are dismissed without saving
   if (id === "product-modal") _pendingProductImage = null;
   if (id === "gallery-modal") _pendingGalleryImage = null;
+  // If the crop modal is being closed, tear down the cropper instance and reject any pending crop promise
+  if (id === "crop-modal") {
+    if (_cropper) { _cropper.destroy(); _cropper = null; }
+    if (_cropResolver) { _cropResolver.reject(new Error("Cancelled")); _cropResolver = null; }
+  }
   // Drop focus from anything inside the modal to prevent stray Enter/click reactivation
   if (document.activeElement && modal.contains(document.activeElement)) document.activeElement.blur();
 }
@@ -77,6 +82,76 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     document.querySelectorAll(".modal-bg.active").forEach(m => closeModal(m.id));
   }
+});
+
+// ----- Image cropper (Cropper.js) -----
+let _cropper = null;
+let _cropResolver = null;
+const MAX_CROPPED_DIMENSION = 1600; // cap output for reasonable file sizes
+
+function openCropper(file, aspectRatio) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith("image/")) { reject(new Error("Not an image")); return; }
+    if (!window.Cropper) { reject(new Error("Cropper not loaded")); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = $("crop-image");
+      img.src = reader.result;
+      $("crop-aspect-hint").textContent = aspectRatio === 1
+        ? "Drag, zoom, and reposition. Square crop (1:1) for product cards."
+        : "Drag, zoom, and reposition. Wide crop (4:3) for the carousel.";
+      openModal("crop-modal");
+      // Init cropper after image is in the DOM and visible
+      setTimeout(() => {
+        if (_cropper) _cropper.destroy();
+        _cropper = new window.Cropper(img, {
+          aspectRatio,
+          viewMode: 1,
+          dragMode: "move",
+          autoCropArea: 0.95,
+          background: false,
+          movable: true,
+          zoomable: true,
+          rotatable: true,
+          scalable: false,
+          responsive: true,
+          checkOrientation: true
+        });
+      }, 100);
+      _cropResolver = { resolve, reject, originalName: file.name, originalType: file.type };
+    };
+    reader.onerror = () => reject(new Error("Couldn't read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
+$("crop-zoom-in").addEventListener("click", () => _cropper?.zoom(0.1));
+$("crop-zoom-out").addEventListener("click", () => _cropper?.zoom(-0.1));
+$("crop-rotate-left").addEventListener("click", () => _cropper?.rotate(-90));
+$("crop-rotate-right").addEventListener("click", () => _cropper?.rotate(90));
+$("crop-reset").addEventListener("click", () => _cropper?.reset());
+
+$("crop-apply-btn").addEventListener("click", () => {
+  if (!_cropper || !_cropResolver) return;
+  const canvas = _cropper.getCroppedCanvas({
+    maxWidth: MAX_CROPPED_DIMENSION,
+    maxHeight: MAX_CROPPED_DIMENSION,
+    imageSmoothingEnabled: true,
+    imageSmoothingQuality: "high"
+  });
+  const { resolve, originalName, originalType } = _cropResolver;
+  const outType = originalType === "image/png" ? "image/png" : "image/jpeg";
+  canvas.toBlob(blob => {
+    if (!blob) { closeCropper(); return; }
+    // Repackage as a File so the rest of the upload flow keeps working
+    const ext = outType === "image/png" ? "png" : "jpg";
+    const base = (originalName || "upload").replace(/\.[^.]+$/, "");
+    const cropped = new File([blob], `${base}.${ext}`, { type: outType });
+    if (_cropper) { _cropper.destroy(); _cropper = null; }
+    _cropResolver = null;
+    closeModal("crop-modal");
+    resolve(cropped);
+  }, outType, 0.92);
 });
 
 // Drag-and-drop reordering. Saves new order to Firestore via batched write.
@@ -380,10 +455,12 @@ let _pendingProductImage = null; // { url, path } from a fresh upload
 setupDropZone("product-drop-zone", "product-image-input", async file => {
   const status = $("product-upload-status");
   try {
-    const res = await uploadImage(file, "products", status);
+    const cropped = await openCropper(file, 1); // 1:1 square for product cards
+    const res = await uploadImage(cropped, "products", status);
     _pendingProductImage = res;
     setDropZoneImage("product-drop-zone", res.url);
   } catch (e) {
+    if (e.message === "Cancelled") return; // user closed crop modal
     console.error(e);
     if (e.message !== "Not an image" && e.message !== "Too big") toast("Upload failed: " + e.message, "error");
   }
@@ -521,10 +598,12 @@ let _pendingGalleryImage = null;
 setupDropZone("gallery-drop-zone", "gallery-image-input", async file => {
   const status = $("gallery-upload-status");
   try {
-    const res = await uploadImage(file, "gallery", status);
+    const cropped = await openCropper(file, 4 / 3); // 4:3 wide for carousel cards
+    const res = await uploadImage(cropped, "gallery", status);
     _pendingGalleryImage = res;
     setDropZoneImage("gallery-drop-zone", res.url);
   } catch (e) {
+    if (e.message === "Cancelled") return;
     console.error(e);
     if (e.message !== "Not an image" && e.message !== "Too big") toast("Upload failed: " + e.message, "error");
   }

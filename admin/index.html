@@ -9,6 +9,8 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -462,6 +464,33 @@
           </div>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ============ CROP MODAL ============ -->
+  <div id="crop-modal" class="modal-bg">
+    <div class="modal p-6 sm:p-8" style="max-width:760px">
+      <div class="flex items-start justify-between mb-5">
+        <div>
+          <h2 class="font-display font-bold text-2xl">Crop Image</h2>
+          <p class="text-white/40 text-sm mt-1" id="crop-aspect-hint">Drag, zoom, and reposition. The shaded area will be saved.</p>
+        </div>
+        <button class="btn btn-ghost !py-1.5 !px-3 text-xs modal-close" data-modal="crop-modal">Close</button>
+      </div>
+      <div style="background:#000;border-radius:12px;overflow:hidden;max-height:520px">
+        <img id="crop-image" style="display:block;max-width:100%;max-height:520px" />
+      </div>
+      <div class="flex flex-wrap items-center gap-3 mt-5">
+        <button type="button" id="crop-zoom-in" class="btn btn-ghost text-xs">Zoom In</button>
+        <button type="button" id="crop-zoom-out" class="btn btn-ghost text-xs">Zoom Out</button>
+        <button type="button" id="crop-rotate-left" class="btn btn-ghost text-xs">Rotate ↺</button>
+        <button type="button" id="crop-rotate-right" class="btn btn-ghost text-xs">Rotate ↻</button>
+        <button type="button" id="crop-reset" class="btn btn-ghost text-xs">Reset</button>
+        <div class="flex gap-2 ml-auto">
+          <button type="button" class="btn btn-ghost modal-close" data-modal="crop-modal">Cancel</button>
+          <button type="button" id="crop-apply-btn" class="btn btn-primary">Apply Crop</button>
+        </div>
+      </div>
     </div>
   </div>
 
