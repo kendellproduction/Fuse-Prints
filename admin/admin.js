@@ -547,7 +547,7 @@ function openProductModal(product) {
   // Stash existing image path for cleanup if replaced
   $("product-form").dataset.existingImagePath = product?.imagePath || "";
   $("product-form").dataset.existingImageUrl = product?.imageUrl || "";
-  $("product-recrop-btn").classList.toggle("hidden", !product?.imageUrl);
+  $("product-recrop-btn").style.display = product?.imageUrl ? "inline-flex" : "none";
   openModal("product-modal");
 }
 
@@ -694,7 +694,7 @@ function openGalleryModal(item) {
   setDropZoneImage("gallery-drop-zone", item?.imageUrl || "");
   $("gallery-form").dataset.existingImagePath = item?.imagePath || "";
   $("gallery-form").dataset.existingImageUrl = item?.imageUrl || "";
-  $("gallery-recrop-btn").classList.toggle("hidden", !item?.imageUrl);
+  $("gallery-recrop-btn").style.display = item?.imageUrl ? "inline-flex" : "none";
   openModal("gallery-modal");
 }
 
@@ -845,7 +845,7 @@ function openHeroModal(item) {
   setDropZoneImage("hero-drop-zone", item?.imageUrl || "");
   $("hero-form").dataset.existingImagePath = item?.imagePath || "";
   $("hero-form").dataset.existingImageUrl = item?.imageUrl || "";
-  $("hero-recrop-btn").classList.toggle("hidden", !item?.imageUrl);
+  $("hero-recrop-btn").style.display = item?.imageUrl ? "inline-flex" : "none";
   openModal("hero-modal");
 }
 
