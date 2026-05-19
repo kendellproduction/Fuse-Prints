@@ -97,7 +97,61 @@
     /* Hero */
     .hero-word{display:inline-block;overflow:hidden;vertical-align:bottom}
     .hero-word span{display:inline-block;transform:translateY(110%)}
-    .hero-img-reveal{clip-path:inset(100% 0 0 0)}
+    /* Subtle, uniform text shadow on hero copy for depth */
+    #hero h1, #hero p, #hero a:not(.bg-brand){text-shadow:0 2px 12px rgba(0,0,0,.45),0 1px 3px rgba(0,0,0,.35)}
+    /* Gradient-text uses background-clip:text — text-shadow leaks through the transparent fill,
+       so we soften it to a clean drop-shadow on the element instead */
+    #hero .gradient-text{text-shadow:none;filter:drop-shadow(0 2px 12px rgba(0,0,0,.45)) drop-shadow(0 1px 3px rgba(0,0,0,.35))}
+
+    /* Animated hero background — branded gradient + drifting orbs */
+    #hero-bg{position:absolute;inset:0;background:radial-gradient(1200px 800px at 15% 25%,rgba(33,150,243,.35),transparent 60%),radial-gradient(1000px 700px at 88% 78%,rgba(21,101,192,.32),transparent 60%),radial-gradient(800px 600px at 50% 110%,rgba(100,181,246,.14),transparent 65%),linear-gradient(135deg,#040a1a 0%,#020202 50%,#020a14 100%)}
+    #hero-orb{position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(33,150,243,.55) 0%,rgba(33,150,243,.18) 40%,transparent 70%);filter:blur(40px);top:18%;left:8%;animation:orbDrift 18s ease-in-out infinite alternate;pointer-events:none;mix-blend-mode:screen}
+    #hero-orb-2{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(100,181,246,.4) 0%,rgba(21,101,192,.15) 40%,transparent 70%);filter:blur(50px);bottom:12%;right:6%;animation:orbDrift2 22s ease-in-out infinite alternate;pointer-events:none;mix-blend-mode:screen}
+    @keyframes orbDrift{
+      0%  {transform:translate(0,0) scale(1)}
+      50% {transform:translate(80px,-40px) scale(1.1)}
+      100%{transform:translate(-40px,60px) scale(.95)}
+    }
+    @keyframes orbDrift2{
+      0%  {transform:translate(0,0) scale(1)}
+      50% {transform:translate(-70px,50px) scale(1.08)}
+      100%{transform:translate(40px,-30px) scale(.95)}
+    }
+    /* Halftone-dot pattern — on-brand for a print shop */
+    #hero-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.18) 1.2px,transparent 1.6px);background-size:22px 22px;mask-image:radial-gradient(ellipse 80% 70% at 70% 80%,#000 0%,#000 35%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 70% 80%,#000 0%,#000 35%,transparent 75%);opacity:.55;pointer-events:none}
+    #hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(33,150,243,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(33,150,243,.06) 1px,transparent 1px);background-size:90px 90px,90px 90px;mask-image:radial-gradient(ellipse at 30% 50%,#000 10%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 30% 50%,#000 10%,transparent 70%);opacity:.9;pointer-events:none}
+    /* Diagonal accent line — gives the layout a piece of geometry to grip */
+    #hero-line{position:absolute;top:-20%;right:-10%;width:120%;height:1px;background:linear-gradient(90deg,transparent,rgba(33,150,243,.25),transparent);transform:rotate(28deg);transform-origin:center;pointer-events:none}
+    #hero-line-2{position:absolute;top:auto;bottom:-15%;right:-20%;width:140%;height:1px;background:linear-gradient(90deg,transparent,rgba(100,181,246,.18),transparent);transform:rotate(-22deg);transform-origin:center;pointer-events:none}
+    /* Vignette so edges fade into the next section cleanly */
+    #hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse 110% 90% at 50% 50%,transparent 40%,rgba(2,2,2,.5) 100%);pointer-events:none}
+
+    /* CMYK registration mark — print-industry hero centerpiece */
+    #hero-reg{position:absolute;right:6%;top:50%;transform:translateY(-50%);width:min(36vw,520px);height:min(36vw,520px);pointer-events:none;opacity:.95;animation:regFloat 14s ease-in-out infinite alternate}
+    #hero-reg .reg-spin{transform-origin:center;animation:regSpin 80s linear infinite}
+    @keyframes regFloat{
+      0%  {transform:translateY(-50%) translate(0,0)}
+      100%{transform:translateY(-50%) translate(-20px,-30px)}
+    }
+    @keyframes regSpin{
+      0%  {transform:rotate(0deg)}
+      100%{transform:rotate(360deg)}
+    }
+    /* Color-bar tabs that flank the mark — CMYK reference */
+    #hero-cmyk-bar{position:absolute;right:6%;bottom:14%;display:flex;gap:0;opacity:.85;pointer-events:none}
+    #hero-cmyk-bar span{display:block;width:36px;height:8px;border-radius:2px}
+    #hero-cmyk-bar .c{background:#00B7D4}
+    #hero-cmyk-bar .m{background:#E5247A}
+    #hero-cmyk-bar .y{background:#FFD400}
+    #hero-cmyk-bar .k{background:#FAFAFA}
+    /* Giant ghosted "EST. 2014" wordmark behind the headline */
+    #hero-est{position:absolute;left:-2vw;bottom:-2vw;font-family:'Clash Display',system-ui,sans-serif;font-weight:700;font-size:24vw;line-height:.85;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px rgba(33,150,243,.10);text-stroke:1px rgba(33,150,243,.10);pointer-events:none;white-space:nowrap;user-select:none}
+    @media(max-width:768px){
+      #hero-reg{right:-15%;top:8%;width:80vw;height:80vw;opacity:.4}
+      #hero-cmyk-bar{display:none}
+      #hero-est{font-size:36vw;left:-8vw;bottom:-6vw}
+    }
+    @media(prefers-reduced-motion:reduce){#hero-orb,#hero-orb-2,#hero-reg,#hero-reg .reg-spin{animation:none}}
 
     /* Gradient text */
     .gradient-text{background:linear-gradient(135deg,#64B5F6 0%,#2196F3 50%,#1565C0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -286,7 +340,7 @@
           <a href="https://www.youtube.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="text-white/50 hover:text-brand transition-colors"><svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
           <a href="https://www.facebook.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-white/50 hover:text-brand transition-colors"><svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
         </div>
-        <a href="#contact" class="inline-flex text-[13px] font-display font-semibold text-white bg-brand px-6 py-2.5 rounded-full hover:bg-brand-light transition-all">Get a Quote</a>
+        <a href="#contact" class="inline-flex text-[13px] font-display font-bold text-white bg-brand px-6 py-2.5 rounded-full hover:bg-brand-light transition-all" style="text-shadow:0 1px 2px rgba(0,0,0,.35)">Get a Quote</a>
       </div>
       <button id="menu-toggle" class="lg:hidden text-white p-2"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
     </div>
@@ -300,7 +354,7 @@
     <a href="#services" class="mobile-nav-link text-4xl font-display font-semibold text-white/80 hover:text-brand transition-colors mb-6">Services</a>
     <a href="#process" class="mobile-nav-link text-4xl font-display font-semibold text-white/80 hover:text-brand transition-colors mb-6">Process</a>
     <a href="#contact" class="mobile-nav-link text-4xl font-display font-semibold text-white/80 hover:text-brand transition-colors mb-6">Contact</a>
-    <a href="#contact" class="mt-4 text-lg font-display font-semibold text-white bg-brand px-8 py-3 rounded-full mobile-nav-link">Get a Quote</a>
+    <a href="#contact" class="mt-4 text-lg font-display font-bold text-white bg-brand px-8 py-3 rounded-full mobile-nav-link" style="text-shadow:0 1px 2px rgba(0,0,0,.35)">Get a Quote</a>
     <div class="flex items-center gap-6 mt-10">
       <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-white/60 hover:text-brand transition-colors"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
       <a href="https://www.tiktok.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="text-white/60 hover:text-brand transition-colors"><svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.56a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.03Z"/></svg></a>
@@ -310,27 +364,81 @@
   </div>
 
 
-  <!-- ============ HERO — PHOTO MOSAIC ============ -->
-  <section class="relative min-h-screen flex flex-col justify-center sm:justify-end pt-24 pb-12 sm:pt-0 sm:pb-28 overflow-hidden">
-    <!-- Image mosaic background -->
-    <div class="absolute inset-0 grid grid-cols-2 sm:grid-cols-5 grid-rows-3 opacity-0" id="hero-mosaic"></div>
-    <div class="absolute inset-0 bg-surface-400/75 sm:bg-surface-400/65" id="hero-overlay"></div>
+  <!-- ============ HERO ============ -->
+  <section id="hero" class="relative min-h-screen flex flex-col justify-center pt-28 pb-12 sm:pt-32 sm:pb-24 overflow-hidden">
+    <!-- Branded background (no photos — keeps focus on the gallery below) -->
+    <div id="hero-bg" class="absolute inset-0"></div>
+    <div id="hero-dots" class="absolute inset-0"></div>
+    <div id="hero-grid" class="absolute inset-0"></div>
+    <div id="hero-line" class="absolute"></div>
+    <div id="hero-line-2" class="absolute"></div>
+    <div id="hero-orb" class="absolute"></div>
+    <div id="hero-orb-2" class="absolute"></div>
+    <div id="hero-vignette" class="absolute inset-0"></div>
+
+    <!-- Giant ghosted EST. 2014 wordmark -->
+    <div id="hero-est" aria-hidden="true">EST. 2014</div>
+
+    <!-- CMYK registration mark centerpiece -->
+    <svg id="hero-reg" viewBox="0 0 400 400" aria-hidden="true" fill="none">
+      <defs>
+        <radialGradient id="reg-fade" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(33,150,243,0.45)"/>
+          <stop offset="60%" stop-color="rgba(33,150,243,0.15)"/>
+          <stop offset="100%" stop-color="rgba(33,150,243,0)"/>
+        </radialGradient>
+      </defs>
+      <!-- Soft glow disk -->
+      <circle cx="200" cy="200" r="190" fill="url(#reg-fade)"/>
+      <!-- Outer ring -->
+      <circle cx="200" cy="200" r="178" stroke="rgba(100,181,246,0.55)" stroke-width="1.5"/>
+      <!-- Inner ring -->
+      <circle cx="200" cy="200" r="120" stroke="rgba(100,181,246,0.4)" stroke-width="1"/>
+      <!-- Tick ring -->
+      <g class="reg-spin" stroke="rgba(100,181,246,0.5)" stroke-width="1.5" stroke-linecap="round">
+        <line x1="200" y1="22" x2="200" y2="50"/>
+        <line x1="378" y1="200" x2="350" y2="200"/>
+        <line x1="200" y1="378" x2="200" y2="350"/>
+        <line x1="22" y1="200" x2="50" y2="200"/>
+        <line x1="326" y1="74" x2="306" y2="94"/>
+        <line x1="326" y1="326" x2="306" y2="306"/>
+        <line x1="74" y1="326" x2="94" y2="306"/>
+        <line x1="74" y1="74" x2="94" y2="94"/>
+      </g>
+      <!-- Center crosshair (the actual registration mark) -->
+      <g stroke="#64B5F6" stroke-width="2" stroke-linecap="round">
+        <line x1="200" y1="140" x2="200" y2="180"/>
+        <line x1="200" y1="220" x2="200" y2="260"/>
+        <line x1="140" y1="200" x2="180" y2="200"/>
+        <line x1="220" y1="200" x2="260" y2="200"/>
+        <circle cx="200" cy="200" r="34" stroke-width="2" fill="none"/>
+        <circle cx="200" cy="200" r="2.5" fill="#64B5F6"/>
+      </g>
+      <!-- Tiny corner labels -->
+      <g fill="rgba(100,181,246,0.45)" font-family="'Clash Display',system-ui,sans-serif" font-size="9" font-weight="600" letter-spacing="3">
+        <text x="200" y="14" text-anchor="middle">REGISTRATION</text>
+        <text x="200" y="396" text-anchor="middle">FUSE PRINTS</text>
+      </g>
+    </svg>
+
+    <!-- CMYK color-bar reference -->
+    <div id="hero-cmyk-bar"><span class="c"></span><span class="m"></span><span class="y"></span><span class="k"></span></div>
 
     <div class="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-10 w-full">
-      <div class="flex items-center gap-4 mb-6 sm:mb-8" id="hero-eyebrow" style="opacity:0">
-        <div class="h-px w-12 bg-brand/50"></div>
-        <p class="text-brand text-[11px] sm:text-[13px] font-semibold tracking-[.3em] uppercase">Large Format Printing</p>
+      <div class="flex items-center gap-4 mb-5 sm:mb-7" id="hero-eyebrow" style="opacity:0">
+        <div class="h-[2px] w-12 bg-brand-light"></div>
+        <p class="text-brand-light text-[12px] sm:text-[14px] font-bold tracking-[.3em] uppercase">Large Format Printing Service</p>
       </div>
 
-      <h1 class="font-display font-bold text-[13vw] sm:text-[9vw] lg:text-[7vw] leading-[.9] tracking-[-.03em]">
-        <span class="hero-word"><span class="text-white">We Print</span></span><br/>
-        <span class="hero-word"><span class="text-white">What Others</span></span><br/>
-        <span class="hero-word"><span class="gradient-text">Can't.</span></span>
+      <h1 class="font-display font-bold text-[12vw] sm:text-[8vw] lg:text-[5.5vw] leading-[.9] tracking-[-.03em]">
+        <span class="hero-word"><span class="text-white">Need Large</span></span><br/>
+        <span class="hero-word"><span class="text-white">Prints<span class="text-brand-light">?</span></span></span><br/>
+        <span class="hero-word"><span class="gradient-text">We Can Help!</span></span>
       </h1>
 
-      <p id="hero-sub" class="mt-6 sm:mt-8 max-w-md" style="opacity:0">
-        <span class="block font-display font-medium text-base sm:text-lg text-white/90 tracking-wide leading-relaxed">Backdrops <span class="text-brand">/</span> Banners <span class="text-brand">/</span> Signage <span class="text-brand">/</span> Canvas</span>
-        <span class="block text-white/50 text-sm sm:text-base mt-2 leading-relaxed">Family-owned in Bradford, PA — printing bold for brands nationwide.</span>
+      <p id="hero-sub" class="mt-6 sm:mt-7 max-w-xl" style="opacity:0">
+        <span class="block font-display font-medium text-base sm:text-lg text-white/90 tracking-wide leading-relaxed">Banners <span class="text-brand">/</span> Signs <span class="text-brand">/</span> Stickers <span class="text-brand">/</span> Decals <span class="text-brand">/</span> Displays</span>
+        <span class="block text-white/85 text-base sm:text-lg mt-2 leading-relaxed font-medium">All products produced in Bradford, PA — Family Owned and Operated since 2014.</span>
       </p>
       <a href="#contact" id="hero-cta" class="group inline-flex items-center gap-3 bg-brand text-white font-display font-semibold text-sm sm:text-base uppercase tracking-[.12em] px-8 py-4 sm:px-7 sm:py-3.5 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.3)] w-fit mt-8" style="opacity:0">
         Start a Project
@@ -345,10 +453,10 @@
   <!-- ============ MARQUEE ============ -->
   <div class="py-5 border-y border-white/[.06] overflow-hidden">
     <div class="marquee-track">
-      <span class="flex items-center gap-8 px-4 text-white/40 font-display font-semibold text-[13px] uppercase tracking-[.25em] whitespace-nowrap">
+      <span class="flex items-center gap-8 px-4 text-white/70 font-display font-semibold text-[13px] uppercase tracking-[.25em] whitespace-nowrap">
         <span>Backdrops</span><span class="text-brand/60">&#9670;</span><span>Banners</span><span class="text-brand/60">&#9670;</span><span>Trade Show Displays</span><span class="text-brand/60">&#9670;</span><span>Canvas Prints</span><span class="text-brand/60">&#9670;</span><span>Wall Graphics</span><span class="text-brand/60">&#9670;</span><span>Custom Signage</span><span class="text-brand/60">&#9670;</span><span>Laser Engraving</span><span class="text-brand/60">&#9670;</span><span>Decals</span><span class="text-brand/60">&#9670;</span><span>Home Decor</span><span class="text-brand/60">&#9670;</span>
       </span>
-      <span class="flex items-center gap-8 px-4 text-white/40 font-display font-semibold text-[13px] uppercase tracking-[.25em] whitespace-nowrap">
+      <span class="flex items-center gap-8 px-4 text-white/70 font-display font-semibold text-[13px] uppercase tracking-[.25em] whitespace-nowrap">
         <span>Backdrops</span><span class="text-brand/60">&#9670;</span><span>Banners</span><span class="text-brand/60">&#9670;</span><span>Trade Show Displays</span><span class="text-brand/60">&#9670;</span><span>Canvas Prints</span><span class="text-brand/60">&#9670;</span><span>Wall Graphics</span><span class="text-brand/60">&#9670;</span><span>Custom Signage</span><span class="text-brand/60">&#9670;</span><span>Laser Engraving</span><span class="text-brand/60">&#9670;</span><span>Decals</span><span class="text-brand/60">&#9670;</span><span>Home Decor</span><span class="text-brand/60">&#9670;</span>
       </span>
     </div>
@@ -363,7 +471,7 @@
           <p class="text-brand text-[11px] font-semibold tracking-[.3em] uppercase mb-3 line-reveal"><span>Selected Work</span></p>
           <h2 class="font-display font-bold text-5xl sm:text-6xl lg:text-7xl tracking-[-.03em] line-reveal"><span>Our Work</span></h2>
         </div>
-        <p class="text-white/40 text-base max-w-sm line-reveal"><span>From local shops to national brands — every print tells a story.</span></p>
+        <p class="text-white/75 text-lg sm:text-xl font-medium leading-relaxed max-w-md line-reveal"><span>From local shops to national brands — every print tells a story.</span></p>
       </div>
     </div>
 
@@ -389,7 +497,7 @@
             <p class="text-brand text-[11px] font-semibold tracking-[.3em] uppercase mb-4">Who We Are</p>
             <h2 class="font-display font-bold text-3xl sm:text-5xl tracking-[-.02em] leading-[.95]">Family-Owned.<br/><span class="gradient-text">Nationally Trusted.</span></h2>
           </div>
-          <p class="text-white/40 text-base leading-relaxed">Based in Bradford, PA, we've grown from a small family operation into a trusted partner for businesses and organizations nationwide.</p>
+          <p class="text-white/70 text-base leading-relaxed">Based in Bradford, PA, we've grown from a small family operation into a trusted partner for businesses and organizations nationwide.</p>
         </div>
 
         <!-- Stat: Years -->
@@ -397,7 +505,7 @@
           <i data-lucide="calendar" class="w-6 h-6 text-brand/50"></i>
           <div>
             <p class="stat-number font-display font-bold text-5xl text-white" data-target="10">0</p>
-            <p class="text-white/30 text-xs uppercase tracking-[.15em] font-semibold mt-1">Years in Business</p>
+            <p class="text-white/65 text-xs uppercase tracking-[.15em] font-semibold mt-1">Years in Business</p>
           </div>
         </div>
 
@@ -406,7 +514,7 @@
           <i data-lucide="layers" class="w-6 h-6 text-brand/50"></i>
           <div>
             <p class="stat-number font-display font-bold text-5xl text-white" data-target="5000">0</p>
-            <p class="text-white/30 text-xs uppercase tracking-[.15em] font-semibold mt-1">Projects Completed</p>
+            <p class="text-white/65 text-xs uppercase tracking-[.15em] font-semibold mt-1">Projects Completed</p>
           </div>
         </div>
 
@@ -415,7 +523,7 @@
           <i data-lucide="map" class="w-6 h-6 text-brand/50"></i>
           <div>
             <p class="stat-number font-display font-bold text-5xl text-white" data-target="48">0</p>
-            <p class="text-white/30 text-xs uppercase tracking-[.15em] font-semibold mt-1">States Served</p>
+            <p class="text-white/65 text-xs uppercase tracking-[.15em] font-semibold mt-1">States Served</p>
           </div>
         </div>
 
@@ -440,21 +548,20 @@
           <h2 class="font-display font-bold text-5xl sm:text-6xl lg:text-7xl tracking-[-.03em] leading-[.95] line-reveal"><span>What We</span><br/><span>Print<span class="gradient-text">.</span></span></h2>
         </div>
         <div class="flex items-end">
-          <p class="text-white/40 text-lg leading-relaxed line-reveal"><span>From eye-catching event signage to immersive trade show experiences — we bring your brand to life at any scale, on any surface.</span></p>
+          <p class="text-white/70 text-lg leading-relaxed line-reveal"><span>From eye-catching event signage to immersive trade show experiences — we bring your brand to life at any scale, on any surface.</span></p>
         </div>
       </div>
 
       <div class="grid lg:grid-cols-[1fr_400px] gap-12 items-start">
-        <!-- Services list -->
-        <div class="space-y-0">
-          <div class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">01</span><h3 class="font-display font-semibold text-xl sm:text-2xl group-hover:text-brand transition-colors duration-300">Backdrops & Step-and-Repeats</h3></div><p class="text-white/20 text-sm sm:max-w-xs sm:text-right group-hover:text-white/40 transition-colors">Custom fabric and vinyl for events and press walls</p></div>
-          <div class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">02</span><h3 class="font-display font-semibold text-xl sm:text-2xl group-hover:text-brand transition-colors duration-300">Banners & Banner Stands</h3></div><p class="text-white/20 text-sm sm:max-w-xs sm:text-right group-hover:text-white/40 transition-colors">Retractable, hanging, and outdoor at any scale</p></div>
-          <div class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">03</span><h3 class="font-display font-semibold text-xl sm:text-2xl group-hover:text-brand transition-colors duration-300">Trade Show Displays</h3></div><p class="text-white/20 text-sm sm:max-w-xs sm:text-right group-hover:text-white/40 transition-colors">Complete booth solutions and pop-ups</p></div>
-          <div class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">04</span><h3 class="font-display font-semibold text-xl sm:text-2xl group-hover:text-brand transition-colors duration-300">Canvas Prints</h3></div><p class="text-white/20 text-sm sm:max-w-xs sm:text-right group-hover:text-white/40 transition-colors">Gallery-quality for offices, lobbies, and homes</p></div>
-          <div class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">05</span><h3 class="font-display font-semibold text-xl sm:text-2xl group-hover:text-brand transition-colors duration-300">Decals & Wall Graphics</h3></div><p class="text-white/20 text-sm sm:max-w-xs sm:text-right group-hover:text-white/40 transition-colors">Vinyl murals and window graphics</p></div>
-          <div class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">06</span><h3 class="font-display font-semibold text-xl sm:text-2xl group-hover:text-brand transition-colors duration-300">Custom Signage</h3></div><p class="text-white/20 text-sm sm:max-w-xs sm:text-right group-hover:text-white/40 transition-colors">Acrylic, wood, metal — any surface</p></div>
-          <div class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">07</span><h3 class="font-display font-semibold text-xl sm:text-2xl group-hover:text-brand transition-colors duration-300">Laser Engraving</h3></div><p class="text-white/20 text-sm sm:max-w-xs sm:text-right group-hover:text-white/40 transition-colors">Precision laser-cut and engraved pieces</p></div>
-          <div class="service-card group border-t border-b border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">08</span><h3 class="font-display font-semibold text-xl sm:text-2xl group-hover:text-brand transition-colors duration-300">Home Decor & Gifts</h3></div><p class="text-white/20 text-sm sm:max-w-xs sm:text-right group-hover:text-white/40 transition-colors">Personalized prints and engraved gifts</p></div>
+        <!-- Services list — hardcoded as SEO fallback, hydrated dynamically by JS to include any custom services -->
+        <div class="space-y-0" id="services-list">
+          <a href="/banners" class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 no-underline"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">01</span><h3 class="font-display font-semibold text-xl sm:text-2xl text-white group-hover:text-brand transition-colors duration-300">Banners</h3></div><p class="text-white/65 text-sm sm:max-w-xs sm:text-right group-hover:text-white/95 transition-colors">Retractable, hanging, and outdoor at any scale</p></a>
+          <a href="/custom-signs" class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 no-underline"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">02</span><h3 class="font-display font-semibold text-xl sm:text-2xl text-white group-hover:text-brand transition-colors duration-300">Custom Signs</h3></div><p class="text-white/65 text-sm sm:max-w-xs sm:text-right group-hover:text-white/95 transition-colors">Acrylic, wood, metal — any surface, any size</p></a>
+          <a href="/custom-awards-plaques" class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 no-underline"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">03</span><h3 class="font-display font-semibold text-xl sm:text-2xl text-white group-hover:text-brand transition-colors duration-300">Custom Awards &amp; Plaques</h3></div><p class="text-white/65 text-sm sm:max-w-xs sm:text-right group-hover:text-white/95 transition-colors">Precision laser-engraved recognition pieces</p></a>
+          <a href="/tradeshow-displays" class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 no-underline"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">04</span><h3 class="font-display font-semibold text-xl sm:text-2xl text-white group-hover:text-brand transition-colors duration-300">Tradeshow Displays</h3></div><p class="text-white/65 text-sm sm:max-w-xs sm:text-right group-hover:text-white/95 transition-colors">Complete booth solutions, backdrops, and pop-ups</p></a>
+          <a href="/stickers-decals" class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 no-underline"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">05</span><h3 class="font-display font-semibold text-xl sm:text-2xl text-white group-hover:text-brand transition-colors duration-300">Stickers &amp; Decals</h3></div><p class="text-white/65 text-sm sm:max-w-xs sm:text-right group-hover:text-white/95 transition-colors">Die-cut vinyl, kiss-cut sheets, and durable outdoor</p></a>
+          <a href="/wall-window-decals" class="service-card group border-t border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 no-underline"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">06</span><h3 class="font-display font-semibold text-xl sm:text-2xl text-white group-hover:text-brand transition-colors duration-300">Wall &amp; Window Decals</h3></div><p class="text-white/65 text-sm sm:max-w-xs sm:text-right group-hover:text-white/95 transition-colors">Murals, frosted glass, and storefront graphics</p></a>
+          <a href="/home-decor-gifts" class="service-card group border-t border-b border-white/[.06] py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 no-underline"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">07</span><h3 class="font-display font-semibold text-xl sm:text-2xl text-white group-hover:text-brand transition-colors duration-300">Home Décor &amp; Gifts</h3></div><p class="text-white/65 text-sm sm:max-w-xs sm:text-right group-hover:text-white/95 transition-colors">Personalized prints, canvas, and engraved gifts</p></a>
         </div>
 
         <!-- Sticky feature image -->
@@ -487,32 +594,32 @@
         <div class="process-step glass rounded-2xl p-8 hover:border-brand/20 transition-all hover:-translate-y-1">
           <div class="flex items-center gap-4 mb-5"><span class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center font-display font-bold text-brand text-sm">01</span><div class="h-px flex-1 bg-white/[.06]"></div></div>
           <h3 class="font-display font-semibold text-xl mb-2">Reach Out</h3>
-          <p class="text-white/30 text-sm leading-relaxed">Tell us about your project via our quote form, email, or a quick phone call.</p>
+          <p class="text-white/65 text-sm leading-relaxed">Tell us about your project via our quote form, email, or a quick phone call.</p>
         </div>
         <div class="process-step glass rounded-2xl p-8 hover:border-brand/20 transition-all hover:-translate-y-1">
           <div class="flex items-center gap-4 mb-5"><span class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center font-display font-bold text-brand text-sm">02</span><div class="h-px flex-1 bg-white/[.06]"></div></div>
           <h3 class="font-display font-semibold text-xl mb-2">Ideation</h3>
-          <p class="text-white/30 text-sm leading-relaxed">We collaborate on concepts, materials, and sizing to nail your vision.</p>
+          <p class="text-white/65 text-sm leading-relaxed">We collaborate on concepts, materials, and sizing to nail your vision.</p>
         </div>
         <div class="process-step glass rounded-2xl p-8 hover:border-brand/20 transition-all hover:-translate-y-1">
           <div class="flex items-center gap-4 mb-5"><span class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center font-display font-bold text-brand text-sm">03</span><div class="h-px flex-1 bg-white/[.06]"></div></div>
           <h3 class="font-display font-semibold text-xl mb-2">Renderings & Proofs</h3>
-          <p class="text-white/30 text-sm leading-relaxed">Receive digital mockups to visualize exactly what you're getting.</p>
+          <p class="text-white/65 text-sm leading-relaxed">Receive digital mockups to visualize exactly what you're getting.</p>
         </div>
         <div class="process-step glass rounded-2xl p-8 hover:border-brand/20 transition-all hover:-translate-y-1">
           <div class="flex items-center gap-4 mb-5"><span class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center font-display font-bold text-brand text-sm">04</span><div class="h-px flex-1 bg-white/[.06]"></div></div>
           <h3 class="font-display font-semibold text-xl mb-2">Approval</h3>
-          <p class="text-white/30 text-sm leading-relaxed">Review, request revisions, and give the green light on the final design.</p>
+          <p class="text-white/65 text-sm leading-relaxed">Review, request revisions, and give the green light on the final design.</p>
         </div>
         <div class="process-step glass rounded-2xl p-8 hover:border-brand/20 transition-all hover:-translate-y-1">
           <div class="flex items-center gap-4 mb-5"><span class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center font-display font-bold text-brand text-sm">05</span><div class="h-px flex-1 bg-white/[.06]"></div></div>
           <h3 class="font-display font-semibold text-xl mb-2">Print</h3>
-          <p class="text-white/30 text-sm leading-relaxed">We produce your order with premium materials and meticulous quality control.</p>
+          <p class="text-white/65 text-sm leading-relaxed">We produce your order with premium materials and meticulous quality control.</p>
         </div>
         <div class="process-step glass rounded-2xl p-8 hover:border-brand/20 transition-all hover:-translate-y-1">
           <div class="flex items-center gap-4 mb-5"><span class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center font-display font-bold text-brand text-sm">06</span><div class="h-px flex-1 bg-white/[.06]"></div></div>
           <h3 class="font-display font-semibold text-xl mb-2">Delivery</h3>
-          <p class="text-white/30 text-sm leading-relaxed">Fast shipping or professional on-site installation — your call.</p>
+          <p class="text-white/65 text-sm leading-relaxed">Fast shipping or professional on-site installation — your call.</p>
         </div>
       </div>
     </div>
@@ -556,7 +663,7 @@
 
       <!-- Browse All CTA — shown when there are featured products -->
       <div id="product-browse-all" class="hidden mt-14 text-center">
-        <p class="text-white/40 text-base mb-6">Want to see the full collection?</p>
+        <p class="text-white/70 text-base mb-6">Want to see the full collection?</p>
         <a href="https://www.etsy.com/shop/FusePrints" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-3 text-white font-display font-semibold text-sm uppercase tracking-[.1em] px-8 py-4 rounded-full transition-all hover:shadow-[0_0_40px_rgba(241,101,33,.4)]" style="background:#F16521">
           Browse All Products on Etsy
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -583,7 +690,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </div>
         </div>
-        <p class="text-center text-white/40 text-sm mt-10 max-w-md mx-auto">Featured products coming soon — <a href="https://www.etsy.com/shop/FusePrints" target="_blank" rel="noopener noreferrer" class="text-[#F16521] hover:underline">browse our full shop on Etsy</a>.</p>
+        <p class="text-center text-white/70 text-sm mt-10 max-w-md mx-auto">Featured products coming soon — <a href="https://www.etsy.com/shop/FusePrints" target="_blank" rel="noopener noreferrer" class="text-[#F16521] hover:underline">browse our full shop on Etsy</a>.</p>
       </div>
     </div>
   </section>
@@ -609,7 +716,7 @@
           <p class="text-white/70 text-xl sm:text-2xl font-display leading-relaxed mb-8">"Fuse Prints knocked it out of the park with our trade show booth. The quality was incredible, turnaround was fast, and they made the whole process effortless."</p>
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-full bg-brand/20 flex items-center justify-center font-display font-bold text-brand text-lg">S</div>
-            <div><p class="font-display font-semibold text-white">Sarah M.</p><p class="text-white/30 text-sm">Marketing Director</p></div>
+            <div><p class="font-display font-semibold text-white">Sarah M.</p><p class="text-white/65 text-sm">Marketing Director</p></div>
           </div>
         </div>
       </div>
@@ -619,12 +726,12 @@
         <div class="testimonial-card rounded-2xl p-8">
           <div class="flex gap-1 mb-5"><i data-lucide="star" class="w-4 h-4 text-brand fill-brand"></i><i data-lucide="star" class="w-4 h-4 text-brand fill-brand"></i><i data-lucide="star" class="w-4 h-4 text-brand fill-brand"></i><i data-lucide="star" class="w-4 h-4 text-brand fill-brand"></i><i data-lucide="star" class="w-4 h-4 text-brand fill-brand"></i></div>
           <p class="text-white/50 text-base leading-relaxed mb-6">"We've used Fuse Prints for all our event banners and signage for 3 years. Consistent quality, great communication, and they always deliver on time."</p>
-          <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-brand/15 flex items-center justify-center font-display font-bold text-brand text-sm">J</div><div><p class="font-display font-semibold text-white text-sm">Jason R.</p><p class="text-white/25 text-xs">Event Coordinator</p></div></div>
+          <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-brand/15 flex items-center justify-center font-display font-bold text-brand text-sm">J</div><div><p class="font-display font-semibold text-white text-sm">Jason R.</p><p class="text-white/65 text-xs">Event Coordinator</p></div></div>
         </div>
         <div class="testimonial-card rounded-2xl p-8">
           <div class="flex gap-1 mb-5"><i data-lucide="star" class="w-4 h-4 text-brand fill-brand"></i><i data-lucide="star" class="w-4 h-4 text-brand fill-brand"></i><i data-lucide="star" class="w-4 h-4 text-brand fill-brand"></i><i data-lucide="star" class="w-4 h-4 text-brand fill-brand"></i><i data-lucide="star" class="w-4 h-4 text-brand fill-brand"></i></div>
           <p class="text-white/50 text-base leading-relaxed mb-6">"The lobby graphics they did for our office completely transformed the space. Professional, responsive, and genuinely great people to work with."</p>
-          <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-brand/15 flex items-center justify-center font-display font-bold text-brand text-sm">A</div><div><p class="font-display font-semibold text-white text-sm">Amanda K.</p><p class="text-white/25 text-xs">Office Manager</p></div></div>
+          <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-brand/15 flex items-center justify-center font-display font-bold text-brand text-sm">A</div><div><p class="font-display font-semibold text-white text-sm">Amanda K.</p><p class="text-white/65 text-xs">Office Manager</p></div></div>
         </div>
       </div>
     </div>
@@ -639,17 +746,17 @@
         <div class="lg:sticky lg:top-28 lg:self-start">
           <p class="text-brand text-[11px] font-semibold tracking-[.3em] uppercase mb-3 line-reveal"><span>Common Questions</span></p>
           <h2 class="font-display font-bold text-5xl sm:text-6xl tracking-[-.03em] leading-[.95] mb-6 line-reveal"><span>FAQ</span></h2>
-          <p class="text-white/30 text-base leading-relaxed line-reveal"><span>Got a question we haven't answered? Reach out — we're always happy to help.</span></p>
+          <p class="text-white/65 text-base leading-relaxed line-reveal"><span>Got a question we haven't answered? Reach out — we're always happy to help.</span></p>
           <a href="#contact" class="inline-flex items-center gap-3 mt-8 font-display font-semibold text-sm uppercase tracking-[.15em] text-brand hover:text-brand-light transition-colors">
             Ask Us <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform hover:translate-x-1 -rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </a>
         </div>
         <div>
-          <details class="group border-t border-white/[.06]"><summary class="flex items-center justify-between py-6 cursor-pointer list-none"><span class="font-display font-semibold text-lg text-white group-hover:text-brand transition-colors">What file formats do you accept?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/30 transition-transform group-open:rotate-45"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary><p class="text-white/35 text-base leading-relaxed pb-6">We accept AI, EPS, PDF, PSD, PNG, JPG, and TIFF files. For best results, send vector files at full size. Not sure? Send us what you have.</p></details>
-          <details class="group border-t border-white/[.06]"><summary class="flex items-center justify-between py-6 cursor-pointer list-none"><span class="font-display font-semibold text-lg text-white group-hover:text-brand transition-colors">What's the typical turnaround time?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/30 transition-transform group-open:rotate-45"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary><p class="text-white/35 text-base leading-relaxed pb-6">Standard turnaround is 3-5 business days after proof approval. Rush production is available — just mention your deadline.</p></details>
-          <details class="group border-t border-white/[.06]"><summary class="flex items-center justify-between py-6 cursor-pointer list-none"><span class="font-display font-semibold text-lg text-white group-hover:text-brand transition-colors">Do you offer design services?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/30 transition-transform group-open:rotate-45"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary><p class="text-white/35 text-base leading-relaxed pb-6">Yes! We help with layout, file prep, and design modifications. Have a concept? We'll make it print-ready.</p></details>
-          <details class="group border-t border-white/[.06]"><summary class="flex items-center justify-between py-6 cursor-pointer list-none"><span class="font-display font-semibold text-lg text-white group-hover:text-brand transition-colors">Do you ship nationwide?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/30 transition-transform group-open:rotate-45"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary><p class="text-white/35 text-base leading-relaxed pb-6">Absolutely. We ship across all 48 contiguous states. For trade shows, we can ship directly to your venue.</p></details>
-          <details class="group border-t border-b border-white/[.06]"><summary class="flex items-center justify-between py-6 cursor-pointer list-none"><span class="font-display font-semibold text-lg text-white group-hover:text-brand transition-colors">What's the minimum order?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/30 transition-transform group-open:rotate-45"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary><p class="text-white/35 text-base leading-relaxed pb-6">No minimum. Whether you need one banner or a hundred decals, we'll handle it with the same care.</p></details>
+          <details class="group border-t border-white/[.06]"><summary class="flex items-center justify-between py-6 cursor-pointer list-none"><span class="font-display font-semibold text-lg text-white group-hover:text-brand transition-colors">What file formats do you accept?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/65 transition-transform group-open:rotate-45"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary><p class="text-white/70 text-base leading-relaxed pb-6">We accept AI, EPS, PDF, PSD, PNG, JPG, and TIFF files. For best results, send vector files at full size. Not sure? Send us what you have.</p></details>
+          <details class="group border-t border-white/[.06]"><summary class="flex items-center justify-between py-6 cursor-pointer list-none"><span class="font-display font-semibold text-lg text-white group-hover:text-brand transition-colors">What's the typical turnaround time?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/65 transition-transform group-open:rotate-45"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary><p class="text-white/70 text-base leading-relaxed pb-6">Standard turnaround is 3-5 business days after proof approval. Rush production is available — just mention your deadline.</p></details>
+          <details class="group border-t border-white/[.06]"><summary class="flex items-center justify-between py-6 cursor-pointer list-none"><span class="font-display font-semibold text-lg text-white group-hover:text-brand transition-colors">Do you offer design services?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/65 transition-transform group-open:rotate-45"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary><p class="text-white/70 text-base leading-relaxed pb-6">Yes! We help with layout, file prep, and design modifications. Have a concept? We'll make it print-ready.</p></details>
+          <details class="group border-t border-white/[.06]"><summary class="flex items-center justify-between py-6 cursor-pointer list-none"><span class="font-display font-semibold text-lg text-white group-hover:text-brand transition-colors">Do you ship nationwide?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/65 transition-transform group-open:rotate-45"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary><p class="text-white/70 text-base leading-relaxed pb-6">Absolutely. We ship across all 48 contiguous states. For trade shows, we can ship directly to your venue.</p></details>
+          <details class="group border-t border-b border-white/[.06]"><summary class="flex items-center justify-between py-6 cursor-pointer list-none"><span class="font-display font-semibold text-lg text-white group-hover:text-brand transition-colors">What's the minimum order?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/65 transition-transform group-open:rotate-45"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></summary><p class="text-white/70 text-base leading-relaxed pb-6">No minimum. Whether you need one banner or a hundred decals, we'll handle it with the same care.</p></details>
         </div>
       </div>
     </div>
@@ -668,7 +775,7 @@
       <h2 class="font-display font-bold text-5xl sm:text-6xl lg:text-8xl tracking-[-.03em] leading-[.9] mb-6">
         Ready to Print<br/><span class="gradient-text">Something Bold?</span>
       </h2>
-      <p class="text-white/40 text-lg sm:text-xl max-w-2xl mx-auto mb-10">One quote request. That's all it takes. Tell us your vision and we'll handle the rest.</p>
+      <p class="text-white/70 text-lg sm:text-xl max-w-2xl mx-auto mb-10">One quote request. That's all it takes. Tell us your vision and we'll handle the rest.</p>
       <a href="#contact" class="inline-flex items-center gap-4 bg-brand text-white font-display font-semibold text-base uppercase tracking-[.1em] px-10 py-5 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_60px_rgba(33,150,243,.3)] active:scale-[.98]">
         Get Your Free Quote <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
@@ -687,29 +794,29 @@
           <p class="text-brand text-[11px] font-semibold tracking-[.3em] uppercase mb-3 line-reveal"><span>Start a Project</span></p>
           <h2 class="font-display font-bold text-4xl sm:text-6xl lg:text-7xl tracking-[-.03em] leading-[.95] mb-8 line-reveal"><span>Let's Build</span><br/><span>Something</span><br/><span class="gradient-text">Bold.</span></h2>
           <div class="space-y-6 mt-8 lg:mt-12">
-            <a href="tel:8775753873" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="phone" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">(877) 575-3873</span></a>
-            <a href="mailto:orders@fuseprints.com" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">orders@fuseprints.com</span></a>
-            <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 text-white/40 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span><span class="font-display font-medium text-lg">@fuseprints</span></a>
-            <div class="flex items-center gap-4 text-white/20"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center"><i data-lucide="map-pin" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">Bradford, PA</span></div>
+            <a href="tel:8775753873" class="group flex items-center gap-4 text-white/70 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="phone" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">(877) 575-3873</span></a>
+            <a href="mailto:orders@fuseprints.com" class="group flex items-center gap-4 text-white/70 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">orders@fuseprints.com</span></a>
+            <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 text-white/70 hover:text-white transition-colors"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-brand/40 transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span><span class="font-display font-medium text-lg">@fuseprints</span></a>
+            <div class="flex items-center gap-4 text-white/65"><span class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center"><i data-lucide="map-pin" class="w-5 h-5"></i></span><span class="font-display font-medium text-lg">Bradford, PA</span></div>
           </div>
         </div>
 
         <div class="holo-card rounded-3xl p-8 sm:p-10 order-1 lg:order-2" id="holo-form-card">
           <div class="holo-glow"></div>
           <form id="quote-form" class="space-y-7 relative" style="z-index:5">
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Name *</label><input type="text" name="name" required class="form-input" placeholder="Your name"/></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Email *</label><input type="email" name="email" required class="form-input" placeholder="you@company.com"/></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Phone</label><input type="tel" name="phone" class="form-input" placeholder="(555) 555-5555"/></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Project Type</label><select name="project-type" class="form-input" style="background:transparent"><option value="">Select a type...</option><option value="backdrop">Backdrop / Step-and-Repeat</option><option value="banner">Banner / Banner Stand</option><option value="tradeshow">Trade Show Display</option><option value="canvas">Canvas Print</option><option value="decal">Decal / Wall Graphic</option><option value="signage">Custom Signage</option><option value="laser">Laser Engraving</option><option value="other">Other</option></select></div>
-            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/30 mb-2 block">Project Details *</label><textarea name="message" rows="4" required class="form-input resize-none" placeholder="What you need, dimensions, timeline..."></textarea></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/65 mb-2 block">Name *</label><input type="text" name="name" required class="form-input" placeholder="Your name"/></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/65 mb-2 block">Email *</label><input type="email" name="email" required class="form-input" placeholder="you@company.com"/></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/65 mb-2 block">Phone</label><input type="tel" name="phone" class="form-input" placeholder="(555) 555-5555"/></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/65 mb-2 block">Project Type</label><select name="project-type" class="form-input" style="background:transparent"><option value="">Select a type...</option><option value="backdrop">Backdrop / Step-and-Repeat</option><option value="banner">Banner / Banner Stand</option><option value="tradeshow">Trade Show Display</option><option value="canvas">Canvas Print</option><option value="decal">Decal / Wall Graphic</option><option value="signage">Custom Signage</option><option value="laser">Laser Engraving</option><option value="other">Other</option></select></div>
+            <div><label class="text-[11px] font-semibold tracking-[.2em] uppercase text-white/65 mb-2 block">Project Details *</label><textarea name="message" rows="4" required class="form-input resize-none" placeholder="What you need, dimensions, timeline..."></textarea></div>
             <div style="display:none!important" aria-hidden="true"><input type="text" name="_gotcha" tabindex="-1" autocomplete="off"/></div>
             <button type="submit" id="submit-btn" class="group w-full flex items-center justify-between bg-brand text-white font-display font-semibold text-base py-5 px-8 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.25)] active:scale-[.98]"><span>Send Quote Request</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform group-hover:translate-x-1 -rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-            <p class="text-white/15 text-xs text-center">Have files? Email them to <a href="mailto:orders@fuseprints.com" class="text-brand/50 hover:text-brand transition-colors">orders@fuseprints.com</a></p>
+            <p class="text-white/55 text-sm text-center">Have files? Email them to <a href="mailto:chris@fuseprints.com" class="text-brand hover:text-brand-light transition-colors font-semibold">chris@fuseprints.com</a></p>
           </form>
           <div id="form-success" class="hidden py-20 text-center relative" style="z-index:5">
             <div class="w-20 h-20 rounded-full border-2 border-brand flex items-center justify-center mx-auto mb-6"><i data-lucide="check" class="w-8 h-8 text-brand"></i></div>
             <h3 class="font-display font-bold text-3xl mb-3">Request Sent</h3>
-            <p class="text-white/30 text-base">We'll be in touch within 24 hours.</p>
+            <p class="text-white/65 text-base">We'll be in touch within 24 hours.</p>
           </div>
         </div>
       </div>
@@ -721,23 +828,23 @@
   <footer class="border-t border-white/[.06] py-10">
     <div class="max-w-[1400px] mx-auto px-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-6">
       <div class="flex items-center"><img src="assets/logo-white.png" alt="Fuse Prints" class="h-6 w-auto opacity-40"/></div>
-      <p class="text-white/15 text-xs">&copy; 2026 Fuse Prints. Family-owned in Bradford, PA.</p>
-      <div class="flex items-center gap-5 text-white/30 text-xs">
+      <p class="text-white/55 text-xs">&copy; 2026 Fuse Prints. Family-owned in Bradford, PA.</p>
+      <div class="flex items-center gap-5 text-white/65 text-xs">
         <a href="/privacy/" class="hover:text-white transition-colors">Privacy</a>
         <a href="/terms/" class="hover:text-white transition-colors">Terms</a>
       </div>
       <div class="flex items-center gap-6">
-        <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
-        <a href="https://www.facebook.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
-        <a href="https://www.tiktok.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.56a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.03Z"/></svg></a>
-        <a href="https://www.youtube.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="text-white/20 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
+        <a href="https://www.instagram.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-white/65 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://www.facebook.com/fuseprints/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-white/65 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://www.tiktok.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="text-white/65 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.56a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.03Z"/></svg></a>
+        <a href="https://www.youtube.com/@fuseprints" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="text-white/65 hover:text-brand transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></a>
       </div>
     </div>
   </footer>
 
 
   <!-- Lightbox -->
-  <div id="lightbox" class="lightbox"><button id="lb-close" class="absolute top-6 right-6 text-white/40 hover:text-white transition-colors z-10 cursor-pointer"><i data-lucide="x" class="w-8 h-8"></i></button><button id="lb-prev" class="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition-colors z-10 cursor-pointer"><i data-lucide="chevron-left" class="w-10 h-10"></i></button><button id="lb-next" class="absolute right-6 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition-colors z-10 cursor-pointer"><i data-lucide="chevron-right" class="w-10 h-10"></i></button><div class="max-w-5xl max-h-[85vh] px-16"><img id="lb-img" src="" alt="" class="max-w-full max-h-[78vh] object-contain rounded-lg"/><div class="text-center mt-4"><span id="lb-cat" class="text-brand text-[11px] font-semibold tracking-[.2em] uppercase"></span><p id="lb-title" class="text-white font-display font-semibold text-lg mt-1"></p></div></div></div>
+  <div id="lightbox" class="lightbox"><button id="lb-close" class="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-10 cursor-pointer"><i data-lucide="x" class="w-8 h-8"></i></button><button id="lb-prev" class="absolute left-6 top-1/2 -translate-y-1/2 text-white/65 hover:text-white transition-colors z-10 cursor-pointer"><i data-lucide="chevron-left" class="w-10 h-10"></i></button><button id="lb-next" class="absolute right-6 top-1/2 -translate-y-1/2 text-white/65 hover:text-white transition-colors z-10 cursor-pointer"><i data-lucide="chevron-right" class="w-10 h-10"></i></button><div class="max-w-5xl max-h-[85vh] px-16"><img id="lb-img" src="" alt="" class="max-w-full max-h-[78vh] object-contain rounded-lg"/><div class="text-center mt-4"><span id="lb-cat" class="text-brand text-[11px] font-semibold tracking-[.2em] uppercase"></span><p id="lb-title" class="text-white font-display font-semibold text-lg mt-1"></p></div></div></div>
 
 
   <!-- ============ JS ============ -->
@@ -777,22 +884,15 @@
       if(isMobile&&href==='#contact'){const formCard=document.getElementById('holo-form-card');if(formCard)t=formCard;}
       gsap.to(window,{duration:isMobile?.7:1.2,scrollTo:{y:t,offsetY:isMobile?20:80},ease:'power2.out'})})});
 
-    // Hero mosaic reveal
-    const htl=gsap.timeline({delay:.3});
-    htl.to('#hero-mosaic',{opacity:1,duration:.01})
-       .to('.hero-img-reveal',{clipPath:'inset(0% 0 0 0)',duration:1.2,stagger:{amount:.8,from:'random'},ease:'power4.inOut'})
-       .to('#hero-overlay',{opacity:.65,duration:1},'-=.8')
-       .to('.hero-word span',{y:0,duration:1,stagger:.15,ease:'power4.out'},'-=.6')
-       .to('#hero-eyebrow',{opacity:1,duration:.8,ease:'power3.out'},'-=.5')
-;
+    // Hero reveal
+    const htl=gsap.timeline({delay:.2});
+    htl.to('.hero-word span',{y:0,duration:1,stagger:.15,ease:'power4.out'})
+       .to('#hero-eyebrow',{opacity:1,duration:.8,ease:'power3.out'},'-=.9');
 
     // Hero subtitle + CTA
     gsap.set('#hero-sub',{y:20});gsap.set('#hero-cta',{y:20});
     htl.to('#hero-sub',{opacity:1,y:0,duration:1,ease:'power3.out'},'-=.3')
        .to('#hero-cta',{opacity:1,y:0,duration:1,ease:'power3.out'},'-=.6');
-
-    // Parallax mosaic — desktop only (scrub-based parallax janks mobile scroll)
-    if(!isMobile){gsap.to('#hero-mosaic',{yPercent:30,ease:'none',scrollTrigger:{trigger:'#hero-mosaic',start:'top top',end:'bottom top',scrub:true}});}
 
     // Line reveals — animate ALL direct child spans, not just the first
     document.querySelectorAll('.line-reveal').forEach(el=>{const spans=el.querySelectorAll(':scope>span');if(!spans.length)return;gsap.to(spans,{y:0,duration:1,stagger:.08,ease:'power4.out',scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'}})});
@@ -856,7 +956,7 @@
 
   <!-- ============ FIRESTORE CONTENT LOADER ============ -->
   <script type="module">
-    import { fetchProducts, fetchGallery, fetchHero, fetchSiteImages, renderProducts, submitInquiry } from './assets/js/content.js';
+    import { fetchProducts, fetchGallery, fetchSiteImages, fetchServices, renderProducts, submitInquiry } from './assets/js/content.js?v=4';
     import { emailjsConfig, isEmailjsConfigured } from './assets/js/emailjs-config.js';
     if (isEmailjsConfigured() && window.emailjs) {
       window.emailjs.init({ publicKey: emailjsConfig.publicKey });
@@ -893,84 +993,6 @@
         });
       }catch(e){console.warn('Site images load failed',e)}
 
-      // Hero — replace hardcoded mosaic with admin-managed images if available
-      try{
-        const hero = await fetchHero();
-        if (hero.length) {
-          const mosaic = document.getElementById('hero-mosaic');
-          if (mosaic) {
-            const escAttr = s => String(s ?? '').replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-
-            // Pack items into rows of 5 columns each, NEVER duplicating.
-            // If a wide rectangle won't fit in the remaining row space, look ahead
-            // through the remaining (unused) items for a normal that can. If we can't
-            // complete a full row of 5, we stop and shrink the grid to the rows we have.
-            const ROW_SIZE = 5;
-            const desktopLayout = [];
-            const used = new Set();
-            let placedRows = 0;
-
-            function buildRow(startIdx) {
-              const rowItems = [];
-              const tentative = new Set();
-              let cells = 0;
-              let i = startIdx;
-              while (cells < ROW_SIZE && i < hero.length) {
-                if (used.has(i) || tentative.has(i)) { i++; continue; }
-                const item = hero[i];
-                const w = item.wide ? 2 : 1;
-                if (cells + w <= ROW_SIZE) {
-                  rowItems.push(item);
-                  tentative.add(i);
-                  cells += w;
-                  i++;
-                } else {
-                  // Wide overflows — look further ahead for a normal
-                  let foundIdx = -1;
-                  for (let j = i + 1; j < hero.length; j++) {
-                    if (!used.has(j) && !tentative.has(j) && !hero[j].wide) { foundIdx = j; break; }
-                  }
-                  if (foundIdx >= 0) {
-                    rowItems.push(hero[foundIdx]);
-                    tentative.add(foundIdx);
-                    cells += 1;
-                  } else {
-                    return null; // can't complete this row
-                  }
-                }
-              }
-              if (cells !== ROW_SIZE) return null;
-              tentative.forEach(idx => used.add(idx));
-              return rowItems;
-            }
-
-            let cursor = 0;
-            while (cursor < hero.length) {
-              if (used.has(cursor)) { cursor++; continue; }
-              const rowItems = buildRow(cursor);
-              if (!rowItems) break;
-              desktopLayout.push(...rowItems);
-              placedRows++;
-              cursor++;
-            }
-
-            // Tell the grid how many rows we actually filled so each one is a tall stripe
-            mosaic.style.gridTemplateRows = `repeat(${Math.max(placedRows, 1)}, 1fr)`;
-
-            // Mobile only sees the items the admin marked mobileVisible (max 6 cells in 2×3)
-            const mobileItems = hero.filter(h => h.mobileVisible !== false).slice(0, 6);
-            const mobileSet = new Set(mobileItems.map(h => h.id));
-
-            mosaic.innerHTML = desktopLayout.map(h => {
-              const isMobile = mobileSet.has(h.id);
-              const wideCls = h.wide ? "hidden sm:block sm:col-span-2" : (isMobile ? "" : "hidden sm:block");
-              return `<div class="overflow-hidden ${wideCls}"><img src="${escAttr(h.imageUrl)}" alt="${escAttr(h.title || '')}" class="w-full h-full object-cover" /></div>`;
-            }).join('');
-            mosaic.style.opacity = '1';
-          }
-        }
-      }catch(e){console.warn('Hero load failed',e)}
-
       // Products — only show featured ones on the homepage
       try{
         const products = await fetchProducts({ featuredOnly: true });
@@ -998,6 +1020,29 @@
           if(r2) r2.innerHTML = buildMarqueeRow(row2.length?row2:items);
         }
       }catch(e){console.warn('Gallery load failed',e)}
+
+      // Services list — hydrate with live Firestore data so Chris's custom services show up
+      try{
+        const services = await fetchServices();
+        if (services.length) {
+          const list = document.getElementById('services-list');
+          if (list) {
+            list.innerHTML = services.map((s, i) => {
+              const num = String(i + 1).padStart(2, '0');
+              const isLast = i === services.length - 1;
+              const borders = isLast ? 'border-t border-b border-white/[.06]' : 'border-t border-white/[.06]';
+              const desc = s.subheading || s.heading || '';
+              return `<a href="/${esc(s.slug)}" class="service-card group ${borders} py-6 sm:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 no-underline"><div class="flex items-center gap-6"><span class="text-brand/20 font-display font-bold text-sm">${num}</span><h3 class="font-display font-semibold text-xl sm:text-2xl text-white group-hover:text-brand transition-colors duration-300">${esc(s.name || s.slug)}</h3></div><p class="text-white/65 text-sm sm:max-w-xs sm:text-right group-hover:text-white/95 transition-colors">${esc(desc)}</p></a>`;
+            }).join('');
+            // Re-wire the hover handlers on the new cards
+            if (window.gsap) {
+              gsap.utils.toArray('.service-card').forEach(c => {
+                gsap.set(c, { clearProps: 'all' });
+              });
+            }
+          }
+        }
+      }catch(e){console.warn('Services load failed',e)}
     })();
 
     // ---------- Quote form → Firestore inquiries (with mailto fallback) ----------
