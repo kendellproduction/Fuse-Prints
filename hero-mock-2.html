@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero Option 2: Bold Typography / Stats — Fuse Prints</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { brand: { DEFAULT:'#2196F3', light:'#64B5F6', dark:'#1565C0' }, surface: { 400:'#020202' } }, fontFamily: { display: ['"Clash Display"','system-ui','sans-serif'], body: ['"General Sans"','system-ui','sans-serif'] } } } }
+  </script>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700,800&f[]=general-sans@400,500,600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'General Sans',system-ui,sans-serif;background:#020202;color:#FAFAFA;overflow-x:hidden}
+    h1,h2{font-family:'Clash Display',system-ui,sans-serif}
+    .gradient-text{background:linear-gradient(135deg,#64B5F6 0%,#2196F3 50%,#1565C0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    #hero-bg{position:absolute;inset:0;background:radial-gradient(900px 600px at 70% 30%,rgba(33,150,243,.18),transparent 60%),#020202}
+    /* Massive scrolling marquee strip behind the hero */
+    .ticker-row{position:absolute;left:0;right:0;display:flex;white-space:nowrap;font-family:'Clash Display',system-ui,sans-serif;font-weight:800;font-style:italic;font-size:14vw;line-height:1;letter-spacing:-.03em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.06);text-transform:uppercase;pointer-events:none;user-select:none}
+    .ticker-row.t1{top:6%;animation:scroll-l 60s linear infinite}
+    .ticker-row.t2{bottom:8%;animation:scroll-r 80s linear infinite;-webkit-text-stroke:1px rgba(33,150,243,.12)}
+    @keyframes scroll-l{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @keyframes scroll-r{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+    .ticker-row span{padding-right:60px;display:inline-block}
+    .ticker-row .star{color:rgba(33,150,243,.4);-webkit-text-stroke:0;font-size:.7em;vertical-align:middle;padding:0 30px}
+    .mock-label{position:fixed;top:20px;left:20px;background:rgba(33,150,243,.15);border:1px solid rgba(33,150,243,.4);color:#64B5F6;padding:8px 16px;border-radius:999px;font-family:'Clash Display',system-ui,sans-serif;font-weight:600;font-size:12px;letter-spacing:.15em;text-transform:uppercase;z-index:1000}
+    .stat-block{display:flex;flex-direction:column}
+    .stat-block .num{font-family:'Clash Display',system-ui,sans-serif;font-weight:700;font-size:48px;line-height:1;letter-spacing:-.03em;color:#fff}
+    .stat-block .num .accent{color:#2196F3}
+    .stat-block .label{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:6px}
+  </style>
+</head>
+<body>
+  <div class="mock-label">Option 2 · Typography + Stats</div>
+  <section id="hero" class="relative min-h-screen flex flex-col justify-center pt-28 pb-12 sm:pt-32 sm:pb-24 overflow-hidden">
+    <div id="hero-bg" class="absolute inset-0"></div>
+    <!-- Background marquee strips with the services -->
+    <div class="ticker-row t1"><span>Banners</span><span class="star">★</span><span>Signs</span><span class="star">★</span><span>Stickers</span><span class="star">★</span><span>Decals</span><span class="star">★</span><span>Displays</span><span class="star">★</span><span>Banners</span><span class="star">★</span><span>Signs</span><span class="star">★</span><span>Stickers</span><span class="star">★</span><span>Decals</span><span class="star">★</span><span>Displays</span><span class="star">★</span></div>
+    <div class="ticker-row t2"><span>Bradford, PA</span><span class="star">●</span><span>Since 2014</span><span class="star">●</span><span>Family-Owned</span><span class="star">●</span><span>Bradford, PA</span><span class="star">●</span><span>Since 2014</span><span class="star">●</span><span>Family-Owned</span><span class="star">●</span></div>
+
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-10 w-full">
+      <div class="flex items-center gap-4 mb-6"><div class="h-[2px] w-12 bg-brand-light"></div><p class="text-brand-light text-[12px] sm:text-[14px] font-bold tracking-[.3em] uppercase">Large Format Printing Service</p></div>
+      <h1 class="font-display font-bold text-[14vw] sm:text-[10vw] lg:text-[8vw] leading-[.85] tracking-[-.04em] max-w-5xl mb-8">
+        <span class="block text-white">Need Large</span>
+        <span class="block text-white">Prints<span class="text-brand-light">?</span></span>
+        <span class="block gradient-text">We Can Help!</span>
+      </h1>
+      <div class="grid grid-cols-3 gap-6 sm:gap-12 max-w-2xl mb-10">
+        <div class="stat-block">
+          <p class="num"><span class="accent">10</span>+</p>
+          <p class="label">Years in Business</p>
+        </div>
+        <div class="stat-block">
+          <p class="num"><span class="accent">5K</span>+</p>
+          <p class="label">Projects Shipped</p>
+        </div>
+        <div class="stat-block">
+          <p class="num"><span class="accent">48</span></p>
+          <p class="label">States Served</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-4 items-center">
+        <a href="#" class="inline-flex items-center gap-3 bg-brand text-white font-display font-semibold text-sm sm:text-base uppercase tracking-[.12em] px-8 py-4 sm:px-7 sm:py-3.5 rounded-full hover:bg-brand-light transition-all w-fit">Start a Project<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <a href="#" class="inline-flex items-center gap-3 text-white/75 hover:text-white font-display font-semibold text-sm uppercase tracking-[.12em] px-7 py-3.5 rounded-full border border-white/15 hover:border-white/30 transition-all">See Our Work</a>
+        <p class="text-white/55 text-sm sm:text-base font-medium ml-2 sm:ml-4">Banners · Signs · Stickers · Decals · Displays</p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

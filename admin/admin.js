@@ -57,7 +57,6 @@ function closeModal(id) {
   // Clear any pending image state when modals are dismissed without saving
   if (id === "product-modal") _pendingProductImage = null;
   if (id === "gallery-modal") _pendingGalleryImage = null;
-  if (id === "hero-modal") _pendingHeroImage = null;
   if (id === "site-image-modal") _pendingSiteImage = null;
   // If the crop modal is being closed, tear down the cropper instance and reject any pending crop promise
   if (id === "crop-modal") {
@@ -260,7 +259,7 @@ document.querySelectorAll(".tab, .tab-link").forEach(el => {
     document.querySelectorAll(".panel").forEach(p => p.classList.toggle("hidden", p.dataset.panel !== tab));
     if (tab === "products") loadProducts();
     if (tab === "gallery") loadGallery();
-    if (tab === "hero") loadHero();
+    if (tab === "services") loadServices();
     if (tab === "site-images") loadSiteImages();
     if (tab === "dashboard") { loadDashboard(); loadInquiries(); }
   });
@@ -793,154 +792,536 @@ $("gallery-delete-btn").addEventListener("click", async () => {
   } catch (e) { toast("Delete failed: " + e.message, "error"); }
 });
 
-// ---------- Hero Images ----------
-let _pendingHeroImage = null;
+// ---------- Service Pages ----------
+// Default services seeded on first admin load so Chris's 7 main pages exist.
+// After that, services are fully Firestore-driven — Chris can add, edit, delete any service.
+const DEFAULT_SERVICES = [
+  { slug: "banners",                name: "Banners",                order: 1 },
+  { slug: "custom-signs",           name: "Custom Signs",           order: 2 },
+  { slug: "custom-awards-plaques",  name: "Custom Awards & Plaques", order: 3 },
+  { slug: "tradeshow-displays",     name: "Tradeshow Displays",     order: 4 },
+  { slug: "stickers-decals",        name: "Stickers & Decals",      order: 5 },
+  { slug: "wall-window-decals",     name: "Wall & Window Decals",   order: 6 },
+  { slug: "home-decor-gifts",       name: "Home Décor & Gifts",     order: 7 }
+];
+const RESERVED_SLUGS = new Set(["admin","privacy","terms","assets","service.html","index.html","404.html","robots.txt","sitemap.xml","api","favicon.ico"]);
+let _allServiceDocs = []; // [{slug, name, order, ...}] populated on loadServices()
 
-setupDropZone("hero-drop-zone", "hero-image-input", async file => {
-  const status = $("hero-upload-status");
-  try {
-    // Use 4:3 if wide is checked, 1:1 otherwise — matches roughly how cells render
-    const wide = $("hero-wide").checked;
-    const cropped = await openCropper(file, wide ? 16 / 9 : 1);
-    const res = await uploadImage(cropped, "hero", status);
-    _pendingHeroImage = res;
-    setDropZoneImage("hero-drop-zone", res.url);
-  } catch (e) {
-    if (e.message === "Cancelled") return;
-    console.error(e);
-    if (e.message !== "Not an image" && e.message !== "Too big") toast("Upload failed: " + e.message, "error");
-  }
+// Common Lucide icon names admins can pick from for capabilities + use cases
+const ICON_OPTIONS = [
+  "square","maximize-2","maximize","shield","wind","zap","palette","truck","feather","tool",
+  "scissors","layers","sun","anchor","pen-tool","crosshair","gem","edit-3","package","image","layout",
+  "rotate-ccw","box","eye-off","check-circle","home","droplets","sparkles","calendar","store","briefcase",
+  "building","flag","megaphone","heart","award","trophy","graduation-cap","star","gift","baby","cake",
+  "map-pin","shopping-bag","shopping-cart","coffee","utensils","dumbbell","school"
+];
+
+let _currentServiceImages = [];   // [{ imageUrl, imagePath, title, order }]
+let _currentServiceFeatures = []; // [{ icon, title, description }]
+let _currentServiceMaterials = []; // [string]
+let _currentServiceUseCases = []; // [{ icon, title, description }]
+let _currentServiceFaqs = [];     // [{ q, a }]
+let _currentServiceRelated = []; // [slug]
+
+// Modal section-tab switching (delegated)
+document.addEventListener("click", e => {
+  const t = e.target.closest(".svc-section-tab");
+  if (!t) return;
+  const section = t.dataset.section;
+  document.querySelectorAll(".svc-section-tab").forEach(b => b.classList.toggle("active", b.dataset.section === section));
+  document.querySelectorAll(".svc-section").forEach(s => s.classList.toggle("hidden", s.dataset.section !== section));
 });
 
-$("add-hero-btn").addEventListener("click", () => openHeroModal(null));
-
-async function loadHero() {
-  const loading = $("hero-loading"), empty = $("hero-empty"), grid = $("hero-grid");
-  loading.classList.remove("hidden"); empty.classList.add("hidden"); grid.classList.add("hidden");
+async function loadServices() {
+  const loading = $("services-loading"), grid = $("services-grid"), empty = $("services-empty");
+  loading.classList.remove("hidden"); grid.classList.add("hidden"); empty.classList.add("hidden");
   try {
-    const snap = await getDocs(query(collection(db, "hero"), orderBy("order", "asc")));
+    // Fetch all service docs from Firestore
+    const snap = await getDocs(query(collection(db, "services"), orderBy("order", "asc")));
+    let docs = snap.docs.map(d => ({ slug: d.id, ...d.data() }));
+
+    // Seed the 7 default services on first admin load if missing
+    const seenSlugs = new Set(docs.map(d => d.slug));
+    const missing = DEFAULT_SERVICES.filter(s => !seenSlugs.has(s.slug));
+    if (missing.length) {
+      for (const m of missing) {
+        await setDoc(doc(db, "services", m.slug), {
+          slug: m.slug, name: m.name, order: m.order,
+          createdAt: serverTimestamp(), updatedAt: serverTimestamp()
+        }, { merge: true });
+        docs.push({ slug: m.slug, name: m.name, order: m.order });
+      }
+      docs.sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
+    }
+    _allServiceDocs = docs;
+
     loading.classList.add("hidden");
-    if (snap.empty) { empty.classList.remove("hidden"); return; }
-    grid.innerHTML = snap.docs.map(d => {
-      const h = d.data();
-      return `<article class="grid-item cursor-pointer" data-id="${d.id}">
-        <img class="grid-item-img" src="${esc(h.imageUrl || "")}" alt="${esc(h.title || "")}" loading="lazy" onerror="this.style.display='none'" />
+    if (!docs.length) { empty.classList.remove("hidden"); return; }
+
+    grid.innerHTML = docs.map(d => {
+      const imgCount = Array.isArray(d.images) ? d.images.length : 0;
+      const cover = imgCount ? d.images[0].imageUrl : "";
+      const isDefault = DEFAULT_SERVICES.some(def => def.slug === d.slug);
+      return `<article class="grid-item cursor-pointer" data-slug="${esc(d.slug)}" style="cursor:pointer">
+        <div style="aspect-ratio:1/1;background:#0a0a0a;display:flex;align-items:center;justify-content:center;overflow:hidden">
+          ${cover ? `<img class="grid-item-img" src="${esc(cover)}" alt="${esc(d.name || d.slug)}" loading="lazy" onerror="this.style.display='none'" />` : `<svg class="w-12 h-12 text-white/15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159M21 12V6a1.5 1.5 0 00-1.5-1.5H4.5A1.5 1.5 0 003 6v12a1.5 1.5 0 001.5 1.5h12.75"/></svg>`}
+        </div>
         <div class="grid-item-body">
-          <div class="flex items-start justify-between gap-2 mb-2">
-            <h3 class="font-display font-semibold text-base truncate flex-1">${esc(h.title || "Untitled")}</h3>
-          </div>
-          <div class="flex flex-wrap gap-1.5">
-            ${h.wide ? `<span class="badge" style="background:rgba(241,101,33,.15);color:#F99970">Wide 2x</span>` : `<span class="badge badge-inactive">1x</span>`}
-            ${h.mobileVisible !== false ? `<span class="badge badge-active">Mobile</span>` : `<span class="badge badge-inactive">Desktop only</span>`}
-            <span class="badge badge-inactive">order ${h.order ?? 0}</span>
+          <h3 class="font-display font-semibold text-base mb-1">${esc(d.name || d.slug)}</h3>
+          <p class="text-white/40 text-xs font-mono mb-2">/${esc(d.slug)}</p>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="badge ${imgCount ? "badge-active" : "badge-inactive"}">${imgCount} image${imgCount === 1 ? "" : "s"}</span>
+            <span class="badge ${d.heading ? "badge-active" : "badge-inactive"}">${d.heading ? "Content" : "Default"}</span>
+            ${isDefault ? '' : '<span class="badge" style="background:rgba(100,181,246,.15);color:#64B5F6">Custom</span>'}
           </div>
         </div>
       </article>`;
     }).join("");
     grid.classList.remove("hidden");
     grid.querySelectorAll(".grid-item").forEach(el => {
-      el.addEventListener("click", e => {
-        if (el.classList.contains("just-dragged")) { el.classList.remove("just-dragged"); return; }
-        const h = snap.docs.find(d => d.id === el.dataset.id);
-        if (h) openHeroModal({ id: h.id, ...h.data() });
+      el.addEventListener("click", () => {
+        const item = docs.find(d => d.slug === el.dataset.slug);
+        if (item) openServiceModal({ slug: item.slug, name: item.name || item.slug, order: item.order ?? 99, isExisting: true }, item);
       });
     });
-    setupSortable("hero-grid", "hero");
+    // Drag-to-reorder
+    setupSortable("services-grid", "services");
   } catch (e) {
     loading.classList.add("hidden");
     console.error(e);
-    toast("Couldn't load hero images: " + e.message, "error");
+    toast("Couldn't load services: " + e.message, "error");
   }
 }
 
-function openHeroModal(item) {
-  _pendingHeroImage = null;
-  $("hero-form").reset();
-  $("hero-id").value = item?.id || "";
-  $("hero-title").value = item?.title || "";
-  $("hero-order").value = item?.order ?? 0;
-  $("hero-wide").checked = item?.wide === true;
-  $("hero-mobile").checked = item?.mobileVisible !== false;
-  $("hero-modal-title").textContent = item ? "Edit Hero Image" : "Add Hero Image";
-  $("hero-delete-btn").classList.toggle("hidden", !item);
-  $("hero-upload-status").textContent = "";
-  setDropZoneImage("hero-drop-zone", item?.imageUrl || "");
-  $("hero-form").dataset.existingImagePath = item?.imagePath || "";
-  $("hero-form").dataset.existingImageUrl = item?.imageUrl || "";
-  $("hero-recrop-btn").style.display = item?.imageUrl ? "inline-flex" : "none";
-  openModal("hero-modal");
+// "+ New Service" button — opens a blank modal for a brand-new service
+$("add-service-btn").addEventListener("click", () => {
+  openServiceModal({ slug: "", name: "", order: (_allServiceDocs?.length || 0) + 1, isExisting: false }, null);
+});
+
+function renderServiceImagesGrid() {
+  const grid = $("service-images-grid");
+  if (!_currentServiceImages.length) {
+    grid.innerHTML = `<p class="col-span-full text-white/30 text-xs text-center py-6" id="service-images-empty">No images yet. Click + Add Image to upload.</p>`;
+    return;
+  }
+  grid.innerHTML = _currentServiceImages.map((img, i) => `
+    <div class="grid-item" data-idx="${i}" style="cursor:grab">
+      <img class="grid-item-img" src="${esc(img.imageUrl)}" alt="${esc(img.title || "")}" loading="lazy" />
+      <div class="grid-item-body" style="padding:8px 10px">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-white/40 text-xs">#${i + 1}</span>
+          <button type="button" data-action="delete-img" data-idx="${i}" class="text-red-400 hover:text-red-300 text-xs font-semibold">Remove</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+  // Wire remove buttons
+  grid.querySelectorAll('[data-action="delete-img"]').forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const idx = Number(btn.dataset.idx);
+      const removed = _currentServiceImages.splice(idx, 1)[0];
+      if (removed?.imagePath) deleteStorageFile(removed.imagePath);
+      renderServiceImagesGrid();
+    });
+  });
+  // Sortable for reorder (local; only persisted on Save)
+  if (window.Sortable) {
+    if (grid._sortable) grid._sortable.destroy();
+    grid._sortable = window.Sortable.create(grid, {
+      animation: 180,
+      ghostClass: "sortable-ghost",
+      chosenClass: "sortable-chosen",
+      dragClass: "sortable-drag",
+      onEnd: (evt) => {
+        if (evt.oldIndex === evt.newIndex) return;
+        const moved = _currentServiceImages.splice(evt.oldIndex, 1)[0];
+        _currentServiceImages.splice(evt.newIndex, 0, moved);
+        renderServiceImagesGrid();
+      }
+    });
+  }
 }
 
-$("hero-recrop-btn").addEventListener("click", async () => {
-  const url = $("hero-form").dataset.existingImageUrl;
-  if (!url) return;
-  // Match the aspect ratio used at upload time — 16:9 if marked wide, 1:1 otherwise
-  const wide = $("hero-wide").checked;
-  const cropped = await recropExistingImage(url, wide ? 16 / 9 : 1);
-  if (!cropped) return;
-  const status = $("hero-upload-status");
+// ----- Repeatable list renderers -----
+function iconSelectHtml(currentIcon) {
+  return `<select class="input" data-field="icon">${ICON_OPTIONS.map(n => `<option value="${esc(n)}"${n === currentIcon ? " selected" : ""}>${esc(n)}</option>`).join("")}</select>`;
+}
+
+function renderFeaturesList() {
+  const el = $("service-features-list");
+  if (!_currentServiceFeatures.length) {
+    el.innerHTML = `<p class="text-white/30 text-xs text-center py-6">No capabilities yet. Click + Add Capability.</p>`;
+    return;
+  }
+  el.innerHTML = _currentServiceFeatures.map((f, i) => `
+    <div class="item-row" data-idx="${i}">
+      <div class="item-grid cols-2">
+        ${iconSelectHtml(f.icon || "square")}
+        <input type="text" class="input" data-field="title" placeholder="Title" value="${esc(f.title || "")}" />
+      </div>
+      <textarea class="input mt-2" rows="2" data-field="description" placeholder="Short description">${esc(f.description || "")}</textarea>
+      <div class="item-actions">
+        <span class="item-handle text-xs">⋮⋮ drag to reorder</span>
+        <button type="button" class="btn-remove" data-action="remove-feature">Remove</button>
+      </div>
+    </div>
+  `).join("");
+  wireRepeatableRows(el, _currentServiceFeatures, renderFeaturesList);
+}
+
+function renderMaterialsList() {
+  const el = $("service-materials-list");
+  if (!_currentServiceMaterials.length) {
+    el.innerHTML = `<p class="text-white/30 text-xs text-center py-6">No materials yet. Click + Add Material.</p>`;
+    return;
+  }
+  el.innerHTML = _currentServiceMaterials.map((m, i) => `
+    <div class="item-row flex items-center gap-3" data-idx="${i}">
+      <span class="item-handle text-xs shrink-0">⋮⋮</span>
+      <input type="text" class="input flex-1" data-field="value" placeholder="e.g. 13oz Vinyl" value="${esc(m)}" />
+      <button type="button" class="btn-remove" data-action="remove-material">Remove</button>
+    </div>
+  `).join("");
+  // Wire inputs (string list)
+  el.querySelectorAll(".item-row").forEach(row => {
+    const idx = Number(row.dataset.idx);
+    row.querySelector('[data-field="value"]').addEventListener("input", e => { _currentServiceMaterials[idx] = e.target.value; });
+    row.querySelector('[data-action="remove-material"]').addEventListener("click", () => {
+      _currentServiceMaterials.splice(idx, 1); renderMaterialsList();
+    });
+  });
+  if (window.Sortable) {
+    if (el._sortable) el._sortable.destroy();
+    el._sortable = window.Sortable.create(el, {
+      animation: 180, handle: ".item-handle", ghostClass: "sortable-ghost", chosenClass: "sortable-chosen",
+      onEnd: (evt) => {
+        if (evt.oldIndex === evt.newIndex) return;
+        const moved = _currentServiceMaterials.splice(evt.oldIndex, 1)[0];
+        _currentServiceMaterials.splice(evt.newIndex, 0, moved);
+        renderMaterialsList();
+      }
+    });
+  }
+}
+
+function renderUseCasesList() {
+  const el = $("service-usecases-list");
+  if (!_currentServiceUseCases.length) {
+    el.innerHTML = `<p class="text-white/30 text-xs text-center py-6">No use cases yet. Click + Add Use Case.</p>`;
+    return;
+  }
+  el.innerHTML = _currentServiceUseCases.map((u, i) => `
+    <div class="item-row" data-idx="${i}">
+      <div class="item-grid cols-2">
+        ${iconSelectHtml(u.icon || "square")}
+        <input type="text" class="input" data-field="title" placeholder="Title (e.g. Events & Weddings)" value="${esc(u.title || "")}" />
+      </div>
+      <textarea class="input mt-2" rows="2" data-field="description" placeholder="One-sentence description">${esc(u.description || "")}</textarea>
+      <div class="item-actions">
+        <span class="item-handle text-xs">⋮⋮ drag to reorder</span>
+        <button type="button" class="btn-remove" data-action="remove-usecase">Remove</button>
+      </div>
+    </div>
+  `).join("");
+  wireRepeatableRows(el, _currentServiceUseCases, renderUseCasesList, "remove-usecase");
+}
+
+function renderFaqsList() {
+  const el = $("service-faqs-list");
+  if (!_currentServiceFaqs.length) {
+    el.innerHTML = `<p class="text-white/30 text-xs text-center py-6">No FAQs yet. Click + Add FAQ.</p>`;
+    return;
+  }
+  el.innerHTML = _currentServiceFaqs.map((f, i) => `
+    <div class="item-row" data-idx="${i}">
+      <input type="text" class="input" data-field="q" placeholder="Question" value="${esc(f.q || "")}" />
+      <textarea class="input mt-2" rows="3" data-field="a" placeholder="Answer">${esc(f.a || "")}</textarea>
+      <div class="item-actions">
+        <span class="item-handle text-xs">⋮⋮ drag to reorder</span>
+        <button type="button" class="btn-remove" data-action="remove-faq">Remove</button>
+      </div>
+    </div>
+  `).join("");
+  // Custom wiring (q/a, not icon/title/description)
+  el.querySelectorAll(".item-row").forEach(row => {
+    const idx = Number(row.dataset.idx);
+    row.querySelectorAll("[data-field]").forEach(input => {
+      input.addEventListener("input", e => { _currentServiceFaqs[idx][e.target.dataset.field] = e.target.value; });
+    });
+    row.querySelector('[data-action="remove-faq"]').addEventListener("click", () => {
+      _currentServiceFaqs.splice(idx, 1); renderFaqsList();
+    });
+  });
+  if (window.Sortable) {
+    if (el._sortable) el._sortable.destroy();
+    el._sortable = window.Sortable.create(el, {
+      animation: 180, handle: ".item-handle", ghostClass: "sortable-ghost", chosenClass: "sortable-chosen",
+      onEnd: (evt) => {
+        if (evt.oldIndex === evt.newIndex) return;
+        const moved = _currentServiceFaqs.splice(evt.oldIndex, 1)[0];
+        _currentServiceFaqs.splice(evt.newIndex, 0, moved);
+        renderFaqsList();
+      }
+    });
+  }
+}
+
+function renderRelatedPicker(currentSlug) {
+  const el = $("service-related-list");
+  el.innerHTML = SERVICE_SLOTS.filter(s => s.slug !== currentSlug).map(s => {
+    const checked = _currentServiceRelated.includes(s.slug);
+    return `<label class="related-pick ${checked ? "selected" : ""}">
+      <input type="checkbox" value="${esc(s.slug)}" ${checked ? "checked" : ""} />
+      <span>${esc(s.name)}</span>
+    </label>`;
+  }).join("");
+  el.querySelectorAll("input[type=checkbox]").forEach(cb => {
+    cb.addEventListener("change", e => {
+      const v = e.target.value;
+      if (e.target.checked) {
+        if (!_currentServiceRelated.includes(v)) _currentServiceRelated.push(v);
+      } else {
+        _currentServiceRelated = _currentServiceRelated.filter(x => x !== v);
+      }
+      e.target.closest(".related-pick").classList.toggle("selected", e.target.checked);
+    });
+  });
+}
+
+// Shared wiring for icon/title/description-shaped row lists
+function wireRepeatableRows(el, list, rerender, removeAction) {
+  removeAction = removeAction || el.id.includes("features") ? "remove-feature" : removeAction;
+  el.querySelectorAll(".item-row").forEach(row => {
+    const idx = Number(row.dataset.idx);
+    row.querySelectorAll("[data-field]").forEach(input => {
+      input.addEventListener("input", e => { list[idx][e.target.dataset.field] = e.target.value; });
+    });
+    const rem = row.querySelector('[data-action="remove-feature"],[data-action="remove-usecase"]');
+    if (rem) rem.addEventListener("click", () => { list.splice(idx, 1); rerender(); });
+  });
+  if (window.Sortable) {
+    if (el._sortable) el._sortable.destroy();
+    el._sortable = window.Sortable.create(el, {
+      animation: 180, handle: ".item-handle", ghostClass: "sortable-ghost", chosenClass: "sortable-chosen",
+      onEnd: (evt) => {
+        if (evt.oldIndex === evt.newIndex) return;
+        const moved = list.splice(evt.oldIndex, 1)[0];
+        list.splice(evt.newIndex, 0, moved);
+        rerender();
+      }
+    });
+  }
+}
+
+// "Add" buttons
+$("service-add-feature-btn").addEventListener("click", () => {
+  _currentServiceFeatures.push({ icon: "square", title: "", description: "" });
+  renderFeaturesList();
+});
+$("service-add-material-btn").addEventListener("click", () => {
+  _currentServiceMaterials.push("");
+  renderMaterialsList();
+});
+$("service-add-usecase-btn").addEventListener("click", () => {
+  _currentServiceUseCases.push({ icon: "square", title: "", description: "" });
+  renderUseCasesList();
+});
+$("service-add-faq-btn").addEventListener("click", () => {
+  _currentServiceFaqs.push({ q: "", a: "" });
+  renderFaqsList();
+});
+
+function slugify(s) {
+  return String(s || "").toLowerCase().trim().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "").replace(/-+/g, "-").slice(0, 60);
+}
+
+function openServiceModal(slot, item) {
+  $("service-form").reset();
+  // Reset to first tab
+  document.querySelectorAll(".svc-section-tab").forEach(b => b.classList.toggle("active", b.dataset.section === "content"));
+  document.querySelectorAll(".svc-section").forEach(s => s.classList.toggle("hidden", s.dataset.section !== "content"));
+
+  const isExisting = !!slot.isExisting;
+  const slug = slot.slug || "";
+  const name = slot.name || "";
+
+  $("service-slug").value = slug;
+  $("service-slug-input").value = slug;
+  $("service-slug-input").readOnly = isExisting;
+  $("service-slug-input").classList.toggle("opacity-60", isExisting);
+  $("service-name").value = name;
+  $("service-modal-title").textContent = isExisting ? `Edit: ${name || slug}` : "New Service";
+  $("service-modal-url").textContent = isExisting ? `fuseprints.com/${slug}` : "fuseprints.com/your-slug";
+  $("service-view-link").href = isExisting ? `/${slug}` : "#";
+  $("service-view-link").style.display = isExisting ? "inline-flex" : "none";
+  $("service-delete-btn").classList.toggle("hidden", !isExisting || isDefaultService(slug));
+
+  $("service-heading").value = item?.heading || (name ? `${name} — Bradford, PA` : "");
+  $("service-eyebrow").value = item?.eyebrow || (name ? `${name} · Bradford, PA` : "");
+  $("service-subheading").value = item?.subheading || "";
+  $("service-description").value = item?.description || "";
+  $("service-seo-title").value = item?.seoTitle || (name ? `${name} in Bradford, PA | Fuse Prints` : "");
+  $("service-seo-desc").value = item?.seoDescription || "";
+  $("service-image-upload-status").textContent = "";
+
+  _currentServiceImages = Array.isArray(item?.images) ? item.images.map(i => ({ ...i })) : [];
+  _currentServiceImages.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  _currentServiceFeatures = Array.isArray(item?.features) ? item.features.map(f => ({ ...f })) : [];
+  _currentServiceMaterials = Array.isArray(item?.materials) ? [...item.materials] : [];
+  _currentServiceUseCases = Array.isArray(item?.useCases) ? item.useCases.map(u => ({ ...u })) : [];
+  _currentServiceFaqs = Array.isArray(item?.faqs) ? item.faqs.map(f => ({ q: f.q || f.question || "", a: f.a || f.answer || "" })) : [];
+  _currentServiceRelated = Array.isArray(item?.relatedServices) ? [...item.relatedServices] : [];
+
+  renderServiceImagesGrid();
+  renderFeaturesList();
+  renderMaterialsList();
+  renderUseCasesList();
+  renderFaqsList();
+  renderRelatedPicker(slug);
+
+  // Auto-slug from name when creating a new service
+  if (!isExisting) {
+    $("service-name").oninput = e => {
+      if (!$("service-slug-input").dataset.userEdited) {
+        $("service-slug-input").value = slugify(e.target.value);
+      }
+    };
+    $("service-slug-input").oninput = e => {
+      e.target.dataset.userEdited = "true";
+      e.target.value = slugify(e.target.value);
+    };
+  } else {
+    $("service-name").oninput = null;
+    $("service-slug-input").oninput = null;
+  }
+
+  openModal("service-modal");
+}
+
+function isDefaultService(slug) {
+  return DEFAULT_SERVICES.some(d => d.slug === slug);
+}
+
+$("service-add-image-btn").addEventListener("click", () => $("service-image-input").click());
+
+$("service-image-input").addEventListener("change", async e => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  const status = $("service-image-upload-status");
   try {
-    const res = await uploadImage(cropped, "hero", status);
-    _pendingHeroImage = res;
-    setDropZoneImage("hero-drop-zone", res.url);
-  } catch (e) {
-    console.error(e);
-    toast("Upload failed: " + e.message, "error");
+    const cropped = await openCropper(file, 4 / 3); // matches gallery aspect
+    const res = await uploadImage(cropped, "services", status);
+    _currentServiceImages.push({
+      imageUrl: res.url,
+      imagePath: res.path,
+      title: "",
+      order: _currentServiceImages.length
+    });
+    renderServiceImagesGrid();
+  } catch (err) {
+    if (err.message === "Cancelled") return;
+    console.error(err);
+    if (err.message !== "Not an image" && err.message !== "Too big") toast("Upload failed: " + err.message, "error");
   }
 });
 
-$("hero-form").addEventListener("submit", async e => {
+$("service-form").addEventListener("submit", async e => {
   e.preventDefault();
-  const id = $("hero-id").value;
-  const btn = $("hero-save-btn"); btn.disabled = true; btn.textContent = "Saving…";
-  const existingPath = $("hero-form").dataset.existingImagePath;
-  const existingUrl = $("hero-form").dataset.existingImageUrl;
+  const existingSlug = $("service-slug").value;
+  const slugInput = slugify($("service-slug-input").value);
+  const name = $("service-name").value.trim();
+  const btn = $("service-save-btn"); btn.disabled = true; btn.textContent = "Saving…";
+
+  const restore = () => { btn.disabled = false; btn.textContent = "Save Service"; };
+
+  if (!name) { toast("Service name is required.", "error"); restore(); return; }
+  if (!slugInput) { toast("URL slug is required.", "error"); restore(); return; }
+  if (RESERVED_SLUGS.has(slugInput)) { toast(`"${slugInput}" is a reserved path. Pick another slug.`, "error"); restore(); return; }
+
+  const slug = existingSlug || slugInput;
+  const isNew = !existingSlug;
+
+  // For new services, make sure the slug isn't already taken
+  if (isNew) {
+    try {
+      const existing = await getDoc(doc(db, "services", slug));
+      if (existing.exists()) { toast(`Slug "${slug}" is already used by another service.`, "error"); restore(); return; }
+    } catch (err) { console.warn(err); }
+  }
+
+  const existing = _allServiceDocs.find(d => d.slug === slug);
+  const order = existing?.order ?? (_allServiceDocs.length + 1);
 
   const data = {
-    title: $("hero-title").value.trim(),
-    order: Number($("hero-order").value) || 0,
-    wide: $("hero-wide").checked,
-    mobileVisible: $("hero-mobile").checked,
-    imageUrl: _pendingHeroImage?.url || existingUrl || "",
-    imagePath: _pendingHeroImage?.path || existingPath || "",
+    slug,
+    name,
+    order,
+    heading: $("service-heading").value.trim(),
+    eyebrow: $("service-eyebrow").value.trim(),
+    subheading: $("service-subheading").value.trim(),
+    description: $("service-description").value.trim(),
+    seoTitle: $("service-seo-title").value.trim(),
+    seoDescription: $("service-seo-desc").value.trim(),
+    images: _currentServiceImages.map((img, i) => ({
+      imageUrl: img.imageUrl,
+      imagePath: img.imagePath || "",
+      title: img.title || "",
+      order: i
+    })),
+    features: _currentServiceFeatures
+      .filter(f => f.title?.trim() || f.description?.trim())
+      .map(f => ({ icon: f.icon || "square", title: (f.title || "").trim(), description: (f.description || "").trim() })),
+    materials: _currentServiceMaterials.map(m => (m || "").trim()).filter(Boolean),
+    useCases: _currentServiceUseCases
+      .filter(u => u.title?.trim() || u.description?.trim())
+      .map(u => ({ icon: u.icon || "square", title: (u.title || "").trim(), description: (u.description || "").trim() })),
+    faqs: _currentServiceFaqs
+      .filter(f => f.q?.trim() || f.a?.trim())
+      .map(f => ({ q: (f.q || "").trim(), a: (f.a || "").trim() })),
+    relatedServices: _currentServiceRelated.filter(s => s !== slug),
     updatedAt: serverTimestamp()
   };
-  if (!data.imageUrl) { toast("Please upload an image.", "error"); btn.disabled = false; btn.textContent = "Save Image"; return; }
 
   try {
-    if (id) {
-      await updateDoc(doc(db, "hero", id), data);
-      if (_pendingHeroImage && existingPath && existingPath !== _pendingHeroImage.path) {
-        deleteStorageFile(existingPath);
-      }
-      toast("Hero image updated.", "success");
-    } else {
-      data.createdAt = serverTimestamp();
-      await addDoc(collection(db, "hero"), data);
-      toast("Hero image added.", "success");
-    }
-    closeModal("hero-modal");
-    loadHero();
-  } catch (e) {
-    console.error(e);
-    toast("Save failed: " + e.message, "error");
+    const payload = isNew ? { ...data, createdAt: serverTimestamp() } : data;
+    await setDoc(doc(db, "services", slug), payload, { merge: true });
+    toast(isNew ? `Service "${name}" created. Live at /${slug}.` : "Service page saved.", "success");
+    closeModal("service-modal");
+    loadServices();
+  } catch (err) {
+    console.error(err);
+    toast("Save failed: " + err.message, "error");
   } finally {
-    btn.disabled = false; btn.textContent = "Save Image";
+    restore();
   }
 });
 
-$("hero-delete-btn").addEventListener("click", async () => {
-  const id = $("hero-id").value;
-  if (!id) return;
-  if (!(await confirmDialog("Delete this hero image?", "It will be removed from the homepage immediately."))) return;
+// Delete service (custom services only; the 7 defaults are protected)
+$("service-delete-btn").addEventListener("click", async () => {
+  const slug = $("service-slug").value;
+  if (!slug) return;
+  if (isDefaultService(slug)) {
+    toast("Default services can't be deleted. You can leave them empty though.", "error");
+    return;
+  }
+  const ok = await confirmDialog(
+    "Delete this service?",
+    `The page at /${slug} will be removed and any uploaded images will be unlinked. This can't be undone.`
+  );
+  if (!ok) return;
   try {
-    const existingPath = $("hero-form").dataset.existingImagePath;
-    await deleteDoc(doc(db, "hero", id));
-    if (existingPath) deleteStorageFile(existingPath);
-    toast("Hero image deleted.", "success");
-    closeModal("hero-modal");
-    loadHero();
-  } catch (e) { toast("Delete failed: " + e.message, "error"); }
+    // Delete uploaded images from Storage too
+    _currentServiceImages.forEach(img => { if (img.imagePath) deleteStorageFile(img.imagePath); });
+    await deleteDoc(doc(db, "services", slug));
+    toast("Service deleted.", "success");
+    closeModal("service-modal");
+    loadServices();
+  } catch (err) {
+    console.error(err);
+    toast("Delete failed: " + err.message, "error");
+  }
 });
 
 // ---------- Site Images (single named slots: about-card, services-feature, etsy-bg, cta-bg) ----------

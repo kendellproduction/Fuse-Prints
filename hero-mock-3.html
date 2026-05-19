@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero Option 3: Print Press Visual — Fuse Prints</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { brand: { DEFAULT:'#2196F3', light:'#64B5F6', dark:'#1565C0' }, surface: { 400:'#020202' } }, fontFamily: { display: ['"Clash Display"','system-ui','sans-serif'], body: ['"General Sans"','system-ui','sans-serif'] } } } }
+  </script>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'General Sans',system-ui,sans-serif;background:#020202;color:#FAFAFA;overflow-x:hidden}
+    h1,h2{font-family:'Clash Display',system-ui,sans-serif}
+    .gradient-text{background:linear-gradient(135deg,#64B5F6 0%,#2196F3 50%,#1565C0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    #hero-bg{position:absolute;inset:0;background:radial-gradient(800px 600px at 20% 30%,rgba(33,150,243,.22),transparent 60%),linear-gradient(135deg,#040a1a 0%,#020202 60%,#020a14 100%)}
+    .mock-label{position:fixed;top:20px;left:20px;background:rgba(33,150,243,.15);border:1px solid rgba(33,150,243,.4);color:#64B5F6;padding:8px 16px;border-radius:999px;font-family:'Clash Display',system-ui,sans-serif;font-weight:600;font-size:12px;letter-spacing:.15em;text-transform:uppercase;z-index:1000}
+
+    /* Stacked floating "print sheets" illustration */
+    .sheet-stage{position:relative;aspect-ratio:1/1;perspective:1500px;perspective-origin:50% 30%}
+    .sheet{position:absolute;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);transition:transform .8s cubic-bezier(.2,0,.2,1)}
+    .sheet-stage:hover .sheet{transform:translateZ(20px)}
+    .sheet-1{top:8%;left:14%;width:62%;height:62%;background:linear-gradient(135deg,#1565C0 0%,#2196F3 60%,#64B5F6 100%);transform:rotateX(8deg) rotateY(-12deg) rotateZ(-6deg) translateZ(50px);overflow:hidden}
+    .sheet-2{top:18%;left:32%;width:60%;height:60%;background:linear-gradient(135deg,#0a0a14 0%,#1a1a2e 100%);transform:rotateX(8deg) rotateY(-12deg) rotateZ(2deg) translateZ(25px);border:1px solid rgba(33,150,243,.25);overflow:hidden}
+    .sheet-3{top:28%;left:50%;width:55%;height:55%;background:#FAFAFA;transform:rotateX(8deg) rotateY(-12deg) rotateZ(8deg) translateZ(0);overflow:hidden;display:flex;align-items:center;justify-content:center;color:#020202;font-family:'Clash Display',system-ui,sans-serif;font-weight:700;font-size:18px;letter-spacing:.2em;text-transform:uppercase;color:#1565C0}
+    .sheet-1::after,.sheet-2::after{content:'';position:absolute;top:0;left:0;right:0;height:14px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.15) 0,rgba(255,255,255,.15) 8px,transparent 8px,transparent 16px)}
+    .sheet-1 .label,.sheet-2 .label{position:absolute;top:30px;left:24px;font-family:'Clash Display',system-ui,sans-serif;font-weight:700;font-size:32px;line-height:1;letter-spacing:-.02em;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+    .sheet-1 .sub,.sheet-2 .sub{position:absolute;bottom:24px;left:24px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:600}
+    .sheet-2 .label{color:#64B5F6}
+
+    /* CMYK color stripe down the side */
+    .cmyk-stripe{position:absolute;left:6%;top:18%;bottom:18%;width:6px;border-radius:3px;background:linear-gradient(180deg,#00B7D4 0%,#00B7D4 25%,#E5247A 25%,#E5247A 50%,#FFD400 50%,#FFD400 75%,#FAFAFA 75%,#FAFAFA 100%);opacity:.7}
+
+    @keyframes sheetFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    .sheet-1{animation:sheetFloat 6s ease-in-out infinite}
+    .sheet-2{animation:sheetFloat 7s ease-in-out infinite -2s}
+    .sheet-3{animation:sheetFloat 8s ease-in-out infinite -4s}
+  </style>
+</head>
+<body>
+  <div class="mock-label">Option 3 · Floating Print Sheets</div>
+  <section id="hero" class="relative min-h-screen flex items-center pt-28 pb-12 sm:pt-20 sm:pb-12 overflow-hidden">
+    <div id="hero-bg" class="absolute inset-0"></div>
+    <div class="cmyk-stripe"></div>
+
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-10 w-full grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
+      <!-- Left: copy -->
+      <div>
+        <div class="flex items-center gap-4 mb-6"><div class="h-[2px] w-12 bg-brand-light"></div><p class="text-brand-light text-[12px] sm:text-[14px] font-bold tracking-[.3em] uppercase">Large Format Printing Service</p></div>
+        <h1 class="font-display font-bold text-[12vw] sm:text-[8vw] lg:text-[6vw] leading-[.92] tracking-[-.03em] mb-6">
+          <span class="block text-white">Need Large</span><span class="block text-white">Prints<span class="text-brand-light">?</span></span><span class="block gradient-text">We Can Help!</span>
+        </h1>
+        <p class="text-white/85 text-lg leading-relaxed max-w-md mb-3 font-medium">Banners <span class="text-brand">/</span> Signs <span class="text-brand">/</span> Stickers <span class="text-brand">/</span> Decals <span class="text-brand">/</span> Displays</p>
+        <p class="text-white/65 text-base leading-relaxed max-w-md mb-8">All products produced in Bradford, PA — Family Owned and Operated since 2014.</p>
+        <a href="#" class="inline-flex items-center gap-3 bg-brand text-white font-display font-semibold text-sm sm:text-base uppercase tracking-[.12em] px-7 py-3.5 rounded-full hover:bg-brand-light transition-all w-fit">Start a Project<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      </div>
+      <!-- Right: floating print sheets illustration -->
+      <div class="hidden lg:block">
+        <div class="sheet-stage">
+          <div class="sheet sheet-1"><span class="label">YOUR<br/>BANNER</span><span class="sub">12 × 4 ft · Vinyl</span></div>
+          <div class="sheet sheet-2"><span class="label">CUSTOM<br/>SIGN</span><span class="sub">Acrylic · Layered</span></div>
+          <div class="sheet sheet-3">PRINT READY</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

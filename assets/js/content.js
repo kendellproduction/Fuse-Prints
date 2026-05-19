@@ -2,7 +2,7 @@
 // Falls back silently if Firebase isn't configured or empty.
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getFirestore, collection, query, where, orderBy, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { getFirestore, collection, query, where, orderBy, getDocs, getDoc, doc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import { firebaseConfig, isConfigured } from "./firebase-config.js";
 
 let _db = null;
@@ -67,14 +67,27 @@ export async function fetchSiteImages() {
   }
 }
 
-export async function fetchHero() {
+export async function fetchService(slug) {
+  const d = db();
+  if (!d || !slug) return null;
+  try {
+    const snap = await getDoc(doc(d, "services", slug));
+    if (!snap.exists()) return null;
+    return { id: snap.id, ...snap.data() };
+  } catch (e) {
+    console.warn("fetchService failed:", e);
+    return null;
+  }
+}
+
+export async function fetchServices() {
   const d = db();
   if (!d) return [];
   try {
-    const snap = await getDocs(query(collection(d, "hero"), orderBy("order", "asc")));
+    const snap = await getDocs(query(collection(d, "services"), orderBy("order", "asc")));
     return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   } catch (e) {
-    console.warn("fetchHero failed:", e);
+    console.warn("fetchServices failed:", e);
     return [];
   }
 }
