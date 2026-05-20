@@ -95,6 +95,29 @@
     .badge-inactive{background:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
 
     .hidden{display:none!important}
+
+    /* Service modal section tabs */
+    .svc-section-tab{padding:9px 14px;border:none;background:transparent;color:rgba(255,255,255,.5);font-family:'Clash Display',system-ui,sans-serif;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap}
+    .svc-section-tab:hover{color:rgba(255,255,255,.85)}
+    .svc-section-tab.active{color:#fff;border-bottom-color:#2196F3}
+
+    /* Repeatable item row */
+    .item-row{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;cursor:grab}
+    .item-row:active{cursor:grabbing}
+    .item-row.sortable-chosen{box-shadow:0 8px 30px rgba(0,0,0,.4);border-color:rgba(33,150,243,.4)}
+    .item-row .item-handle{color:rgba(255,255,255,.25);cursor:grab}
+    .item-row .item-grid{display:grid;gap:10px}
+    .item-row .item-grid.cols-2{grid-template-columns:140px 1fr}
+    .item-row input.input,.item-row textarea.input{padding:8px 12px;font-size:13px}
+    .item-row .item-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px}
+    .item-row .btn-remove{color:#ef4444;background:transparent;border:none;font-size:12px;font-weight:600;cursor:pointer;padding:4px 8px;border-radius:6px;transition:background .2s}
+    .item-row .btn-remove:hover{background:rgba(239,68,68,.1)}
+
+    /* Related-services checkbox card */
+    .related-pick{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.08);border-radius:10px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.75);transition:border-color .2s,background .2s}
+    .related-pick:hover{border-color:rgba(33,150,243,.3);color:#fff}
+    .related-pick input{accent-color:#2196F3}
+    .related-pick.selected{background:rgba(33,150,243,.08);border-color:rgba(33,150,243,.4);color:#fff}
   </style>
 </head>
 <body>
@@ -197,9 +220,9 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
           <span>Products</span>
         </button>
-        <button class="tab" data-tab="hero">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></svg>
-          <span>Hero Images</span>
+        <button class="tab" data-tab="services">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+          <span>Service Pages</span>
         </button>
         <button class="tab" data-tab="site-images">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25"/></svg>
@@ -257,7 +280,7 @@
           <h3 class="font-display font-semibold text-lg mb-4">Quick actions</h3>
           <div class="flex flex-wrap gap-3">
             <button class="btn btn-primary tab-link" data-tab="products">+ Add Product</button>
-            <button class="btn btn-ghost tab-link" data-tab="hero">+ Edit Hero Images</button>
+            <button class="btn btn-ghost tab-link" data-tab="services">Edit Service Pages</button>
             <button class="btn btn-ghost tab-link" data-tab="gallery">+ Add Gallery Image</button>
           </div>
         </div>
@@ -301,21 +324,21 @@
         <div id="products-grid" class="hidden grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
       </section>
 
-      <!-- Hero Images -->
-      <section class="panel hidden" data-panel="hero">
+      <!-- Service Pages -->
+      <section class="panel hidden" data-panel="services">
         <header class="flex items-end justify-between mb-8 gap-4 flex-wrap">
           <div>
-            <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Hero Images</h1>
-            <p class="text-white/40 text-sm max-w-2xl">The mosaic at the top of the homepage. Mark images as <span class="text-brand">Wide</span> to span 2 columns and <span class="text-brand">Mobile</span> to show on phones. Each row on desktop fits 5 columns total. <span class="text-brand">Drag to reorder.</span></p>
+            <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Service Landing Pages</h1>
+            <p class="text-white/40 text-sm max-w-2xl">Each service has its own SEO-friendly landing page (e.g. <span class="text-brand">/banners</span>). Click a card to edit. Add new services with a custom slug — they get a clean URL automatically.</p>
           </div>
-          <button id="add-hero-btn" class="btn btn-primary">+ Add Image</button>
+          <button id="add-service-btn" class="btn btn-primary">+ New Service</button>
         </header>
-        <div id="hero-loading" class="flex items-center gap-3 text-white/40"><div class="spinner"></div> Loading hero images…</div>
-        <div id="hero-empty" class="hidden card p-10 text-center">
-          <p class="text-white/50 mb-4">No hero images yet — the homepage will show the default fallback.</p>
-          <button class="btn btn-primary" onclick="document.getElementById('add-hero-btn').click()">+ Add First Image</button>
+        <div id="services-loading" class="flex items-center gap-3 text-white/40"><div class="spinner"></div> Loading services…</div>
+        <div id="services-empty" class="hidden card p-10 text-center">
+          <p class="text-white/50 mb-4">No services yet.</p>
+          <button class="btn btn-primary" onclick="document.getElementById('add-service-btn').click()">+ Add Your First Service</button>
         </div>
-        <div id="hero-grid" class="hidden grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+        <div id="services-grid" class="hidden grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </section>
 
       <!-- Site Images -->
@@ -446,52 +469,148 @@
     </div>
   </div>
 
-  <!-- ============ HERO MODAL ============ -->
-  <div id="hero-modal" class="modal-bg">
-    <div class="modal p-6 sm:p-8">
+  <!-- ============ SERVICE MODAL ============ -->
+  <div id="service-modal" class="modal-bg">
+    <div class="modal p-6 sm:p-8" style="max-width:780px">
       <div class="flex items-start justify-between mb-6">
-        <h2 id="hero-modal-title" class="font-display font-bold text-2xl">Add Hero Image</h2>
-        <button class="btn btn-ghost !py-1.5 !px-3 text-xs modal-close" data-modal="hero-modal">Close</button>
-      </div>
-      <form id="hero-form" class="space-y-5">
-        <input type="hidden" id="hero-id" />
         <div>
-          <label class="lbl">Image</label>
-          <div id="hero-drop-zone" class="drop-zone">
-            <svg class="w-8 h-8 mx-auto mb-2 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-            <p class="text-white/50 text-sm mb-1">Click or drag image here</p>
-            <p class="text-white/25 text-xs">JPG, PNG, or WebP up to 8MB</p>
-            <input type="file" id="hero-image-input" accept="image/*" class="hidden" />
-            <div class="drop-zone-overlay">Click to change</div>
-          </div>
-          <p id="hero-upload-status" class="text-xs text-white/40 mt-2"></p>
-          <button type="button" id="hero-recrop-btn" class="btn btn-ghost text-xs mt-3" style="display:none">Adjust crop of current image</button>
+          <h2 id="service-modal-title" class="font-display font-bold text-2xl">Edit Service</h2>
+          <p id="service-modal-url" class="text-white/40 text-xs mt-1 font-mono"></p>
         </div>
-        <div class="grid sm:grid-cols-2 gap-4">
+        <button class="btn btn-ghost !py-1.5 !px-3 text-xs modal-close" data-modal="service-modal">Close</button>
+      </div>
+      <!-- Section tabs -->
+      <div class="flex gap-1 mb-6 border-b border-white/[.06] overflow-x-auto -mx-1 px-1">
+        <button type="button" class="svc-section-tab active" data-section="content">Content</button>
+        <button type="button" class="svc-section-tab" data-section="gallery">Gallery</button>
+        <button type="button" class="svc-section-tab" data-section="features">Capabilities</button>
+        <button type="button" class="svc-section-tab" data-section="materials">Materials</button>
+        <button type="button" class="svc-section-tab" data-section="usecases">Use Cases</button>
+        <button type="button" class="svc-section-tab" data-section="faqs">FAQ</button>
+        <button type="button" class="svc-section-tab" data-section="seo">SEO</button>
+      </div>
+
+      <form id="service-form">
+        <input type="hidden" id="service-slug" />
+
+        <!-- CONTENT SECTION -->
+        <div class="svc-section" data-section="content">
+          <div class="grid sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="lbl" for="service-name">Service Name</label>
+              <input id="service-name" type="text" class="input" placeholder="e.g. Banners" required />
+              <p class="text-white/30 text-xs mt-1">Short name shown in nav, related services, and card titles.</p>
+            </div>
+            <div>
+              <label class="lbl" for="service-slug-input">URL Slug</label>
+              <input id="service-slug-input" type="text" class="input font-mono" placeholder="banners" pattern="[a-z0-9-]+" />
+              <p class="text-white/30 text-xs mt-1">Lowercase, dashes only. Becomes /your-slug. Cannot be changed after save.</p>
+            </div>
+          </div>
           <div>
-            <label class="lbl" for="hero-title">Title (alt text)</label>
-            <input id="hero-title" type="text" class="input" placeholder="Optional alt text" />
+            <label class="lbl" for="service-heading">Page Heading</label>
+            <input id="service-heading" type="text" class="input" placeholder="e.g. Custom Banners — Bradford, PA" required />
+            <p class="text-white/30 text-xs mt-1">Big headline at the top of the page. Include "Bradford, PA" for local SEO.</p>
           </div>
+          <div class="mt-4">
+            <label class="lbl" for="service-eyebrow">Eyebrow Label</label>
+            <input id="service-eyebrow" type="text" class="input" placeholder="e.g. Banners · Bradford, PA" />
+            <p class="text-white/30 text-xs mt-1">Small label that sits above the heading.</p>
+          </div>
+          <div class="mt-4">
+            <label class="lbl" for="service-subheading">Subheading</label>
+            <textarea id="service-subheading" class="input" rows="2" placeholder="One-sentence pitch shown right below the heading."></textarea>
+          </div>
+          <div class="mt-4">
+            <label class="lbl" for="service-description">Overview / Description</label>
+            <textarea id="service-description" class="input" rows="6" placeholder="Long-form copy for the Overview section. Use blank lines for paragraph breaks."></textarea>
+          </div>
+        </div>
+
+        <!-- GALLERY SECTION -->
+        <div class="svc-section hidden" data-section="gallery">
+          <div class="flex items-center justify-between mb-3">
+            <label class="lbl !mb-0">Gallery Images <span class="text-white/30 normal-case">(scrolling carousel on the page)</span></label>
+            <button type="button" id="service-add-image-btn" class="btn btn-ghost text-xs">+ Add Image</button>
+          </div>
+          <input type="file" id="service-image-input" accept="image/*" class="hidden" />
+          <p id="service-image-upload-status" class="text-xs text-white/40 mb-3"></p>
+          <div id="service-images-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 min-h-[80px]">
+            <p class="col-span-full text-white/30 text-xs text-center py-6" id="service-images-empty">No images yet. Click + Add Image to upload.</p>
+          </div>
+        </div>
+
+        <!-- CAPABILITIES SECTION -->
+        <div class="svc-section hidden" data-section="features">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <label class="lbl !mb-0">Capabilities</label>
+              <p class="text-white/30 text-xs mt-1">Grid of capability cards shown next to the overview.</p>
+            </div>
+            <button type="button" id="service-add-feature-btn" class="btn btn-ghost text-xs">+ Add Capability</button>
+          </div>
+          <div id="service-features-list" class="space-y-3"></div>
+        </div>
+
+        <!-- MATERIALS SECTION -->
+        <div class="svc-section hidden" data-section="materials">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <label class="lbl !mb-0">Materials & Options</label>
+              <p class="text-white/30 text-xs mt-1">Short chips listing substrates / finishes.</p>
+            </div>
+            <button type="button" id="service-add-material-btn" class="btn btn-ghost text-xs">+ Add Material</button>
+          </div>
+          <div id="service-materials-list" class="space-y-2"></div>
+        </div>
+
+        <!-- USE CASES SECTION -->
+        <div class="svc-section hidden" data-section="usecases">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <label class="lbl !mb-0">Use Cases</label>
+              <p class="text-white/30 text-xs mt-1">Cards showing common applications for this service.</p>
+            </div>
+            <button type="button" id="service-add-usecase-btn" class="btn btn-ghost text-xs">+ Add Use Case</button>
+          </div>
+          <div id="service-usecases-list" class="space-y-3"></div>
+        </div>
+
+        <!-- FAQ SECTION -->
+        <div class="svc-section hidden" data-section="faqs">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <label class="lbl !mb-0">FAQ</label>
+              <p class="text-white/30 text-xs mt-1">Question / answer pairs shown in the FAQ accordion.</p>
+            </div>
+            <button type="button" id="service-add-faq-btn" class="btn btn-ghost text-xs">+ Add FAQ</button>
+          </div>
+          <div id="service-faqs-list" class="space-y-3"></div>
+        </div>
+
+        <!-- SEO SECTION -->
+        <div class="svc-section hidden" data-section="seo">
           <div>
-            <label class="lbl" for="hero-order">Display Order</label>
-            <input id="hero-order" type="number" class="input" value="0" />
+            <label class="lbl" for="service-seo-title">SEO Title <span class="text-white/30 normal-case">(browser tab title, ~60 chars)</span></label>
+            <input id="service-seo-title" type="text" class="input" placeholder="Custom Banner Printing in Bradford, PA | Fuse Prints" maxlength="80" />
+          </div>
+          <div class="mt-4">
+            <label class="lbl" for="service-seo-desc">SEO Description <span class="text-white/30 normal-case">(Google snippet, ~155 chars)</span></label>
+            <textarea id="service-seo-desc" class="input" rows="3" placeholder="One-sentence summary for Google search results." maxlength="200"></textarea>
+          </div>
+          <div class="mt-4">
+            <label class="lbl">Related Services <span class="text-white/30 normal-case">(shown in the "Other services" grid)</span></label>
+            <div id="service-related-list" class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2"></div>
+            <p class="text-white/30 text-xs mt-2">Leave none selected to auto-show the first 3 other services.</p>
           </div>
         </div>
-        <div class="space-y-3 pt-2">
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input id="hero-wide" type="checkbox" class="w-4 h-4 accent-brand" />
-            <span class="text-sm text-white/70">Wide rectangle <span class="text-white/40">(spans 2 columns on desktop)</span></span>
-          </label>
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input id="hero-mobile" type="checkbox" checked class="w-4 h-4 accent-brand" />
-            <span class="text-sm text-white/70">Show on mobile <span class="text-white/40">(mobile shows max 6 small images)</span></span>
-          </label>
-        </div>
-        <div class="flex items-center justify-between gap-3 pt-2">
-          <button type="button" id="hero-delete-btn" class="btn btn-danger hidden">Delete</button>
-          <div class="flex gap-2 ml-auto">
-            <button type="button" class="btn btn-ghost modal-close" data-modal="hero-modal">Cancel</button>
-            <button type="submit" id="hero-save-btn" class="btn btn-primary">Save Image</button>
+
+        <div class="flex items-center justify-between gap-3 pt-4 border-t border-white/[.06] mt-6">
+          <button type="button" id="service-delete-btn" class="btn btn-danger hidden">Delete Service</button>
+          <div class="flex items-center gap-3 ml-auto">
+            <a id="service-view-link" target="_blank" rel="noopener noreferrer" class="btn btn-ghost text-xs">View Page →</a>
+            <button type="button" class="btn btn-ghost modal-close" data-modal="service-modal">Cancel</button>
+            <button type="submit" id="service-save-btn" class="btn btn-primary">Save Service</button>
           </div>
         </div>
       </form>

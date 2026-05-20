@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Large Format Printing — Bradford, PA | Fuse Prints</title>
+  <meta name="description" content="Custom large format printing in Bradford, PA. Banners, signs, decals, displays and more — family owned and operated since 2014." />
+  <meta name="theme-color" content="#020202" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="256x256" href="assets/favicon-256.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Fuse Prints" />
+  <meta property="og:title" content="Large Format Printing — Bradford, PA | Fuse Prints" />
+  <meta property="og:description" content="Custom large format printing in Bradford, PA. Family owned and operated since 2014." />
+  <meta property="og:image" content="https://fuseprints.com/assets/logo-white.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Large Format Printing — Bradford, PA | Fuse Prints" />
+  <meta name="twitter:description" content="Custom large format printing in Bradford, PA. Family owned and operated since 2014." />
+  <meta name="twitter:image" content="https://fuseprints.com/assets/logo-white.png" />
+  <link id="canonical-link" rel="canonical" href="https://fuseprints.com/" />
+
+  <!-- JSON-LD structured data — populated by JS once the service loads. Ships with a base LocalBusiness for AI/search crawlers. -->
+  <script type="application/ld+json" id="ld-localbusiness">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Fuse Prints",
+    "image": "https://fuseprints.com/assets/logo-white.png",
+    "description": "Family-owned large format printing shop specializing in banners, custom signage, awards, displays, decals, and home décor.",
+    "telephone": "+1-877-575-3873",
+    "email": "orders@fuseprints.com",
+    "url": "https://fuseprints.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Bradford",
+      "addressRegion": "PA",
+      "addressCountry": "US"
+    },
+    "areaServed": "United States",
+    "foundingDate": "2014"
+  }
+  </script>
+  <script type="application/ld+json" id="ld-service"></script>
+  <script type="application/ld+json" id="ld-faq"></script>
+  <script type="application/ld+json" id="ld-breadcrumb"></script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT:'#2196F3', light:'#64B5F6', dark:'#1565C0', glow:'rgba(33,150,243,0.15)' },
+            surface: { 50:'#1A1A1A', 100:'#111111', 200:'#0A0A0A', 300:'#050505', 400:'#020202' },
+          },
+          fontFamily: {
+            display: ['"Clash Display"','system-ui','sans-serif'],
+            body: ['"General Sans"','system-ui','sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=general-sans@200,300,400,500,600,700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{overflow-x:hidden;scroll-behavior:smooth}
+    body{font-family:'General Sans',system-ui,sans-serif;background:#020202;color:#FAFAFA;overflow-x:hidden}
+    h1,h2,h3,h4,h5,h6{font-family:'Clash Display',system-ui,sans-serif}
+    ::selection{background:#2196F3;color:#fff}
+
+    .gradient-text{background:linear-gradient(135deg,#64B5F6 0%,#2196F3 50%,#1565C0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+    @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .marquee-track{animation:marquee 45s linear infinite;display:flex;width:max-content}
+    @keyframes marquee-rev{0%{transform:translateX(-50%)}100%{transform:translateX(0%)}}
+    .marquee-track-rev{animation:marquee-rev 50s linear infinite;display:flex;width:max-content}
+
+    .gallery-card{position:relative;overflow:hidden;flex-shrink:0;border-radius:16px}
+    .gallery-card img{transition:transform .8s cubic-bezier(.2,0,.2,1)}
+    .gallery-card:hover img{transform:scale(1.08)}
+    .gallery-card .card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 50%);opacity:0;transition:opacity .4s;border-radius:16px}
+    .gallery-card:hover .card-overlay{opacity:1}
+    .gallery-card .card-content{position:absolute;bottom:0;left:0;right:0;padding:24px;transform:translateY(20px);opacity:0;transition:all .4s cubic-bezier(.2,0,.2,1)}
+    .gallery-card:hover .card-content{transform:translateY(0);opacity:1}
+
+    .mobile-menu{position:fixed;inset:0;z-index:8000;background:#020202;display:flex;flex-direction:column;align-items:center;justify-content:center;clip-path:circle(0% at calc(100% - 40px) 36px);transition:clip-path .6s cubic-bezier(.65,0,.35,1)}
+    .mobile-menu.open{clip-path:circle(150% at calc(100% - 40px) 36px)}
+
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#020202}::-webkit-scrollbar-thumb{background:#2196F3;border-radius:2px}
+
+    /* Service hero background */
+    #svc-hero-bg{position:absolute;inset:0;background:radial-gradient(900px 600px at 20% 30%,rgba(33,150,243,.28),transparent 60%),radial-gradient(700px 500px at 80% 70%,rgba(21,101,192,.2),transparent 60%),linear-gradient(135deg,#040a1a 0%,#020202 60%,#020a14 100%)}
+    #svc-hero-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.14) 1px,transparent 1.4px);background-size:22px 22px;mask-image:radial-gradient(ellipse 70% 60% at 80% 70%,#000 0%,#000 35%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 80% 70%,#000 0%,#000 35%,transparent 75%);opacity:.55;pointer-events:none}
+    #svc-hero-line{position:absolute;top:30%;right:-10%;width:120%;height:1px;background:linear-gradient(90deg,transparent,rgba(33,150,243,.25),transparent);transform:rotate(15deg);pointer-events:none}
+
+    /* Feature card */
+    .feature-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:28px;transition:border-color .3s,transform .3s,background .3s}
+    .feature-card:hover{border-color:rgba(33,150,243,.3);background:rgba(33,150,243,.04);transform:translateY(-4px)}
+    .feature-icon{width:44px;height:44px;border-radius:12px;background:rgba(33,150,243,.12);display:flex;align-items:center;justify-content:center;color:#64B5F6;margin-bottom:16px}
+
+    /* Use case card */
+    .usecase-card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:24px;padding:32px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+    .usecase-card:hover{border-color:rgba(33,150,243,.25);transform:translateY(-3px)}
+    .usecase-card::before{content:'';position:absolute;top:0;right:0;width:140px;height:140px;background:radial-gradient(circle,rgba(33,150,243,.12),transparent 70%);pointer-events:none}
+
+    /* Material chip */
+    .material-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:13px;color:rgba(255,255,255,.85);transition:border-color .25s,background .25s}
+    .material-chip:hover{border-color:rgba(33,150,243,.35);background:rgba(33,150,243,.06)}
+    .material-chip .dot{width:6px;height:6px;border-radius:50%;background:#2196F3}
+
+    /* FAQ details */
+    details[open] summary svg{transform:rotate(45deg)}
+    details summary{list-style:none}
+    details summary::-webkit-details-marker{display:none}
+
+    /* Related card */
+    .related-card{display:block;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:24px;transition:border-color .3s,transform .3s,background .3s;text-decoration:none;color:inherit}
+    .related-card:hover{border-color:rgba(33,150,243,.3);background:rgba(33,150,243,.04);transform:translateY(-3px)}
+
+    .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 100%);background-size:200% 100%;animation:shimmer 1.6s linear infinite;border-radius:12px}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    .section-eyebrow{display:inline-flex;align-items:center;gap:12px;color:#64B5F6;font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;margin-bottom:14px}
+    .section-eyebrow::before{content:'';width:24px;height:1.5px;background:#64B5F6}
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-[100] transition-all duration-500" style="background:transparent">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-10 h-20 flex items-center justify-between">
+      <a href="/" class="flex items-center"><img src="assets/logo-white.png" alt="Fuse Prints" class="h-7 sm:h-8 w-auto" /></a>
+      <div class="hidden lg:flex items-center gap-10">
+        <a href="/#work" class="text-[13px] font-medium text-white/70 hover:text-white transition-colors uppercase tracking-[.15em]">Work</a>
+        <a href="/#about" class="text-[13px] font-medium text-white/70 hover:text-white transition-colors uppercase tracking-[.15em]">About</a>
+        <a href="/#services" class="text-[13px] font-medium text-white/70 hover:text-white transition-colors uppercase tracking-[.15em]">Services</a>
+        <a href="/#process" class="text-[13px] font-medium text-white/70 hover:text-white transition-colors uppercase tracking-[.15em]">Process</a>
+        <a href="/#contact" class="text-[13px] font-medium text-white/70 hover:text-white transition-colors uppercase tracking-[.15em]">Contact</a>
+      </div>
+      <div class="hidden lg:flex items-center gap-5">
+        <a href="/#contact" class="inline-flex text-[13px] font-display font-bold text-white bg-brand px-6 py-2.5 rounded-full hover:bg-brand-light transition-all">Get a Quote</a>
+      </div>
+      <button id="menu-toggle" class="lg:hidden text-white p-2"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" class="mobile-menu">
+    <button id="menu-close" class="absolute top-6 right-6 text-white p-2"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
+    <a href="/" class="text-4xl font-display font-semibold text-white/80 hover:text-brand transition-colors mb-6">Home</a>
+    <a href="/#work" class="text-4xl font-display font-semibold text-white/80 hover:text-brand transition-colors mb-6">Work</a>
+    <a href="/#services" class="text-4xl font-display font-semibold text-white/80 hover:text-brand transition-colors mb-6">Services</a>
+    <a href="/#contact" class="mt-4 text-lg font-display font-bold text-white bg-brand px-8 py-3 rounded-full">Get a Quote</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="relative pt-32 sm:pt-40 pb-16 sm:pb-20 overflow-hidden">
+    <div id="svc-hero-bg" class="absolute inset-0"></div>
+    <div id="svc-hero-dots" class="absolute inset-0"></div>
+    <div id="svc-hero-line" class="absolute"></div>
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-10">
+      <a href="/#services" class="inline-flex items-center gap-2 text-brand-light hover:text-brand text-xs font-semibold tracking-[.2em] uppercase mb-6">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All Services
+      </a>
+      <p class="section-eyebrow"><span id="svc-eyebrow">Bradford, PA</span></p>
+      <h1 id="svc-heading" class="font-display font-bold text-5xl sm:text-6xl lg:text-7xl tracking-[-.03em] leading-[.95] max-w-4xl mb-6">
+        <span class="skeleton inline-block h-[1.1em] w-[80%]"></span>
+      </h1>
+      <p id="svc-subheading" class="text-white/70 text-lg sm:text-xl leading-relaxed max-w-2xl mb-10">
+        <span class="skeleton inline-block h-4 w-[80%]"></span>
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a href="/#contact" class="inline-flex items-center gap-3 bg-brand text-white font-display font-semibold text-sm uppercase tracking-[.12em] px-7 py-3.5 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.3)]">
+          Request a Quote
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#examples" class="inline-flex items-center gap-3 text-white/75 hover:text-white font-display font-semibold text-sm uppercase tracking-[.12em] px-7 py-3.5 rounded-full border border-white/15 hover:border-white/30 transition-all">
+          See Examples
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMAGE MARQUEE -->
+  <section id="examples" class="relative py-10 sm:py-14">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-10 mb-10">
+      <p class="section-eyebrow">Recent Work</p>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-[-.02em]">A look at <span class="gradient-text">our prints.</span></h2>
+    </div>
+    <div class="overflow-hidden mb-4">
+      <div id="svc-row-1" class="marquee-track" style="animation-duration:45s"></div>
+    </div>
+    <div class="overflow-hidden">
+      <div id="svc-row-2" class="marquee-track-rev" style="animation-duration:50s"></div>
+    </div>
+    <div id="svc-empty" class="hidden max-w-[1400px] mx-auto px-6 sm:px-10 py-16 text-center">
+      <p class="text-white/40 text-sm">Photos coming soon. Want to see examples? <a href="/#work" class="text-brand hover:underline">Browse our full gallery</a>.</p>
+    </div>
+  </section>
+
+  <!-- OVERVIEW + FEATURES -->
+  <section class="relative py-20 sm:py-28">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-10">
+      <div class="grid lg:grid-cols-[1fr_1.4fr] gap-12 lg:gap-20 items-start">
+        <div class="lg:sticky lg:top-28">
+          <p class="section-eyebrow">Overview</p>
+          <h2 class="font-display font-bold text-4xl sm:text-5xl tracking-[-.02em] leading-[1.05] mb-6">Built in <span class="gradient-text">Bradford, PA.</span></h2>
+          <div id="svc-description" class="text-white/70 text-base sm:text-lg leading-relaxed space-y-4">
+            <p class="skeleton h-4 w-full"></p>
+            <p class="skeleton h-4 w-[90%]"></p>
+            <p class="skeleton h-4 w-[70%]"></p>
+          </div>
+        </div>
+
+        <div>
+          <p class="section-eyebrow">Capabilities</p>
+          <h3 class="font-display font-bold text-3xl sm:text-4xl tracking-[-.02em] mb-8">What we offer</h3>
+          <div id="svc-features" class="grid sm:grid-cols-2 gap-4"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATERIALS -->
+  <section id="svc-materials-section" class="relative py-20 sm:py-24 border-t border-white/[.06]">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-10">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
+        <div>
+          <p class="section-eyebrow">Materials & Options</p>
+          <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-[-.02em]">Choose your <span class="gradient-text">substrate.</span></h2>
+        </div>
+        <p class="text-white/55 text-base max-w-md">Not sure which is right for your project? Mention what it's for and we'll recommend the best option.</p>
+      </div>
+      <div id="svc-materials" class="flex flex-wrap gap-3"></div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section id="svc-usecases-section" class="relative py-20 sm:py-24 border-t border-white/[.06] overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-brand/[.04] rounded-full blur-[180px] pointer-events-none"></div>
+    <div class="relative max-w-[1400px] mx-auto px-6 sm:px-10">
+      <div class="text-center mb-12">
+        <p class="section-eyebrow justify-center" style="margin-left:auto;margin-right:auto">Common Use Cases</p>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-[-.02em]">Where these <span class="gradient-text">show up.</span></h2>
+      </div>
+      <div id="svc-usecases" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="svc-faq-section" class="relative py-20 sm:py-24 border-t border-white/[.06]">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-10">
+      <div class="grid lg:grid-cols-[1fr_1.6fr] gap-12 lg:gap-20">
+        <div class="lg:sticky lg:top-28 lg:self-start">
+          <p class="section-eyebrow">FAQ</p>
+          <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-[-.02em] leading-[1.05] mb-5">Quick <span class="gradient-text">answers.</span></h2>
+          <p class="text-white/55 text-base leading-relaxed mb-6">Got a question we haven't answered? We're a small family team — just message us and you'll get a real reply.</p>
+          <a href="/#contact" class="inline-flex items-center gap-2 text-brand hover:text-brand-light font-display font-semibold text-sm uppercase tracking-[.15em]">
+            Ask Us
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+        <div id="svc-faqs"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RELATED SERVICES -->
+  <section id="svc-related-section" class="relative py-20 sm:py-24 border-t border-white/[.06]">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-10">
+      <div class="flex items-end justify-between gap-6 mb-10 flex-wrap">
+        <div>
+          <p class="section-eyebrow">Also Available</p>
+          <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-[-.02em]">Other services</h2>
+        </div>
+        <a href="/#services" class="text-brand hover:text-brand-light text-sm font-display font-semibold uppercase tracking-[.15em] inline-flex items-center gap-2">
+          See all <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+      <div id="svc-related" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="relative py-24 sm:py-32 overflow-hidden border-t border-white/[.06]">
+    <div class="absolute inset-0 bg-gradient-to-br from-brand-dark/20 via-surface-400 to-surface-400"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand/[.08] rounded-full blur-[150px]"></div>
+    <div class="relative z-10 max-w-3xl mx-auto px-6 sm:px-10 text-center">
+      <h2 class="font-display font-bold text-4xl sm:text-5xl lg:text-6xl tracking-[-.03em] mb-5">Ready to start your <span class="gradient-text">project?</span></h2>
+      <p class="text-white/65 text-base sm:text-lg mb-8 max-w-xl mx-auto">Family owned and operated in Bradford, PA since 2014. Tell us what you need and we'll get back within 24 hours.</p>
+      <a href="/#contact" class="inline-flex items-center gap-3 bg-brand text-white font-display font-semibold text-base uppercase tracking-[.1em] px-8 py-4 rounded-full hover:bg-brand-light transition-all hover:shadow-[0_0_40px_rgba(33,150,243,.35)]">
+        Get a Free Quote
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/[.06] py-10">
+    <div class="max-w-[1400px] mx-auto px-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <a href="/" class="flex items-center"><img src="assets/logo-white.png" alt="Fuse Prints" class="h-6 w-auto opacity-40"/></a>
+      <p class="text-white/55 text-xs">&copy; 2026 Fuse Prints. Family-owned in Bradford, PA.</p>
+      <div class="flex items-center gap-5 text-white/65 text-xs">
+        <a href="/privacy/" class="hover:text-white transition-colors">Privacy</a>
+        <a href="/terms/" class="hover:text-white transition-colors">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const mm=document.getElementById('mobile-menu');
+    document.getElementById('menu-toggle').addEventListener('click',()=>mm.classList.add('open'));
+    document.getElementById('menu-close').addEventListener('click',()=>mm.classList.remove('open'));
+    const nav=document.getElementById('navbar');
+    window.addEventListener('scroll',()=>{if(window.scrollY>80){nav.style.background='rgba(2,2,2,.9)';nav.style.backdropFilter='blur(20px)';nav.style.borderBottom='1px solid rgba(255,255,255,.05)'}else{nav.style.background='transparent';nav.style.backdropFilter='none';nav.style.borderBottom='none'}});
+  </script>
+
+  <script type="module">
+    import { fetchService, fetchServices } from './assets/js/content.js?v=4';
+
+    function esc(s){if(s==null)return'';return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+    // ---------- Service catalog (for related links + navigation) ----------
+    const CATALOG = {
+      'banners': 'Banners',
+      'custom-signs': 'Custom Signs',
+      'custom-awards-plaques': 'Custom Awards & Plaques',
+      'tradeshow-displays': 'Tradeshow Displays',
+      'stickers-decals': 'Stickers & Decals',
+      'wall-window-decals': 'Wall & Window Decals',
+      'home-decor-gifts': 'Home Décor & Gifts'
+    };
+
+    // ---------- Rich fallback content for every service ----------
+    const FALLBACKS = {
+      'banners': {
+        name: 'Banners',
+        eyebrow: 'Banners · Bradford, PA',
+        heading: 'Custom Banners — Bradford, PA',
+        subheading: 'Vinyl, fabric, mesh, and retractable stands — produced in our Bradford, PA shop and shipped anywhere in the country.',
+        seoTitle: 'Custom Banner Printing in Bradford, PA | Fuse Prints',
+        seoDescription: 'Retractable, hanging, vinyl, and outdoor banners printed in Bradford, PA. Family owned since 2014. Fast turnaround on any size.',
+        description: 'From small storefront banners to full-stadium-sized outdoor displays, Fuse Prints in Bradford, PA produces custom banners built to last. We handle the design clean-up, printing, hemming, and grommet finishing entirely in-house.\n\nFamily owned and operated since 2014, every banner is produced locally in our Bradford, PA shop. Need a rush turnaround for an event next week? Just say the word — we keep most stock materials on hand year-round.',
+        features: [
+          { icon:'maximize-2',  title:'Any Size',           description:'From 2-foot table banners to 50-foot building wraps — no max width with our seam-welded production.' },
+          { icon:'shield',      title:'Outdoor-Rated',      description:'13oz vinyl with UV-stable inks rated for 3-5 years of full outdoor exposure.' },
+          { icon:'wind',        title:'Wind-Resistant',     description:'Mesh banner option drops 30% of wind load — required for fences and exterior building installs.' },
+          { icon:'zap',         title:'Rush Available',     description:'Same-week production on most banner orders. Mention your deadline up front.' },
+          { icon:'palette',     title:'True-Color Printing',description:'CMYK + spot color matching against Pantone references. We send proofs before printing.' },
+          { icon:'truck',       title:'Nationwide Shipping',description:'Rolled and tubed shipping included on most orders. Express delivery available.' }
+        ],
+        materials: ['13oz Vinyl','18oz Heavy-Duty Vinyl','Mesh Vinyl','Fabric (Polyester)','Retractable Stand','Hemmed & Grommeted'],
+        useCases: [
+          { icon:'calendar',    title:'Events & Weddings',  description:'Welcome signs, photo backdrops, sponsor walls, and entryway banners for events of any size.' },
+          { icon:'store',       title:'Storefronts & Retail',description:'Window banners, grand-opening signage, sale promotions, and seasonal storefront displays.' },
+          { icon:'briefcase',   title:'Trade Shows',        description:'Booth backdrops, retractable banner stands, and overhead hanging banners for conventions.' },
+          { icon:'building',    title:'Building Wraps',     description:'Large-format vinyl banners installed on building facades and construction barricades.' },
+          { icon:'flag',        title:'Schools & Sports',   description:'Team banners, championship recognitions, gymnasium graphics, and outdoor field signage.' },
+          { icon:'megaphone',   title:'Political & Causes', description:'Campaign banners, fundraiser displays, awareness walks, and community event signage.' }
+        ],
+        faqs: [
+          { q:'What’s the largest banner you can print?',                a:'We can produce single-piece banners up to about 16 feet wide. Larger than that, we seam-weld multiple panels together — no limit on length.' },
+          { q:'How long do outdoor banners last?',                            a:'Our 13oz vinyl with UV inks is rated for 3-5 years of full outdoor exposure. 18oz heavy-duty extends that another 1-2 years in harsh weather.' },
+          { q:'Can you match my brand colors exactly?',                       a:'Yes. Send us Pantone references or a brand guide and we’ll print a physical proof for sign-off before running the full job.' },
+          { q:'Do banners come with grommets included?',                      a:'Standard finishing on all vinyl banners is hemmed edges with grommets every 2 feet. Pole pockets, D-rings, or rope hems are options too — just ask.' },
+          { q:'What file format should I send?',                              a:'Vector files (AI, EPS, PDF) are best. We also accept high-res JPG, PNG, and TIFF. If you only have a low-res file, we’ll let you know if it needs re-creation.' }
+        ]
+      },
+      'custom-signs': {
+        name: 'Custom Signs',
+        eyebrow: 'Custom Signs · Bradford, PA',
+        heading: 'Custom Signs — Bradford, PA',
+        subheading: 'Acrylic, wood, metal, PVC, and foam board signage cut, printed, and finished in our Bradford, PA shop.',
+        seoTitle: 'Custom Sign Printing in Bradford, PA | Fuse Prints',
+        seoDescription: 'Custom signs printed and CNC-cut in Bradford, PA — acrylic, wood, metal, PVC, foam board. Family owned since 2014.',
+        description: 'Lobby signage, real-estate riders, restaurant menu boards, business directories, way-finding signs — Fuse Prints in Bradford, PA cuts and prints custom signs on virtually any substrate. We handle one-offs, full storefront packages, and multi-location sign systems.\n\nEvery sign is designed, routed, printed, and finished locally in our Bradford, PA shop. Family owned and operated since 2014.',
+        features: [
+          { icon:'scissors',    title:'CNC Cut to Shape',   description:'Routed letters, custom shapes, and contour cuts on rigid substrates up to 1" thick.' },
+          { icon:'layers',      title:'Layered Builds',     description:'Multi-layer dimensional signs with stand-off mounts for a polished lobby look.' },
+          { icon:'sun',         title:'Indoor or Outdoor',  description:'Substrate and finish chosen for the environment — UV-stable for outdoor, premium-finish for interior.' },
+          { icon:'feather',     title:'Lightweight Options',description:'Foam board and Sintra for temporary or trade-show signs that travel easily.' },
+          { icon:'anchor',      title:'Mounting Hardware',  description:'Z-brackets, stand-offs, French cleats, or post-mounted — we ship installation hardware included.' },
+          { icon:'pen-tool',    title:'Design Help',        description:'Send us a sketch or rough idea. We’ll lay it out, send a digital proof, and iterate until it’s right.' }
+        ],
+        materials: ['Acrylic (1/8" - 1/2")','Dibond (Aluminum)','PVC (3mm - 12mm)','Wood (Birch, MDF)','Foam Board','Coroplast','Brushed Aluminum'],
+        useCases: [
+          { icon:'briefcase',   title:'Office Signage',     description:'Lobby logos, conference room markers, ADA-compliant office identification, way-finding.' },
+          { icon:'utensils',    title:'Restaurants',        description:'Menu boards, specials chalk-boards, host stations, exterior storefront signs.' },
+          { icon:'home',        title:'Real Estate',        description:'For-Sale yard signs, riders, open-house directionals, agent-branded post-mounted signs.' },
+          { icon:'map-pin',     title:'Way-finding',        description:'Multi-location directional sign systems for campuses, hotels, parking lots, and venues.' },
+          { icon:'truck',       title:'Vehicle & Trailer',  description:'Magnetic vehicle signs, rigid trailer placards, and removable contractor identification.' },
+          { icon:'award',       title:'Storefront IDs',     description:'Outdoor business identification mounted to building exteriors and monument structures.' }
+        ],
+        faqs: [
+          { q:'What’s the difference between dibond and acrylic?',       a:'Dibond is an aluminum-composite panel — rigid, lightweight, weatherproof, and ideal for outdoor signs. Acrylic is a premium clear or colored plastic with a glossy finish, more often used indoors.' },
+          { q:'Can you cut custom shapes?',                                   a:'Yes — our CNC router cuts any shape from a vector file. Letters, logos, layered builds, and contour cuts on most substrates.' },
+          { q:'Do you offer installation in Bradford?',                       a:'For local Bradford-area jobs we can install on-site. For everywhere else we ship complete with mounting hardware and installation instructions.' },
+          { q:'How long does a sign job typically take?',                     a:'Standard turnaround is 5-7 business days after proof approval. Rush is often possible — just mention your deadline up front.' },
+          { q:'Can the sign be illuminated?',                                 a:'We offer LED edge-lit acrylic and backlit channel-letter options. Mention "illuminated" in your quote request and we’ll spec it out.' }
+        ]
+      },
+      'custom-awards-plaques': {
+        name: 'Custom Awards & Plaques',
+        eyebrow: 'Awards & Plaques · Bradford, PA',
+        heading: 'Custom Awards & Plaques — Bradford, PA',
+        subheading: 'Precision laser-engraved recognition pieces on wood, acrylic, glass, and metal — designed and engraved in Bradford, PA.',
+        seoTitle: 'Custom Awards & Plaques in Bradford, PA | Fuse Prints',
+        seoDescription: 'Laser-engraved awards, plaques, and recognition gifts produced in Bradford, PA. Wood, acrylic, glass, metal. Family owned since 2014.',
+        description: 'Championship plaques, employee-of-the-month awards, retirement gifts, sponsor recognitions, donor walls — Fuse Prints laser-engraves custom awards on wood, acrylic, glass, and metal with crisp, deep detail.\n\nEvery award is designed and engraved locally in Bradford, PA. Family owned and operated since 2014. We help with the layout, send a digital proof, and ship the finished pieces individually packaged.',
+        features: [
+          { icon:'crosshair',   title:'Precision Engraving',description:'Sub-millimeter detail on logos, text, photos, and signatures. CO2 + fiber laser systems.' },
+          { icon:'gem',         title:'Premium Substrates', description:'Walnut, maple, cherry, crystal, marble, brushed aluminum, leather — we keep stock of all common materials.' },
+          { icon:'edit-3',      title:'Personalization',    description:'Each piece can carry a unique name, date, or message. Same setup, no extra cost.' },
+          { icon:'package',     title:'Gift Packaging',     description:'Velvet-lined boxes available for individual gift presentation. Bulk-pack option for events.' },
+          { icon:'image',       title:'Photo Engraving',    description:'High-contrast photos engraved directly onto wood, slate, or anodized metal.' },
+          { icon:'layout',      title:'Design Help',        description:'Send us your logo and message — we’ll lay out the engraving and send a proof before cutting.' }
+        ],
+        materials: ['Walnut','Maple','Cherry Wood','Acrylic','Crystal Glass','Slate','Brushed Aluminum','Leather','Anodized Metal'],
+        useCases: [
+          { icon:'trophy',      title:'Sports & Tournaments',description:'Championship plaques, MVP awards, tournament trophies, team recognitions for any sport.' },
+          { icon:'briefcase',   title:'Corporate Recognition',description:'Employee-of-the-year, sales achievement, retirement gifts, length-of-service awards.' },
+          { icon:'heart',       title:'Donor & Sponsor',    description:'Donor walls, sponsor plaques, named-dedication pieces for nonprofits and capital campaigns.' },
+          { icon:'graduation-cap',title:'Schools',           description:'Academic awards, scholarship recognitions, principal-of-the-year, faculty honors.' },
+          { icon:'star',        title:'Personal Gifts',     description:'Wedding gifts, anniversary engravings, baby announcements, memorial pieces.' },
+          { icon:'shield',      title:'Military & Service', description:'Promotion plaques, retirement shadow boxes, unit recognitions, first-responder awards.' }
+        ],
+        faqs: [
+          { q:'What’s the smallest text you can engrave?',               a:'On wood and acrylic we can engrave text down to about 6pt cleanly. On metal we go even smaller — 4pt for laser-marked plates.' },
+          { q:'Can you engrave a logo?',                                       a:'Yes. Send us a vector file (AI, EPS, SVG) or a high-resolution raster. We’ll send back a digital proof showing exactly how it will engrave.' },
+          { q:'How long for an order of 50+ awards?',                          a:'Bulk orders of 50-200 pieces typically run 7-10 business days after proof approval. Larger quantities — talk to us about timing.' },
+          { q:'Do plaques come with mounting hardware?',                       a:'Wall plaques include keyhole slots or sawtooth hangers. Desk pieces include the base or stand built in.' },
+          { q:'Can you personalize each piece differently?',                   a:'Yes. Send us a spreadsheet with names/dates/messages and we’ll engrave each piece individually. No setup fees for variable data.' }
+        ]
+      },
+      'tradeshow-displays': {
+        name: 'Tradeshow Displays',
+        eyebrow: 'Tradeshow Displays · Bradford, PA',
+        heading: 'Tradeshow Displays — Bradford, PA',
+        subheading: 'Complete booth packages — backdrops, retractable stands, table throws, podiums, and modular displays produced in Bradford, PA.',
+        seoTitle: 'Tradeshow Display Printing in Bradford, PA | Fuse Prints',
+        seoDescription: 'Complete tradeshow booth packages — backdrops, pop-up displays, step-and-repeat, modular kits. Produced in Bradford, PA since 2014.',
+        description: 'Full booth solutions or single components: backwalls, pop-up displays, retractable banners, table throws, podiums, step-and-repeat backdrops, and overhead hanging structures. We ship directly to your venue or stage the kit at our Bradford, PA shop for pickup.\n\nFamily owned and operated since 2014. We produce hundreds of booth packages every year for trade shows across the country.',
+        features: [
+          { icon:'box',         title:'Complete Kits',      description:'Backwall + counter + retractables + table throw bundled at a package price.' },
+          { icon:'truck',       title:'Ship-to-Venue',      description:'We label and ship directly to your booth number or hotel — no carrying gear through airports.' },
+          { icon:'rotate-ccw',  title:'Reusable',           description:'Tension-fabric backwalls and pop-ups break down into rolling cases for the next show.' },
+          { icon:'tool',        title:'Tool-Free Assembly', description:'Pop-up frames snap together in 5 minutes. Magnetic fabric panels — no Velcro, no zip ties.' },
+          { icon:'feather',     title:'Lightweight',        description:'Complete 10x10 booths under 50 lbs total in a rolling case. Most ship as checked baggage.' },
+          { icon:'maximize',    title:'Any Booth Size',     description:'10x10, 10x20, 20x20, island booths — we engineer the structure to your floor plan.' }
+        ],
+        materials: ['Tension Fabric','Aluminum Frame','Pop-Up Magnetic','Retractable Banner','Table Throw (Stretch / Loose)','Hard Case + Wheels','Counter / Podium'],
+        useCases: [
+          { icon:'briefcase',   title:'B2B Trade Shows',    description:'Industry conventions, expo halls, regional trade shows, association annual meetings.' },
+          { icon:'shopping-bag',title:'Consumer Expos',     description:'Bridal expos, home shows, food festivals, craft fairs, agricultural fairs.' },
+          { icon:'graduation-cap',title:'Career & College',  description:'Job fairs, college recruitment events, university open houses, alumni weekends.' },
+          { icon:'flag',        title:'Sports & Events',    description:'Marathon expos, race packet-pickup booths, tournament sponsor activations.' },
+          { icon:'heart',       title:'Nonprofit & Cause',  description:'Charity walks, awareness events, fundraising galas, community outreach booths.' },
+          { icon:'building',    title:'Recruiting & HR',    description:'Career fairs, on-campus interviews, military recruitment, hiring event displays.' }
+        ],
+        faqs: [
+          { q:'How early should I order before my show?',                     a:'Two to three weeks before show date is ideal. We can rush in 5-7 days if needed, but that limits material choices.' },
+          { q:'Can you ship directly to the convention center?',               a:'Yes. We pack and label per the show’s advance-warehouse rules. Just send us the show kit / shipping instructions.' },
+          { q:'Do you store our display between shows?',                       a:'For local Bradford-area clients yes. For everyone else, your hard case ships back to your office between shows.' },
+          { q:'What if my booth design changes mid-year?',                     a:'Tension-fabric panels are swappable — keep the frame, replace just the graphics. Most clients refresh once a year.' },
+          { q:'Can you do hanging signs and overhead structures?',             a:'Yes — overhead rigs, hanging signs, and ceiling banners. These typically require show approval and Union labor at the venue.' }
+        ]
+      },
+      'stickers-decals': {
+        name: 'Stickers & Decals',
+        eyebrow: 'Stickers & Decals · Bradford, PA',
+        heading: 'Stickers & Decals — Bradford, PA',
+        subheading: 'Die-cut vinyl stickers, kiss-cut sheets, weatherproof labels, and outdoor decals — printed in our Bradford, PA shop.',
+        seoTitle: 'Custom Stickers & Decals in Bradford, PA | Fuse Prints',
+        seoDescription: 'Die-cut vinyl stickers, kiss-cut sheets, weatherproof outdoor decals. Printed in Bradford, PA. Any quantity, any shape.',
+        description: 'Logo stickers, product labels, bumper stickers, weatherproof vehicle decals, holographic specialty stickers — any shape, any quantity. We die-cut, kiss-cut, and contour-cut to your art.\n\nProduced in Bradford, PA. Family owned and operated since 2014. From a sheet of 50 for a small business launch to runs of 10,000+ for product packaging.',
+        features: [
+          { icon:'scissors',    title:'Die-Cut to Shape',   description:'Each sticker cut to the exact contour of your art — no white border unless you want one.' },
+          { icon:'layers',      title:'Kiss-Cut Sheets',    description:'Multiple stickers on one peelable backing — great for sticker packs and product samples.' },
+          { icon:'droplets',    title:'Waterproof',         description:'UV-laminated for outdoor use. Dishwasher-safe, weatherproof, scratch-resistant.' },
+          { icon:'sparkles',    title:'Specialty Finishes', description:'Holographic, glitter, glow-in-the-dark, transparent, matte, and metallic options.' },
+          { icon:'package',     title:'Any Quantity',       description:'Order 25, 250, or 25,000. Per-unit pricing scales — no setup fees on reorders.' },
+          { icon:'truck',       title:'Fast Shipping',      description:'Most sticker orders ship within 3-5 business days. Rush production available.' }
+        ],
+        materials: ['Vinyl (Glossy)','Vinyl (Matte)','Holographic','Glitter','Transparent','Glow-in-Dark','Reflective','Removable Adhesive'],
+        useCases: [
+          { icon:'package',     title:'Product Branding',   description:'Box seals, jar labels, product hang-tags, packaging stickers for ecommerce and retail.' },
+          { icon:'truck',       title:'Vehicle Decals',     description:'Window decals, bumper stickers, contractor truck graphics, parking permits.' },
+          { icon:'gift',        title:'Promo Giveaways',    description:'Conference swag, sticker packs, customer thank-you gifts, brand-awareness handouts.' },
+          { icon:'shopping-cart',title:'Retail Pricing',     description:'Pricing labels, sale stickers, barcode labels, inventory tagging.' },
+          { icon:'coffee',      title:'Food & Beverage',    description:'Jar labels, bottle wraps, coffee bag stickers, restaurant menu callouts.' },
+          { icon:'flag',        title:'Events & Causes',    description:'Race-day numbers, campaign stickers, awareness ribbons, event swag.' }
+        ],
+        faqs: [
+          { q:'What’s the minimum order?',                                a:'No minimum. Order one if you need just one. Per-unit pricing drops sharply once you cross 100+.' },
+          { q:'Are stickers weatherproof?',                                    a:'Standard vinyl with UV laminate is weatherproof and dishwasher-safe — rated for 3-5 years outdoors.' },
+          { q:'Can you do custom shapes?',                                      a:'Yes. Send a vector outline and we’ll die-cut to it. Or send a square design and we’ll cut along the artwork.' },
+          { q:'How thick is the vinyl?',                                       a:'3-mil vinyl is our standard. We also offer 5-mil for industrial / outdoor applications and 2-mil removable for window stickers.' },
+          { q:'Can the stickers be removed cleanly later?',                    a:'Standard vinyl leaves no residue when removed within the first year. We also offer a fully-removable adhesive for short-term promo stickers.' }
+        ]
+      },
+      'wall-window-decals': {
+        name: 'Wall & Window Decals',
+        eyebrow: 'Wall & Window · Bradford, PA',
+        heading: 'Wall & Window Decals — Bradford, PA',
+        subheading: 'Full-wall murals, frosted-glass window graphics, storefront vinyl, and removable wall decals printed in Bradford, PA.',
+        seoTitle: 'Wall & Window Decal Printing in Bradford, PA | Fuse Prints',
+        seoDescription: 'Wall murals, frosted-glass window graphics, removable wall decals, storefront vinyl printed in Bradford, PA. Family owned since 2014.',
+        description: 'Full-wall murals, conference-room frosted glass, storefront vinyl, and removable wall decals for offices, gyms, retail spaces, and restaurants. We print, ship with installation instructions, and offer local Bradford-area install service.\n\nDesigned and printed in Bradford, PA. Family owned and operated since 2014.',
+        features: [
+          { icon:'maximize',    title:'Wall-Sized',         description:'Murals printed in seam-matched panels for any wall size — installed corner to corner.' },
+          { icon:'eye-off',     title:'Frosted Glass',      description:'Privacy films and decorative etching effects on conference room glass, office partitions, and storefronts.' },
+          { icon:'sun',         title:'Window Perforated',  description:'See-through perforated vinyl — graphics visible from outside, transparent from inside.' },
+          { icon:'shield',      title:'Damage-Free',        description:'Removable adhesive options leave zero residue on drywall and glass.' },
+          { icon:'check-circle',title:'Install Friendly',   description:'Application tape pre-applied. Pre-spaced. We include step-by-step instructions and a squeegee.' },
+          { icon:'home',        title:'Local Install',      description:'For Bradford-area jobs we install on-site. Statewide installs available for larger projects.' }
+        ],
+        materials: ['Standard Vinyl','Removable Vinyl','Frosted Etch','Perforated Window Film','Wall Mural Paper','Translucent Backlit Vinyl','Floor-Rated Vinyl'],
+        useCases: [
+          { icon:'briefcase',   title:'Office Branding',    description:'Logo walls, conference room frosted glass, motivational quotes, way-finding murals.' },
+          { icon:'store',       title:'Retail Windows',     description:'Storefront promotions, brand-window graphics, seasonal sale decals, hours-of-operation.' },
+          { icon:'dumbbell',    title:'Gyms & Studios',     description:'Floor decals, mirror graphics, brand walls, yoga-studio wall art, locker-room murals.' },
+          { icon:'utensils',    title:'Restaurants',        description:'Menu boards, brand statements, "now hiring" window decals, sidewalk-facing graphics.' },
+          { icon:'school',      title:'Schools',            description:'Mascot walls, library murals, hallway way-finding, gymnasium graphics, classroom labels.' },
+          { icon:'heart',       title:'Healthcare',         description:'Frosted privacy glass, way-finding, pediatric office wall murals, waiting-room branding.' }
+        ],
+        faqs: [
+          { q:'Will the decal damage my wall?',                                a:'Standard wall decals are removable and leave no residue within the first year of install. For longer-term murals we use a stronger adhesive.' },
+          { q:'How do I install a large wall mural?',                          a:'We split the mural into manageable seam-matched panels. Each panel has application tape and registration marks. Two-person install is typical.' },
+          { q:'What’s frosted-etch vinyl?',                                a:'A translucent film that mimics sandblasted glass. We cut the design out of the frosted material so the clear glass shows your logo or pattern.' },
+          { q:'Can you install at my location?',                               a:'For Bradford-area jobs yes. For larger jobs further out, we can quote with a regional install partner or ship with a clear install guide.' },
+          { q:'Are wall decals removable from textured walls?',                a:'Smooth or eggshell wall finishes work best. Textured / orange-peel walls require a heavier vinyl and aren’t fully residue-free on removal.' }
+        ]
+      },
+      'home-decor-gifts': {
+        name: 'Home Décor & Gifts',
+        eyebrow: 'Home Décor · Bradford, PA',
+        heading: 'Home Décor & Gifts — Bradford, PA',
+        subheading: 'Personalized canvas prints, engraved wood signs, custom cutting boards, photo gifts, and home accents — made in Bradford, PA.',
+        seoTitle: 'Custom Home Décor & Gifts in Bradford, PA | Fuse Prints',
+        seoDescription: 'Personalized canvas prints, custom wood signs, engraved gifts, and home décor produced in Bradford, PA. Family owned since 2014.',
+        description: 'Personalized canvas prints, custom wood signs, engraved cutting boards, photo gifts, and one-of-a-kind home accents — designed and produced in our Bradford, PA shop. Most of our home-décor line is also sold on Etsy if you\'d rather browse pre-made designs.\n\nFamily owned and operated since 2014. Browse our Etsy shop or contact us for a fully custom piece.',
+        features: [
+          { icon:'image',       title:'Canvas Prints',      description:'Gallery-wrapped photo canvases on a 1.5" wood frame — sizes from 8x10 to 40x60.' },
+          { icon:'edit-3',      title:'Engraved Wood',      description:'Family names, dates, addresses, and quotes engraved into walnut, maple, and cherry.' },
+          { icon:'gift',        title:'Personalized Gifts', description:'Cutting boards, tumblers, ornaments, photo blocks — personalized with a name or message.' },
+          { icon:'heart',       title:'Memorial & Tribute', description:'Photo memorial canvases, engraved memory boxes, and dedication pieces for loved ones.' },
+          { icon:'home',        title:'Home Signs',         description:'Last-name family signs, kitchen quotes, entryway welcomes, mudroom hooks.' },
+          { icon:'shopping-cart',title:'Etsy Shop',          description:'Pre-made designs available at fuseprints.com/etsy — order direct or message us for customization.' }
+        ],
+        materials: ['Canvas (Gallery Wrap)','Walnut','Maple','Cherry','Acrylic Photo Block','Slate','Cutting Board (Bamboo / Walnut)','Ceramic'],
+        useCases: [
+          { icon:'gift',        title:'Wedding Gifts',      description:'Engraved cutting boards, last-name signs, established-date plaques, photo canvases.' },
+          { icon:'baby',        title:'New Baby',           description:'Birth-stats wood signs, nursery name canvases, personalized first-Christmas ornaments.' },
+          { icon:'home',        title:'Housewarming',       description:'Address signs, family-name plaques, custom home-coordinates art, doormat-style canvases.' },
+          { icon:'heart',       title:'Anniversary',        description:'Year-engraved pieces, wedding-vow canvases, dated keepsake boxes, photo prints.' },
+          { icon:'cake',        title:'Birthday & Milestone',description:'Photo canvas timelines, engraved milestone plaques, "happy 50th" personalized signs.' },
+          { icon:'feather',     title:'Memorial',           description:'Photo memorials, engraved memory boxes, dedication plaques, tribute canvases.' }
+        ],
+        faqs: [
+          { q:'How long does a custom piece take?',                            a:'Standard turnaround is 7-10 business days from design approval. Holiday season (Nov-Dec) extends slightly — order early for Christmas.' },
+          { q:'Do you ship out of state?',                                     a:'Yes, we ship nationwide. Most pieces qualify for USPS Priority or Ground.' },
+          { q:'Can you match a specific photo on canvas?',                     a:'Yes. Higher-resolution photos print best — we recommend at least 2MP for an 8x10 canvas. We send a digital preview before printing.' },
+          { q:'What if the gift is for someone in another state?',             a:'We can ship directly to the recipient with a gift note enclosed. Just provide the recipient’s shipping address at checkout.' },
+          { q:'Do you take Etsy listings off for custom orders?',              a:'Our Etsy shop is mostly pre-made designs. For fully custom one-offs, email us directly and we’ll handle it off-platform.' }
+        ]
+      }
+    };
+
+    // ---------- Render helpers ----------
+    function galleryCardHtml(item){
+      const w = item.width || 380, h = item.height || 280;
+      return `<div class="gallery-card" style="width:${w}px;height:${h}px"><img src="${esc(item.imageUrl||'')}" alt="${esc(item.title||'')}" class="w-full h-full object-cover" loading="lazy"/><div class="card-overlay"></div><div class="card-content"><p class="text-white font-display font-semibold text-lg">${esc(item.title||'')}</p></div></div>`;
+    }
+    function buildRow(items){
+      if(!items.length)return'';
+      const group = `<div class="flex gap-4 px-2">${items.map(galleryCardHtml).join('')}</div>`;
+      return group + group;
+    }
+    function iconSvg(name){
+      // Inline minimal Lucide-style icon via the Lucide UMD that's already loaded.
+      // We render a placeholder and re-init via lucide.createIcons() after.
+      return `<i data-lucide="${esc(name||'square')}" class="w-5 h-5"></i>`;
+    }
+    function renderDescription(text){
+      const el = document.getElementById('svc-description');
+      if(!text){ el.innerHTML = ''; return; }
+      const paras = String(text).split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+      el.innerHTML = paras.map(p => `<p>${esc(p)}</p>`).join('');
+    }
+    function renderFeatures(features){
+      const el = document.getElementById('svc-features');
+      if(!features?.length){ el.parentElement.style.display='none'; return; }
+      el.innerHTML = features.map(f => `
+        <div class="feature-card">
+          <div class="feature-icon">${iconSvg(f.icon)}</div>
+          <h4 class="font-display font-semibold text-lg mb-2">${esc(f.title||'')}</h4>
+          <p class="text-white/55 text-sm leading-relaxed">${esc(f.description||'')}</p>
+        </div>
+      `).join('');
+    }
+    function renderMaterials(materials){
+      const el = document.getElementById('svc-materials');
+      const sec = document.getElementById('svc-materials-section');
+      if(!materials?.length){ sec.style.display='none'; return; }
+      el.innerHTML = materials.map(m => `<span class="material-chip"><span class="dot"></span>${esc(m)}</span>`).join('');
+    }
+    function renderUseCases(useCases){
+      const el = document.getElementById('svc-usecases');
+      const sec = document.getElementById('svc-usecases-section');
+      if(!useCases?.length){ sec.style.display='none'; return; }
+      el.innerHTML = useCases.map(u => `
+        <div class="usecase-card">
+          <div class="relative z-10">
+            <div class="feature-icon">${iconSvg(u.icon)}</div>
+            <h4 class="font-display font-semibold text-xl mb-2">${esc(u.title||'')}</h4>
+            <p class="text-white/55 text-sm leading-relaxed">${esc(u.description||'')}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+    function renderFaqs(faqs){
+      const el = document.getElementById('svc-faqs');
+      const sec = document.getElementById('svc-faq-section');
+      if(!faqs?.length){ sec.style.display='none'; return; }
+      el.innerHTML = faqs.map(f => `
+        <details class="group border-t border-white/[.06]">
+          <summary class="flex items-center justify-between py-6 cursor-pointer list-none">
+            <span class="font-display font-semibold text-base sm:text-lg text-white group-hover:text-brand transition-colors pr-6">${esc(f.q||f.question||'')}</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/65 transition-transform shrink-0"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </summary>
+          <p class="text-white/65 text-base leading-relaxed pb-6 pr-10">${esc(f.a||f.answer||'')}</p>
+        </details>
+      `).join('') + `<div class="border-b border-white/[.06]"></div>`;
+    }
+    // Cached list of all services (slug → name) for related-services lookup
+    let _allServicesCache = null;
+    async function getAllServices(){
+      if(_allServicesCache) return _allServicesCache;
+      try {
+        const live = await fetchServices();
+        // Merge: live services + the 7 default slugs (in case Firestore has fewer)
+        const map = {};
+        Object.entries(CATALOG).forEach(([s,n]) => map[s] = n);
+        live.forEach(s => { map[s.slug || s.id] = s.name || s.heading || s.slug; });
+        _allServicesCache = map;
+      } catch(e){
+        _allServicesCache = { ...CATALOG };
+      }
+      return _allServicesCache;
+    }
+
+    async function renderRelated(currentSlug, relatedSlugs){
+      const el = document.getElementById('svc-related');
+      const all = await getAllServices();
+      let slugs = relatedSlugs && relatedSlugs.length
+        ? relatedSlugs.filter(s => s !== currentSlug)
+        : Object.keys(all).filter(s => s !== currentSlug).slice(0, 3);
+      slugs = slugs.slice(0, 6);
+      if(!slugs.length){ document.getElementById('svc-related-section').style.display='none'; return; }
+      el.innerHTML = slugs.map(s => {
+        const name = all[s] || s;
+        return `<a class="related-card" href="/${esc(s)}">
+          <p class="text-brand-light text-xs font-semibold tracking-[.2em] uppercase mb-2">Service</p>
+          <h4 class="font-display font-semibold text-lg mb-2">${esc(name)}</h4>
+          <span class="inline-flex items-center gap-2 text-brand text-sm font-display font-semibold uppercase tracking-[.12em]">View <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+        </a>`;
+      }).join('');
+    }
+
+    function render(slug, data){
+      // <head>
+      if(data.seoTitle) {
+        document.title = data.seoTitle;
+        document.querySelector('meta[property="og:title"]')?.setAttribute('content', data.seoTitle);
+        document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', data.seoTitle);
+      }
+      if(data.seoDescription){
+        document.querySelector('meta[name="description"]')?.setAttribute('content', data.seoDescription);
+        document.querySelector('meta[property="og:description"]')?.setAttribute('content', data.seoDescription);
+        document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', data.seoDescription);
+      }
+      // Canonical URL
+      const canonical = document.getElementById('canonical-link');
+      if(canonical) canonical.href = `https://fuseprints.com/${slug}`;
+
+      // Hero
+      const eb = document.getElementById('svc-eyebrow');
+      if(eb) eb.textContent = data.eyebrow || `${data.name || 'Service'} · Bradford, PA`;
+      document.getElementById('svc-heading').textContent = data.heading || data.name || 'Service';
+      document.getElementById('svc-subheading').textContent = data.subheading || '';
+
+      // Description
+      renderDescription(data.description || '');
+
+      // Image marquee
+      const imgs = Array.isArray(data.images) ? [...data.images].sort((a,b)=>(a.order??0)-(b.order??0)) : [];
+      if(imgs.length){
+        const row1 = imgs.filter((_,i)=>i%2===0);
+        const row2 = imgs.filter((_,i)=>i%2===1);
+        document.getElementById('svc-row-1').innerHTML = buildRow(row1.length?row1:imgs);
+        document.getElementById('svc-row-2').innerHTML = buildRow(row2.length?row2:imgs);
+      } else {
+        document.getElementById('svc-row-1').remove();
+        document.getElementById('svc-row-2').remove();
+        document.getElementById('svc-empty').classList.remove('hidden');
+      }
+
+      // Repeating sections
+      renderFeatures(data.features || []);
+      renderMaterials(data.materials || []);
+      renderUseCases(data.useCases || []);
+      renderFaqs(data.faqs || []);
+      renderRelated(slug, data.relatedServices || []);
+
+      // JSON-LD structured data — Service + FAQPage + BreadcrumbList for rich Google + AI search results
+      renderJsonLd(slug, data);
+
+      // Re-init lucide for newly injected <i data-lucide="..."> icons
+      if(window.lucide) lucide.createIcons();
+    }
+
+    function renderJsonLd(slug, data){
+      const url = `https://fuseprints.com/${slug}`;
+      // Service schema
+      const svc = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": data.heading || data.name || slug,
+        "description": data.seoDescription || data.subheading || '',
+        "url": url,
+        "serviceType": data.name || slug,
+        "areaServed": [{ "@type": "City", "name": "Bradford" }, { "@type": "State", "name": "Pennsylvania" }, { "@type": "Country", "name": "United States" }],
+        "provider": {
+          "@type": "LocalBusiness",
+          "name": "Fuse Prints",
+          "telephone": "+1-877-575-3873",
+          "email": "orders@fuseprints.com",
+          "url": "https://fuseprints.com",
+          "address": { "@type": "PostalAddress", "addressLocality": "Bradford", "addressRegion": "PA", "addressCountry": "US" }
+        }
+      };
+      if (Array.isArray(data.materials) && data.materials.length) svc.material = data.materials;
+      const svcEl = document.getElementById('ld-service');
+      if (svcEl) svcEl.textContent = JSON.stringify(svc);
+
+      // FAQPage schema (only when FAQs exist)
+      const faqEl = document.getElementById('ld-faq');
+      if (faqEl) {
+        if (Array.isArray(data.faqs) && data.faqs.length) {
+          const faqLd = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": data.faqs.map(f => ({
+              "@type": "Question",
+              "name": f.q || f.question || '',
+              "acceptedAnswer": { "@type": "Answer", "text": f.a || f.answer || '' }
+            }))
+          };
+          faqEl.textContent = JSON.stringify(faqLd);
+        } else {
+          faqEl.textContent = '';
+        }
+      }
+
+      // Breadcrumb schema
+      const bcEl = document.getElementById('ld-breadcrumb');
+      if (bcEl) {
+        const bc = {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://fuseprints.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://fuseprints.com/#services" },
+            { "@type": "ListItem", "position": 3, "name": data.name || slug, "item": url }
+          ]
+        };
+        bcEl.textContent = JSON.stringify(bc);
+      }
+    }
+
+    function render404(slug){
+      document.title = "Service not found · Fuse Prints";
+      // Tell crawlers this is a 404-equivalent so they don't index junk
+      let robots = document.querySelector('meta[name="robots"]');
+      if (!robots) { robots = document.createElement('meta'); robots.setAttribute('name','robots'); document.head.appendChild(robots); }
+      robots.setAttribute('content','noindex,nofollow');
+      const hero = document.querySelector('#svc-heading')?.closest('section');
+      const all = document.querySelectorAll('section, footer');
+      // Hide everything below the hero
+      let pastHero = false;
+      all.forEach(el => { if (pastHero) el.style.display = 'none'; if (el === hero) pastHero = true; });
+      document.getElementById('svc-eyebrow').textContent = 'Page Not Found';
+      document.getElementById('svc-heading').textContent = `We don't have a "${slug}" page yet.`;
+      document.getElementById('svc-subheading').textContent = "Check the URL or browse our full service list.";
+      // Hide the See Examples button
+      const seeEx = document.querySelector('a[href="#examples"]');
+      if (seeEx) seeEx.style.display = 'none';
+    }
+
+    // ---------- Slug extraction + boot ----------
+    const pathParts = window.location.pathname.replace(/\/$/,'').split('/');
+    const rawSlug = pathParts[pathParts.length-1] || 'banners';
+    // Allow any slug (Chris can add new services). Reserved paths shouldn't reach here.
+    const RESERVED = new Set(['','index.html','service.html','admin','privacy','terms','robots.txt','sitemap.xml','404.html']);
+    const slug = RESERVED.has(rawSlug) ? 'banners' : rawSlug;
+
+    (async function(){
+      const isCorePage = !!FALLBACKS[slug];
+      const fb = FALLBACKS[slug] || null;
+      let data = fb;
+      let live = null;
+      try {
+        live = await fetchService(slug);
+      } catch(e){ console.warn('fetchService failed', e); }
+
+      if (live) {
+        // Firestore doc exists — it's authoritative
+        data = fb ? { ...fb, ...live } : live;
+        if (fb) {
+          // Use fallbacks to fill any gaps for the original 7 slugs
+          if(!Array.isArray(data.features) || !data.features.length) data.features = fb.features;
+          if(!Array.isArray(data.materials) || !data.materials.length) data.materials = fb.materials;
+          if(!Array.isArray(data.useCases) || !data.useCases.length) data.useCases = fb.useCases;
+          if(!Array.isArray(data.faqs) || !data.faqs.length) data.faqs = fb.faqs;
+        }
+        if(!Array.isArray(data.relatedServices)) data.relatedServices = [];
+        if(!Array.isArray(data.images)) data.images = [];
+        if(!Array.isArray(data.features)) data.features = [];
+        if(!Array.isArray(data.materials)) data.materials = [];
+        if(!Array.isArray(data.useCases)) data.useCases = [];
+        if(!Array.isArray(data.faqs)) data.faqs = [];
+        render(slug, data);
+      } else if (isCorePage) {
+        // No Firestore doc yet — use the rich default fallback for the original 7 services
+        render(slug, fb);
+      } else {
+        // Unknown slug + no Firestore doc → 404 within the page
+        render404(slug);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -27,6 +27,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /services/{slug} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /siteImages/{key} {
       allow read: if true;
       allow write: if isAdmin();

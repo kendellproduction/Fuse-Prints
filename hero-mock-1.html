@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hero Option 1: CMYK Registration (current) — Fuse Prints</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { brand: { DEFAULT:'#2196F3', light:'#64B5F6', dark:'#1565C0' }, surface: { 400:'#020202' } }, fontFamily: { display: ['"Clash Display"','system-ui','sans-serif'], body: ['"General Sans"','system-ui','sans-serif'] } } } }
+  </script>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,600&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'General Sans',system-ui,sans-serif;background:#020202;color:#FAFAFA;overflow-x:hidden}
+    h1,h2{font-family:'Clash Display',system-ui,sans-serif}
+    .gradient-text{background:linear-gradient(135deg,#64B5F6 0%,#2196F3 50%,#1565C0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    #hero-bg{position:absolute;inset:0;background:radial-gradient(1200px 800px at 15% 25%,rgba(33,150,243,.35),transparent 60%),radial-gradient(1000px 700px at 88% 78%,rgba(21,101,192,.32),transparent 60%),linear-gradient(135deg,#040a1a 0%,#020202 60%,#020a14 100%)}
+    #hero-orb{position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(33,150,243,.55) 0%,rgba(33,150,243,.18) 40%,transparent 70%);filter:blur(40px);top:18%;left:8%;mix-blend-mode:screen}
+    #hero-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.18) 1.2px,transparent 1.6px);background-size:22px 22px;mask-image:radial-gradient(ellipse 80% 70% at 70% 80%,#000 0%,#000 35%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 80% 70% at 70% 80%,#000 0%,#000 35%,transparent 75%);opacity:.55;pointer-events:none}
+    #hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(33,150,243,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(33,150,243,.06) 1px,transparent 1px);background-size:90px 90px;mask-image:radial-gradient(ellipse at 30% 50%,#000 10%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 30% 50%,#000 10%,transparent 70%);opacity:.9;pointer-events:none}
+    #hero-reg{position:absolute;right:6%;top:50%;transform:translateY(-50%);width:min(36vw,520px);height:min(36vw,520px);pointer-events:none;opacity:.95}
+    .reg-spin{transform-origin:center;animation:spin 80s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #hero-cmyk-bar{position:absolute;right:6%;bottom:14%;display:flex;opacity:.85}
+    #hero-cmyk-bar span{display:block;width:36px;height:8px;border-radius:2px}
+    .c{background:#00B7D4}.m{background:#E5247A}.y{background:#FFD400}.k{background:#FAFAFA}
+    #hero-est{position:absolute;left:-2vw;bottom:-2vw;font-weight:700;font-size:24vw;line-height:.85;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px rgba(33,150,243,.10);pointer-events:none;white-space:nowrap;user-select:none}
+    .mock-label{position:fixed;top:20px;left:20px;background:rgba(33,150,243,.15);border:1px solid rgba(33,150,243,.4);color:#64B5F6;padding:8px 16px;border-radius:999px;font-family:'Clash Display',system-ui,sans-serif;font-weight:600;font-size:12px;letter-spacing:.15em;text-transform:uppercase;z-index:1000}
+  </style>
+</head>
+<body>
+  <div class="mock-label">Option 1 · CMYK Registration</div>
+  <section id="hero" class="relative min-h-screen flex flex-col justify-center pt-28 pb-12 sm:pt-32 sm:pb-24 overflow-hidden">
+    <div id="hero-bg" class="absolute inset-0"></div>
+    <div id="hero-dots" class="absolute inset-0"></div>
+    <div id="hero-grid" class="absolute inset-0"></div>
+    <div id="hero-orb"></div>
+    <div id="hero-est" aria-hidden="true">EST. 2014</div>
+    <svg id="hero-reg" viewBox="0 0 400 400" aria-hidden="true" fill="none">
+      <defs><radialGradient id="reg-fade" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(33,150,243,0.45)"/><stop offset="60%" stop-color="rgba(33,150,243,0.15)"/><stop offset="100%" stop-color="rgba(33,150,243,0)"/></radialGradient></defs>
+      <circle cx="200" cy="200" r="190" fill="url(#reg-fade)"/>
+      <circle cx="200" cy="200" r="178" stroke="rgba(100,181,246,0.55)" stroke-width="1.5"/>
+      <circle cx="200" cy="200" r="120" stroke="rgba(100,181,246,0.4)" stroke-width="1"/>
+      <g class="reg-spin" stroke="rgba(100,181,246,0.5)" stroke-width="1.5" stroke-linecap="round">
+        <line x1="200" y1="22" x2="200" y2="50"/><line x1="378" y1="200" x2="350" y2="200"/><line x1="200" y1="378" x2="200" y2="350"/><line x1="22" y1="200" x2="50" y2="200"/>
+        <line x1="326" y1="74" x2="306" y2="94"/><line x1="326" y1="326" x2="306" y2="306"/><line x1="74" y1="326" x2="94" y2="306"/><line x1="74" y1="74" x2="94" y2="94"/>
+      </g>
+      <g stroke="#64B5F6" stroke-width="2" stroke-linecap="round">
+        <line x1="200" y1="140" x2="200" y2="180"/><line x1="200" y1="220" x2="200" y2="260"/><line x1="140" y1="200" x2="180" y2="200"/><line x1="220" y1="200" x2="260" y2="200"/>
+        <circle cx="200" cy="200" r="34" stroke-width="2" fill="none"/><circle cx="200" cy="200" r="2.5" fill="#64B5F6"/>
+      </g>
+      <g fill="rgba(100,181,246,0.45)" font-family="'Clash Display',system-ui,sans-serif" font-size="9" font-weight="600" letter-spacing="3">
+        <text x="200" y="14" text-anchor="middle">REGISTRATION</text><text x="200" y="396" text-anchor="middle">FUSE PRINTS</text>
+      </g>
+    </svg>
+    <div id="hero-cmyk-bar"><span class="c"></span><span class="m"></span><span class="y"></span><span class="k"></span></div>
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 sm:px-10 w-full">
+      <div class="flex items-center gap-4 mb-5 sm:mb-7"><div class="h-[2px] w-12 bg-brand-light"></div><p class="text-brand-light text-[12px] sm:text-[14px] font-bold tracking-[.3em] uppercase">Large Format Printing Service</p></div>
+      <h1 class="font-display font-bold text-[12vw] sm:text-[8vw] lg:text-[5.5vw] leading-[.9] tracking-[-.03em]">
+        <span class="block text-white">Need Large</span><span class="block text-white">Prints<span class="text-brand-light">?</span></span><span class="block gradient-text">We Can Help!</span>
+      </h1>
+      <p class="mt-6 sm:mt-7 max-w-xl"><span class="block font-display font-medium text-base sm:text-lg text-white/90 tracking-wide leading-relaxed">Banners <span class="text-brand">/</span> Signs <span class="text-brand">/</span> Stickers <span class="text-brand">/</span> Decals <span class="text-brand">/</span> Displays</span><span class="block text-white/85 text-base sm:text-lg mt-2 leading-relaxed font-medium">All products produced in Bradford, PA — Family Owned and Operated since 2014.</span></p>
+      <a href="#" class="group inline-flex items-center gap-3 bg-brand text-white font-display font-semibold text-sm sm:text-base uppercase tracking-[.12em] px-8 py-4 sm:px-7 sm:py-3.5 rounded-full hover:bg-brand-light transition-all w-fit mt-8">Start a Project<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="-rotate-45"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </section>
+</body>
+</html>
