@@ -102,3 +102,18 @@ For Chris to pick from (after deploy, accessible at these URLs):
 - The hardcoded service cards in the initial HTML (gets hydrated by JS so any custom services Chris adds will appear on the homepage too)
 - Testimonials section
 - FAQ section on the homepage (different from the per-service FAQ which IS editable)
+
+## 4. Editing page copy in place (Chris)
+
+1. Sign in at **https://fuseprints.com/admin** (once — the session is remembered in that browser).
+2. Open the site (home, Privacy, Terms). A small bar appears at the bottom: **✎ Edit page copy**.
+3. Click it, click any text, type. Enter is disabled (copy is single-run text). **↺ Reset this text** restores the original wording.
+4. **Save & publish** goes live immediately. **Discard** drops unsaved changes. **Done** leaves edit mode.
+
+How it works / limits:
+- Only users with a doc in the `admins` collection get the editor; everyone else just gets the saved text.
+- Edits are stored in Firestore (`settings/copy_<page>`), not in the repo. The HTML keeps the original wording as the fallback.
+- Identical text on one page (e.g. every "Get a Quote" button, the scrolling ticker) changes together.
+- Edited phone numbers / emails also update their `tel:` / `mailto:` links. They do **not** update the SEO structured data (`"telephone"` in the page `<head>`) — that still needs a code change.
+- Not yet editable in place: service landing pages (edit those under Admin → Services), the gallery/products, page titles and meta descriptions.
+- If the original text in the HTML is changed by a developer, any saved edit for that exact text stops applying (the new code wins).
