@@ -9,7 +9,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, collection, addDoc, updateDoc, deleteDoc, setDoc,
-  getDocs, query, where, orderBy, serverTimestamp, writeBatch
+  getDocs, query, where, orderBy, serverTimestamp, writeBatch, arrayUnion, arrayRemove
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 import {
   getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, deleteObject
@@ -874,14 +874,27 @@ async function loadServices() {
             <span class="badge ${d.heading ? "badge-active" : "badge-inactive"}">${d.heading ? "Content" : "Default"}</span>
             ${isDefault ? '' : '<span class="badge" style="background:rgba(100,181,246,.15);color:#64B5F6">Custom</span>'}
           </div>
+          <button class="svc-photos-btn btn btn-ghost text-xs mt-2" data-slug="${esc(d.slug)}" style="padding:4px 10px">📷 Edit Photos</button>
         </div>
       </article>`;
     }).join("");
     grid.classList.remove("hidden");
     grid.querySelectorAll(".grid-item").forEach(el => {
-      el.addEventListener("click", () => {
+      el.addEventListener("click", (e) => {
+        if (e.target.closest(".svc-photos-btn")) return; // handled below
         const item = docs.find(d => d.slug === el.dataset.slug);
         if (item) openServiceModal({ slug: item.slug, name: item.name || item.slug, order: item.order ?? 99, isExisting: true }, item);
+      });
+    });
+    grid.querySelectorAll(".svc-photos-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const item = docs.find(d => d.slug === btn.dataset.slug);
+        if (!item) return;
+        openServiceModal({ slug: item.slug, name: item.name || item.slug, order: item.order ?? 99, isExisting: true }, item);
+        // Switch to Gallery tab
+        document.querySelectorAll(".svc-section-tab").forEach(b => b.classList.toggle("active", b.dataset.section === "gallery"));
+        document.querySelectorAll(".svc-section").forEach(s => s.classList.toggle("hidden", s.dataset.section !== "gallery"));
       });
     });
     // Drag-to-reorder
@@ -1069,7 +1082,7 @@ function renderFaqsList() {
 
 function renderRelatedPicker(currentSlug) {
   const el = $("service-related-list");
-  el.innerHTML = SERVICE_SLOTS.filter(s => s.slug !== currentSlug).map(s => {
+  el.innerHTML = _allServiceDocs.filter(s => s.slug !== currentSlug).map(s => {
     const checked = _currentServiceRelated.includes(s.slug);
     return `<label class="related-pick ${checked ? "selected" : ""}">
       <input type="checkbox" value="${esc(s.slug)}" ${checked ? "checked" : ""} />
@@ -1494,6 +1507,7 @@ async function loadInquiries() {
             ${i.status === "new" ? `<button class="btn btn-ghost !py-2 !px-3 text-xs" data-action="read">Mark Read</button>` : ""}
             ${i.status !== "archived" ? `<button class="btn btn-ghost !py-2 !px-3 text-xs" data-action="archive">Archive</button>` : `<button class="btn btn-ghost !py-2 !px-3 text-xs" data-action="unarchive">Unarchive</button>`}
             <button class="btn btn-danger !py-2 !px-3 text-xs" data-action="delete">Delete</button>
+            <button class="btn btn-ghost !py-2 !px-3 text-xs" data-action="block" title="Block this sender">Block Sender</button>
           </div>
         </div>
         <div class="grid sm:grid-cols-2 gap-x-6 gap-y-1 mb-3 text-sm">
@@ -1517,7 +1531,14 @@ async function loadInquiries() {
         const action = btn.dataset.action;
         btn.disabled = true;
         try {
-          if (action === "delete") {
+          if (action === "block") {
+            const email = article.querySelector("a[href^='mailto:']")?.textContent?.trim();
+            if (!email) { toast("Could not find email address.", "error"); btn.disabled = false; return; }
+            if (!(await confirmDialog(`Block "${email}"?`, "They won't be able to submit the quote form."))) { btn.disabled = false; return; }
+            await blockEmail(email);
+            toast(`${email} blocked.`, "success");
+            btn.disabled = false; return;
+          } else if (action === "delete") {
             if (!(await confirmDialog("Delete this inquiry?", "This can't be undone."))) { btn.disabled = false; return; }
             await deleteDoc(doc(db, "inquiries", id));
             toast("Inquiry deleted.", "success");
@@ -1551,3 +1572,68 @@ async function loadInquiries() {
 const filterStyle = document.createElement("style");
 filterStyle.textContent = `.inq-filter.active{background:rgba(33,150,243,.15);color:#64B5F6;border-color:rgba(33,150,243,.35)}`;
 document.head.appendChild(filterStyle);
+
+// ---------- Spam Blocklist ----------
+async function blockEmail(email) {
+  const ref = doc(db, "settings", "spam");
+  await setDoc(ref, { blockedEmails: arrayUnion(email.toLowerCase().trim()) }, { merge: true });
+}
+
+async function unblockEmail(email) {
+  const ref = doc(db, "settings", "spam");
+  await updateDoc(ref, { blockedEmails: arrayRemove(email.toLowerCase().trim()) });
+}
+
+async function loadBlocklist() {
+  const container = $("blocklist-items");
+  const empty = $("blocklist-empty");
+  if (!container) return;
+  container.innerHTML = '<p class="text-white/40 text-sm">Loading…</p>';
+  try {
+    const snap = await getDoc(doc(db, "settings", "spam"));
+    const emails = (snap.exists() ? snap.data().blockedEmails : null) || [];
+    if (emails.length === 0) {
+      container.innerHTML = "";
+      empty.classList.remove("hidden");
+      return;
+    }
+    empty.classList.add("hidden");
+    container.innerHTML = emails.map(email => `
+      <div class="flex items-center justify-between gap-4 py-2 border-b border-white/[.06]" data-email="${esc(email)}">
+        <span class="text-sm text-white/80 font-mono">${esc(email)}</span>
+        <button class="btn btn-ghost !py-1 !px-3 text-xs unblock-btn">Unblock</button>
+      </div>`).join("");
+    container.querySelectorAll(".unblock-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const email = btn.closest("[data-email]").dataset.email;
+        btn.disabled = true;
+        await unblockEmail(email);
+        toast(`${email} unblocked.`, "success");
+        loadBlocklist();
+      });
+    });
+  } catch (e) {
+    container.innerHTML = `<p class="text-red-400 text-sm">Failed to load: ${esc(e.message)}</p>`;
+  }
+}
+
+const addBlocklistForm = $("add-blocklist-form");
+if (addBlocklistForm) {
+  addBlocklistForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const input = $("blocklist-email-input");
+    const email = (input.value || "").trim().toLowerCase();
+    if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      toast("Enter a valid email address.", "error"); return;
+    }
+    await blockEmail(email);
+    toast(`${email} blocked.`, "success");
+    input.value = "";
+    loadBlocklist();
+  });
+}
+
+// Load blocklist when settings tab is opened
+document.querySelectorAll(".tab[data-tab]").forEach(tab => {
+  tab.addEventListener("click", () => { if (tab.dataset.tab === "settings") loadBlocklist(); });
+});

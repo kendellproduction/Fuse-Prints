@@ -375,6 +375,17 @@
           <h1 class="font-display font-bold text-3xl sm:text-4xl tracking-tight mb-2">Settings</h1>
           <p class="text-white/40 text-sm">Account preferences and security.</p>
         </header>
+        <!-- Spam Blocklist -->
+        <div class="card p-6 mb-6">
+          <h3 class="font-display font-semibold text-lg mb-1">Spam Blocklist</h3>
+          <p class="text-white/40 text-sm mb-5">Blocked emails are silently rejected at the quote form.</p>
+          <form id="add-blocklist-form" class="flex gap-3 mb-5">
+            <input id="blocklist-email-input" type="email" class="input flex-1" placeholder="email@example.com" autocomplete="off" />
+            <button type="submit" class="btn btn-primary whitespace-nowrap">Block Email</button>
+          </form>
+          <div id="blocklist-empty" class="hidden text-white/40 text-sm">No blocked emails.</div>
+          <div id="blocklist-items" class="space-y-0"></div>
+        </div>
         <div class="grid lg:grid-cols-2 gap-6">
           <div class="card p-6">
             <h3 class="font-display font-semibold text-lg mb-4">Account</h3>
@@ -744,6 +755,6 @@
     </div>
   </div>
 
-  <script type="module" src="./admin.js"></script>
+  <script type="module" src="/admin/admin.js"></script>
 </body>
 </html>
