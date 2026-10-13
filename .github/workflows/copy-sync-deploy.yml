@@ -1,0 +1,98 @@
+# GitHub is the source of truth for the live site.
+#   push to master      -> test, deploy to Firebase Hosting, verify live == repo
+#   every 5 minutes     -> bake any copy edits saved in the on-page editor into the HTML, commit, deploy, verify
+#   manual (Run workflow)-> same as above
+# Edits made in the editor are live immediately (Firestore overlay); this job makes GitHub + the deployed
+# HTML catch up within minutes. Pushes made with GITHUB_TOKEN do not re-trigger workflows, so there is no loop.
+name: Copy sync + deploy
+
+on:
+  push:
+    branches: [master]
+    paths-ignore: ["**/*.md", ".github/ISSUE_TEMPLATE/**"]
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+# One run at a time so two jobs never commit/deploy over each other.
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # commit baked copy edits to master. Nothing else.
+
+jobs:
+  sync-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: master
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      # Checker: nothing is baked or deployed unless the full suite passes
+      # (unit parity browser<->baker, XSS/tamper rejection, no-op idempotence, ...).
+      - name: Test
+        run: npm test
+
+      - name: Bake saved copy edits into HTML
+        id: bake
+        env:
+          BAKE_SUMMARY: ${{ runner.temp }}/bake-summary.txt
+        run: node scripts/bake-copy.mjs
+
+      - name: Commit baked edits to master
+        if: steps.bake.outputs.changed == 'true'
+        env:
+          BAKE_SUMMARY: ${{ runner.temp }}/bake-summary.txt
+        run: |
+          git config user.name "fuse-prints-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html privacy/index.html terms/index.html
+          git commit -F "$BAKE_SUMMARY"
+          git pull --rebase origin master
+          git push origin HEAD:master
+
+      - name: Deploy to Firebase Hosting
+        id: deploy
+        if: github.event_name != 'schedule' || steps.bake.outputs.changed == 'true'
+        env:
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FUSE_PRINTS }}
+        run: |
+          if [ -z "$SA_JSON" ]; then
+            echo "::warning::Secret FIREBASE_SERVICE_ACCOUNT_FUSE_PRINTS is not set - skipping deploy (GitHub is updated; production keeps serving the live Firestore overlay)."
+            echo "deployed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          umask 077
+          printf '%s' "$SA_JSON" > "$RUNNER_TEMP/sa.json"
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json" \
+            npx --yes firebase-tools@15.24.0 deploy --only hosting --project fuse-prints --non-interactive
+          echo "deployed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Remove credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"
+
+      # Checker: the live site must now be byte-identical to what is in git.
+      - name: Verify live site matches repo
+        if: steps.deploy.outputs.deployed == 'true'
+        run: |
+          ok=0
+          for attempt in 1 2 3 4 5 6; do
+            ok=1
+            for f in index.html privacy/index.html terms/index.html service.html assets/js/copy-core.js assets/js/inline-edit.js assets/js/inline-edit-ui.js; do
+              curl -fsS "https://fuseprints.com/$f?verify=$GITHUB_RUN_ID-$attempt" | cmp -s - "$f" || { echo "mismatch: $f (attempt $attempt)"; ok=0; }
+            done
+            [ "$ok" = 1 ] && break
+            sleep 20
+          done
+          [ "$ok" = 1 ] && echo "Live site matches repo." || { echo "::error::Live site does not match repo after deploy."; exit 1; }
