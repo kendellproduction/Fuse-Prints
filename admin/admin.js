@@ -374,6 +374,7 @@ $("change-pw-form").addEventListener("submit", async e => {
 
 onAuthStateChanged(auth, async user => {
   if (!user) {
+    try { localStorage.removeItem("fp_admin_hint"); } catch (_) {}
     showScreen("screen-login");
     return;
   }
@@ -384,6 +385,7 @@ onAuthStateChanged(auth, async user => {
       showScreen("screen-denied");
       return;
     }
+    try { localStorage.setItem("fp_admin_hint", "1"); } catch (_) {} // tells the public site to offer the inline copy editor
     $("user-email").textContent = user.email || "";
     $("settings-email").textContent = user.email || "";
     $("settings-uid").textContent = user.uid;
