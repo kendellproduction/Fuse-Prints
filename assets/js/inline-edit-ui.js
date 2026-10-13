@@ -3,7 +3,7 @@
 
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { doc, getDoc, setDoc, deleteField, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-import { getDb, applyEntries, hrefFor, norm, HINT_KEY } from "./inline-edit.js";
+import { getDb, applyEntries, hrefFor, norm, validEntry, HINT_KEY } from "./inline-edit.js";
 import { getApps } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
 const MAX_LEN = 1000;
@@ -157,17 +157,21 @@ export function createEditor({ pageId, units, store, save, who, onSaved }) {
       if (c.now === c.u.orig) { entries[c.key] = deleteField(); continue; } // back to original → drop override
       const e = { orig: c.u.orig, text: c.now };
       const link = units.find(x => x.key === c.key && x.link);
-      if (link) {
-        const href = hrefFor(link.link, c.now);
-        if (!href) { setMsg(`"${c.now}" isn't a valid ${link.origHref.startsWith("tel:") ? "phone number" : "email"}.`, "err"); return; }
-        e.href = href;
+      if (link && !hrefFor(link.origHref, c.now)) { // links follow their text, so it must be a usable phone/email
+        setMsg(`"${c.now}" isn't a valid ${link.origHref.startsWith("tel:") ? "phone number" : "email"}.`, "err"); return;
       }
+      if (!validEntry(c.key, e)) { setMsg("That text can't be saved (control characters or too long).", "err"); return; }
       entries[c.key] = e;
     }
+    // Edits already baked into the HTML (or otherwise orphaned) no longer match any text on the page: drop them,
+    // so an old edit can never resurface if the wording is later changed back.
+    const inert = Object.keys(store.entries).filter(k => !units.some(u => u.key === k && store.entries[k].orig === u.orig));
+    for (const k of inert) entries[k] = deleteField();
     bar.querySelectorAll("button").forEach(b => b.disabled = true);
     setMsg("Saving…");
     try {
       await save(entries);
+      for (const k of inert) delete store.entries[k];
       for (const c of list) { // fold into the local store so `changes()` is clean
         if (c.now === c.u.orig) delete store.entries[c.key];
         else store.entries[c.key] = entries[c.key];

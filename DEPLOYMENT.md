@@ -108,12 +108,27 @@ For Chris to pick from (after deploy, accessible at these URLs):
 1. Sign in at **https://fuseprints.com/admin** (once — the session is remembered in that browser).
 2. Open the site (home, Privacy, Terms). A small bar appears at the bottom: **✎ Edit page copy**.
 3. Click it, click any text, type. Enter is disabled (copy is single-run text). **↺ Reset this text** restores the original wording.
-4. **Save & publish** goes live immediately. **Discard** drops unsaved changes. **Done** leaves edit mode.
+4. **Save & publish** — the change is live on the site immediately. **Discard** drops unsaved changes. **Done** leaves edit mode.
 
-How it works / limits:
-- Only users with a doc in the `admins` collection get the editor; everyone else just gets the saved text.
-- Edits are stored in Firestore (`settings/copy_<page>`), not in the repo. The HTML keeps the original wording as the fallback.
+### What happens after Save
+1. The edit is written to Firestore (`settings/copy_<page>`) and shows on the live site right away.
+2. Within ~5 minutes the **"Copy sync + deploy"** GitHub Action (`.github/workflows/copy-sync-deploy.yml`) reads those edits, writes them into the HTML source (`scripts/bake-copy.mjs`), commits to `master` as `fuse-prints-bot`, deploys to Firebase Hosting and verifies the live files match the repo.
+3. So GitHub always ends up with exactly what is live. To undo any edit: `git revert` the bot commit (or edit the text again).
+
+### One-time setup so the Action can deploy
+Committing to GitHub works out of the box. Deploying needs a Firebase service account stored as a repo secret:
+1. Google Cloud console → IAM → Service accounts → create `github-hosting-deploy` with the single role **Firebase Hosting Admin**.
+2. Create a JSON key for it and save its contents as the GitHub repo secret `FIREBASE_SERVICE_ACCOUNT_FUSE_PRINTS` (Settings → Secrets and variables → Actions). Delete the downloaded file afterwards.
+3. Run the workflow once from the Actions tab ("Run workflow"). Until the secret exists the Action skips the deploy step and says so.
+
+### Security model
+- Only users with a doc in the `admins` collection get the editor; Firestore rules only let those users write `settings/*`.
+- The baker treats everything in Firestore as untrusted input: strict key/length/character validation, plain text only (HTML-escaped), only existing text nodes are changed, `tel:`/`mailto:` hrefs are re-derived from the text (never read from storage), at most 200 edits per run. It cannot add tags, scripts, attributes or URLs. Tests for all of this run before every deploy.
+- A compromised admin account could therefore change wording and phone/email on those pages — not inject code. Use Google sign-in with 2-step verification on the admin accounts.
+- The deploy key is Hosting-only, passed via env, written to a temp file with `umask 077` and deleted at the end of the job; third-party actions are pinned to commit SHAs; the workflow has `contents: write` only.
+
+### Limits
 - Identical text on one page (e.g. every "Get a Quote" button, the scrolling ticker) changes together.
-- Edited phone numbers / emails also update their `tel:` / `mailto:` links. They do **not** update the SEO structured data (`"telephone"` in the page `<head>`) — that still needs a code change.
-- Not yet editable in place: service landing pages (edit those under Admin → Services), the gallery/products, page titles and meta descriptions.
-- If the original text in the HTML is changed by a developer, any saved edit for that exact text stops applying (the new code wins).
+- Edited phone numbers / emails update their `tel:` / `mailto:` links, but **not** the SEO structured data (`"telephone"` in the page `<head>`) — that still needs a code change.
+- Not editable in place: service landing pages (Admin → Services), gallery/products, page titles and meta descriptions.
+- If a developer changes the original HTML text, an edit saved against the old text stops applying (the new code wins).
