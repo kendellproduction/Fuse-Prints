@@ -193,11 +193,8 @@
       <p class="section-eyebrow">Recent Work</p>
       <h2 class="font-display font-bold text-3xl sm:text-4xl tracking-[-.02em]">A look at <span class="gradient-text">our prints.</span></h2>
     </div>
-    <div class="overflow-hidden mb-4">
-      <div id="svc-row-1" class="marquee-track" style="animation-duration:45s"></div>
-    </div>
     <div class="overflow-hidden">
-      <div id="svc-row-2" class="marquee-track-rev" style="animation-duration:50s"></div>
+      <div id="svc-row-1" class="marquee-track" style="animation-duration:45s"></div>
     </div>
     <div id="svc-empty" class="hidden max-w-[1400px] mx-auto px-6 sm:px-10 py-16 text-center">
       <p class="text-white/40 text-sm">Photos coming soon. Want to see examples? <a href="/#work" class="text-brand hover:underline">Browse our full gallery</a>.</p>
@@ -702,13 +699,9 @@
       // Image marquee
       const imgs = Array.isArray(data.images) ? [...data.images].sort((a,b)=>(a.order??0)-(b.order??0)) : [];
       if(imgs.length){
-        const row1 = imgs.filter((_,i)=>i%2===0);
-        const row2 = imgs.filter((_,i)=>i%2===1);
-        document.getElementById('svc-row-1').innerHTML = buildRow(row1.length?row1:imgs);
-        document.getElementById('svc-row-2').innerHTML = buildRow(row2.length?row2:imgs);
+        document.getElementById('svc-row-1').innerHTML = buildRow(imgs);
       } else {
         document.getElementById('svc-row-1').remove();
-        document.getElementById('svc-row-2').remove();
         document.getElementById('svc-empty').classList.remove('hidden');
       }
 

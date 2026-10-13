@@ -36,6 +36,19 @@ export async function fetchProducts({ featuredOnly = false } = {}) {
   }
 }
 
+export async function fetchSpamBlocklist() {
+  const d = db();
+  if (!d) return [];
+  try {
+    const snap = await getDoc(doc(d, "settings", "spam"));
+    if (!snap.exists()) return [];
+    return snap.data().blockedEmails || [];
+  } catch (e) {
+    console.warn("fetchSpamBlocklist failed:", e);
+    return [];
+  }
+}
+
 export async function submitInquiry(data) {
   const d = db();
   if (!d) throw new Error("offline");

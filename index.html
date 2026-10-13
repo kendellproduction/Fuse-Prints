@@ -380,46 +380,9 @@
     <div id="hero-est" aria-hidden="true">EST. 2014</div>
 
     <!-- CMYK registration mark centerpiece -->
-    <svg id="hero-reg" viewBox="0 0 400 400" aria-hidden="true" fill="none">
-      <defs>
-        <radialGradient id="reg-fade" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="rgba(33,150,243,0.45)"/>
-          <stop offset="60%" stop-color="rgba(33,150,243,0.15)"/>
-          <stop offset="100%" stop-color="rgba(33,150,243,0)"/>
-        </radialGradient>
-      </defs>
-      <!-- Soft glow disk -->
-      <circle cx="200" cy="200" r="190" fill="url(#reg-fade)"/>
-      <!-- Outer ring -->
-      <circle cx="200" cy="200" r="178" stroke="rgba(100,181,246,0.55)" stroke-width="1.5"/>
-      <!-- Inner ring -->
-      <circle cx="200" cy="200" r="120" stroke="rgba(100,181,246,0.4)" stroke-width="1"/>
-      <!-- Tick ring -->
-      <g class="reg-spin" stroke="rgba(100,181,246,0.5)" stroke-width="1.5" stroke-linecap="round">
-        <line x1="200" y1="22" x2="200" y2="50"/>
-        <line x1="378" y1="200" x2="350" y2="200"/>
-        <line x1="200" y1="378" x2="200" y2="350"/>
-        <line x1="22" y1="200" x2="50" y2="200"/>
-        <line x1="326" y1="74" x2="306" y2="94"/>
-        <line x1="326" y1="326" x2="306" y2="306"/>
-        <line x1="74" y1="326" x2="94" y2="306"/>
-        <line x1="74" y1="74" x2="94" y2="94"/>
-      </g>
-      <!-- Center crosshair (the actual registration mark) -->
-      <g stroke="#64B5F6" stroke-width="2" stroke-linecap="round">
-        <line x1="200" y1="140" x2="200" y2="180"/>
-        <line x1="200" y1="220" x2="200" y2="260"/>
-        <line x1="140" y1="200" x2="180" y2="200"/>
-        <line x1="220" y1="200" x2="260" y2="200"/>
-        <circle cx="200" cy="200" r="34" stroke-width="2" fill="none"/>
-        <circle cx="200" cy="200" r="2.5" fill="#64B5F6"/>
-      </g>
-      <!-- Tiny corner labels -->
-      <g fill="rgba(100,181,246,0.45)" font-family="'Clash Display',system-ui,sans-serif" font-size="9" font-weight="600" letter-spacing="3">
-        <text x="200" y="14" text-anchor="middle">REGISTRATION</text>
-        <text x="200" y="396" text-anchor="middle">FUSE PRINTS</text>
-      </g>
-    </svg>
+    <div id="hero-reg" aria-hidden="true">
+      <img src="assets/fuse-reg-mark.png" class="reg-spin" alt="" style="width:100%;height:100%;object-fit:contain;display:block">
+    </div>
 
     <!-- CMYK color-bar reference -->
     <div id="hero-cmyk-bar"><span class="c"></span><span class="m"></span><span class="y"></span><span class="k"></span></div>
@@ -956,7 +919,7 @@
 
   <!-- ============ FIRESTORE CONTENT LOADER ============ -->
   <script type="module">
-    import { fetchProducts, fetchGallery, fetchSiteImages, fetchServices, renderProducts, submitInquiry } from './assets/js/content.js?v=4';
+    import { fetchProducts, fetchGallery, fetchSiteImages, fetchServices, renderProducts, submitInquiry, fetchSpamBlocklist } from './assets/js/content.js?v=4';
     import { emailjsConfig, isEmailjsConfigured } from './assets/js/emailjs-config.js';
     if (isEmailjsConfigured() && window.emailjs) {
       window.emailjs.init({ publicKey: emailjsConfig.publicKey });
@@ -1047,6 +1010,7 @@
 
     // ---------- Quote form → Firestore inquiries (with mailto fallback) ----------
     const quoteForm = document.getElementById('quote-form');
+    const _formLoadedAt = Date.now();
     if (quoteForm) {
       quoteForm.addEventListener('submit', async e => {
         e.preventDefault();
@@ -1060,8 +1024,20 @@
         if (!name || name.length < 2) return alert('Please enter your name.');
         if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return alert('Please enter a valid email.');
         if (!message || message.length < 10) return alert('Please share more project details.');
-        // Simple honeypot / length caps
+        // Honeypot / length caps
+        if (fd.get('_gotcha')) return;
         if (name.length > 200 || email.length > 200 || message.length > 5000) return alert('Input too long.');
+        // Too fast = likely a bot (< 3 seconds)
+        if (Date.now() - _formLoadedAt < 3000) return;
+        // Blocklist check
+        try {
+          const blocked = await fetchSpamBlocklist();
+          if (blocked.map(b => b.toLowerCase()).includes(email.toLowerCase())) {
+            quoteForm.style.display = 'none';
+            document.getElementById('form-success').classList.remove('hidden');
+            return;
+          }
+        } catch (_) { /* proceed if check fails */ }
 
         const btn = document.getElementById('submit-btn');
         const btnSpan = btn.querySelector('span');
