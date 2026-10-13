@@ -117,7 +117,8 @@ For Chris to pick from (after deploy, accessible at these URLs):
 
 ### One-time setup so the Action can deploy
 Committing to GitHub works out of the box. Deploying needs a Firebase service account stored as a repo secret:
-1. Google Cloud console → IAM → Service accounts → create `github-hosting-deploy` with the single role **Firebase Hosting Admin**.
+1. Run `scripts/setup-deploy-secret.sh` (does steps 1–2 below for you), or do it by hand:
+   Google Cloud console → IAM → Service accounts → create `github-hosting-deploy` with the role **Firebase Hosting Admin**.
 2. Create a JSON key for it and save its contents as the GitHub repo secret `FIREBASE_SERVICE_ACCOUNT_FUSE_PRINTS` (Settings → Secrets and variables → Actions). Delete the downloaded file afterwards.
 3. Run the workflow once from the Actions tab ("Run workflow"). Until the secret exists the Action skips the deploy step and says so.
 
