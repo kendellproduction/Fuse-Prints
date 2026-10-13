@@ -53,14 +53,15 @@ export function createEditor({ pageId, units, store, save, who, onSaved }) {
 
   function render() {
     if (!editing) {
-      bar.innerHTML = `<span class="msg">Signed in as ${esc(who)}</span><button class="primary" data-a="edit">✎ Edit page copy</button>`;
+      bar.innerHTML = `<span class="msg">Signed in as ${esc(who)}</span><button class="primary" data-a="edit">✎ Edit page copy</button><button data-a="admin">← Back to admin</button>`;
     } else {
       const n = changes().length;
       bar.innerHTML = `<span class="msg">${n ? n + " unsaved change" + (n > 1 ? "s" : "") : "Click any text to edit"}</span>
         <button data-a="revert" ${active ? "" : "disabled"} title="Put this text back to the original wording">↺ Reset this text</button>
         <button data-a="discard" ${n ? "" : "disabled"}>Discard</button>
-        <button class="primary" data-a="save" ${n ? "" : "disabled"}>Save &amp; publish</button>
-        <button data-a="done">Done</button>`;
+        <button data-a="save" ${n ? "" : "disabled"}>Save</button>
+        <button class="primary" data-a="saveclose" ${n ? "" : "disabled"}>Save &amp; close</button>
+        <button data-a="done" title="Leave edit mode">${n ? "Exit without saving" : "Exit"}</button>`;
     }
   }
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -149,18 +150,18 @@ export function createEditor({ pageId, units, store, save, who, onSaved }) {
 
   async function doSave() {
     const list = changes();
-    if (!list.length) return;
+    if (!list.length) return true;
     const empty = list.find(c => !c.now);
-    if (empty) { setMsg("A text box is empty — type something or reset it.", "err"); return; }
+    if (empty) { setMsg("A text box is empty — type something or reset it.", "err"); return false; }
     const entries = {};
     for (const c of list) {
       if (c.now === c.u.orig) { entries[c.key] = deleteField(); continue; } // back to original → drop override
       const e = { orig: c.u.orig, text: c.now };
       const link = units.find(x => x.key === c.key && x.link);
       if (link && !hrefFor(link.origHref, c.now)) { // links follow their text, so it must be a usable phone/email
-        setMsg(`"${c.now}" isn't a valid ${link.origHref.startsWith("tel:") ? "phone number" : "email"}.`, "err"); return;
+        setMsg(`"${c.now}" isn't a valid ${link.origHref.startsWith("tel:") ? "phone number" : "email"}.`, "err"); return false;
       }
-      if (!validEntry(c.key, e)) { setMsg("That text can't be saved (control characters or too long).", "err"); return; }
+      if (!validEntry(c.key, e)) { setMsg("That text can't be saved (control characters or too long).", "err"); return false; }
       entries[c.key] = e;
     }
     // Edits already baked into the HTML (or otherwise orphaned) no longer match any text on the page: drop them,
@@ -178,9 +179,11 @@ export function createEditor({ pageId, units, store, save, who, onSaved }) {
       }
       onSaved && onSaved(store.entries);
       markChanged(); render(); setMsg("Saved — live on the site now.", "ok");
+      return true;
     } catch (e) {
       console.error(e); render();
       setMsg(e && e.code === "permission-denied" ? "Not allowed — is this account an admin?" : "Save failed: " + (e.message || e), "err");
+      return false;
     }
   }
 
@@ -188,6 +191,8 @@ export function createEditor({ pageId, units, store, save, who, onSaved }) {
     const a = e.target.closest("button")?.dataset.a;
     if (a === "edit") start();
     else if (a === "save") doSave();
+    else if (a === "saveclose") doSave().then(ok => { if (ok) stop(); }); // stay in edit mode if the save failed
+    else if (a === "admin") { if (!changes().length || confirm("Leave without saving?")) location.href = "/admin"; }
     else if (a === "discard") discard();
     else if (a === "revert") revertActive();
     else if (a === "done") { if (changes().length && !confirm("Discard your unsaved changes?")) return; stop(); }
