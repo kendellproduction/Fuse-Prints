@@ -17,7 +17,8 @@
       "package-lock.json",
       "scripts/**",
       "test/**",
-      "docs/**"
+      "docs/**",
+      ".github/**"
     ],
     "trailingSlash": false,
     "rewrites": [
