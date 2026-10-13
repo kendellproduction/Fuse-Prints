@@ -43,7 +43,7 @@ test("workflows: deploy is gated behind tests, and the key is deleted afterwards
 
 test("hosting: internal files are excluded from deploy and security headers are present", () => {
   const h = JSON.parse(readFileSync(resolve(ROOT, "firebase.json"), "utf8")).hosting;
-  for (const p of ["**/*.md", "firestore.rules", "storage.rules", "storage-cors.json", "package.json", "scripts/**", "test/**"])
+  for (const p of ["**/*.md", "firestore.rules", "storage.rules", "storage-cors.json", "package.json", "scripts/**", "test/**", ".github/**"])
     assert.ok(h.ignore.includes(p), `firebase.json should ignore ${p}`);
   const all = h.headers.find(x => x.source === "**").headers.map(x => x.key);
   for (const k of ["X-Content-Type-Options", "Referrer-Policy", "Permissions-Policy"]) assert.ok(all.includes(k), k);
